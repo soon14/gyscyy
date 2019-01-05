@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.cargo.materialCategory">
+		<resultMap type="MaterialCategoryEntity" id="MaterialCategory_temp">
+			<result property="id" column="C_ID" />
+			<result property="name" column="C_NAME" />
+			<result property="code" column="C_CODE" />
+			<result property="model" column="C_MODEL" />
+			<result property="unit" column="C_UNIT" />
+			<result property="manufacturer" column="C_MANUFACTURER" />
+			<result property="management" column="C_MANAGEMENT" />
+			<result property="quote" column="C_QUOTE" />
+			<result property="materialType" column="C_MATERIAL_TYPE" />
+			<result property="supplierId" column="C_SUPPLIER_ID" />
+			<result property="supplierIdName" column="C_SUPPLIER_ID_NAME" />
+			<!-- <result property="wareHouseId" column="C_WARE_HOUSE_ID" />
+			<result property="materialCategoryId" column="C_METRIAL_ID" /> -->
+			<result property="goodsAreaId" column="C_GOODS_AREA_ID" />
+			<result property="goodsAreaName" column="C_GOODS_AREA_NAME" />
+			<result property="goodsAllocationId" column="C_GOODS_ALLOCATION_ID" />
+			<result property="goodsAllocationName" column="C_GOODS_ALLOCATION_NAME" />
+			<result property="goodsAttribute" column="C_GOODS_ATTRIBUTE" />
+			<result property="goodsValidity" column="C_GOODS_VALIDITY" />
+			<result property="goodsPrice" column="C_GOODS_PRICE" />
+			<result property="createPeopleId" column="C_CREATE_PEOPLE_ID" />
+			<result property="inventoryCount" column="C_INVENTORY_QUANTITY" />
+			<result property="stockId" column="C_STOCK_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="equipName" column="EQUIP_NAME" />
+			<result property="equipCode" column="EQUIP_CODE" />
+			<result property="backUp" column="C_BACK_UP" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="MaterialCategory_temp">
+			<![CDATA[
+				SELECT * FROM TB_SPARE_MATERIAL_CATEGORY 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_SPARE_MATERIAL_CATEGORY 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="MaterialCategory_temp">
+			<![CDATA[
+				SELECT * FROM TB_SPARE_MATERIAL_CATEGORY  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="materialCategoryEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_SPARE_MATERIAL_CATEGORY 
+				(
+		          C_NAME
+		        , C_CODE
+		        , C_MODEL
+		        , C_UNIT
+		        , C_MANUFACTURER
+		        , C_QUOTE
+		        , C_MATERIAL_TYPE
+		        , C_SUPPLIER_ID
+		        , C_CREATE_PEOPLE_ID
+		        , C_BACK_UP
+				)
+				VALUES
+				(
+		         #{name}
+	           , #{code}
+	           , #{model}
+	           , #{unit}
+	           , #{manufacturer}
+	           , #{quote}
+	           , #{materialType}
+	           , #{supplierId}
+	           , #{createPeopleId}
+	           , #{backUp}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="materialCategoryEntity">
+			<![CDATA[
+				UPDATE TB_SPARE_MATERIAL_CATEGORY SET
+                   C_NAME=#{name}
+	             , C_CODE=#{code}
+	             , C_MODEL=#{model}
+	             , C_UNIT=#{unit}
+	             , C_MANUFACTURER=#{manufacturer}
+	             , C_QUOTE=#{quote}
+	             , C_MATERIAL_TYPE=#{materialType}
+	             , C_SUPPLIER_ID=#{supplierId}
+	             , C_CREATE_PEOPLE_ID=#{createPeopleId}
+	             , C_BACK_UP=#{backUp}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="materialCategoryEntity">
+			<![CDATA[
+				DELETE FROM TB_SPARE_MATERIAL_CATEGORY WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="MaterialCategory_temp">
+			<![CDATA[ 
+				SELECT s.C_SUPPLIER_NAME C_SUPPLIER_ID_NAME,m.* FROM TB_SPARE_MATERIAL_CATEGORY m LEFT JOIN tb_supplier s ON m.C_SUPPLIER_ID=s.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+		<!-- 查找最大id的数据的物资编码 -->
+		<select id="findMaxCode" resultMap="MaterialCategory_temp">
+			select * from tb_spare_material_category mc where mc.C_ID = (select MAX(C_ID) FROM tb_spare_material_category )
+		</select>
+		
+		<!-- 查找待出库的物资种类 -->
+		<select id="findOutStockMaterial" parameterType="map" resultMap="MaterialCategory_temp">
+			SELECT mc.* ,st.C_GOODS_ATTRIBUTE,st.C_INVENTORY_QUANTITY,st.C_GOODS_PRICE,st.C_GOODS_VALIDITY,st.C_SPARECONSUME_NUM, st.C_ID AS C_STOCK_ID FROM tb_spare_stock st 
+			LEFT JOIN tb_spare_material_category mc ON st.C_MATERIAL_ID = mc.C_ID
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+		<select id="findOutStockMaterialDetail" parameterType="map" resultMap="MaterialCategory_temp">
+			SELECT  distinct(ins.C_ID) onlyId,ins.* FROM
+			(SELECT i.C_WARE_HOUSE_ID,d.C_METRIAL_ID,d.C_GOODS_AREA_ID,
+			d.C_GOODS_ALLOCATION_ID,a.C_NAME C_GOODS_AREA_NAME,
+			a.C_NAME C_GOODS_ALLOCATION_NAME, m.* 
+			FROM tb_spare_instock i 
+			INNER JOIN tb_spare_instock_detail d ON i.C_ID=d.C_INSTOCK_ID
+			INNER JOIN tb_spare_stock s ON d.C_METRIAL_ID=s.C_MATERIAL_ID 
+			INNER JOIN tb_spare_material_category m ON m.C_ID=d.C_METRIAL_ID 
+			INNER JOIN tb_ware_house_area a ON a.C_ID=d.C_GOODS_AREA_ID
+			INNER JOIN tb_ware_house_area_position p ON p.C_ID=d.C_GOODS_ALLOCATION_ID) ins
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+		<!-- 查找待入库的物资种类 -->
+		<select id="findInStockMaterial" parameterType="map" resultMap="MaterialCategory_temp">
+			SELECT mc.* ,st.C_GOODS_ATTRIBUTE,st.C_INVENTORY_QUANTITY,st.C_GOODS_PRICE,st.C_GOODS_VALIDITY FROM tb_spare_stock st 
+			LEFT JOIN tb_spare_material_category mc ON st.C_MATERIAL_ID = mc.C_ID
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+		<select id="findMaterialCategoryDataForEquip" parameterType="map" resultMap="MaterialCategory_temp">
+			<![CDATA[ 
+				SELECT M.*,O.C_CREATE_DATE C_CREATE_DATE,
+				O.C_EQUIP_NAME  EQUIP_NAME, E.C_CODE EQUIP_CODE
+				FROM TB_SPARE_MATERIAL_CATEGORY M
+				LEFT JOIN TB_OVERHAUL_SPARECONSUME O ON O.C_CODE = M.C_CODE
+				LEFT JOIN TB_EQUIP_LEDGER E ON E.C_ID = O.C_EQUIP_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

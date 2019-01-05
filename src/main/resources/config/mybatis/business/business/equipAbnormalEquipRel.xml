@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.equip.equipAbnormalEquipRel">
+		<resultMap type="EquipAbnormalEquipRelEntity" id="EquipAbnormalEquipRel_temp">
+			<result property="id" column="C_ID" />
+			<result property="code" column="C_CODE" />
+			<result property="name" column="C_NAME" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="updateUserId" column="C_UPDATE_USER_ID" />
+			<result property="updateDate" column="C_UPDATE_DATE" />
+			<result property="equipCode" column="C_EQUIP_CODE" />
+			<result property="equipName" column="C_EQUIP_NAME" />
+			<result property="equipAbnormalId" column="C_EQUIP_ABNORMAL_ID" />
+			<result property="equipAbnormalReportId" column="C_EQUIP_ABNORMAL_REPORT_ID" />
+			<result property="equipAppraiseId" column="C_EQUIP_APPRAISE_ID" />
+			<result property="status" column="C_STATUS" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="EquipAbnormalEquipRel_temp">
+			<![CDATA[
+				SELECT * FROM TB_EQUIP_ABNORMAL_EQUIP_REL 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_EQUIP_ABNORMAL_EQUIP_REL 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="EquipAbnormalEquipRel_temp">
+			<![CDATA[
+				SELECT * FROM TB_EQUIP_ABNORMAL_EQUIP_REL  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="EquipAbnormalEquipRelEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_EQUIP_ABNORMAL_EQUIP_REL 
+				(
+		          C_CODE
+		        , C_NAME
+		        , C_CREATE_USER_ID
+		        , C_CREATE_DATE
+		        , C_EQUIP_CODE
+		        , C_EQUIP_NAME
+		        , C_EQUIP_ABNORMAL_ID
+		        , C_EQUIP_ABNORMAL_REPORT_ID
+		        , C_EQUIP_APPRAISE_ID
+		        , C_STATUS
+				)
+				VALUES
+				(
+		         #{code}
+	           , #{name}
+	           , #{createUserId}
+	           , #{createDate}
+	           , #{equipCode}
+	           , #{equipName}
+	           , #{equipAbnormalId}
+	           , #{equipAbnormalReportId}
+	           , #{equipAppraiseId}
+	           , #{status}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="EquipAbnormalEquipRelEntity">
+			<![CDATA[
+				UPDATE TB_EQUIP_ABNORMAL_EQUIP_REL SET
+                   C_CODE=#{code}
+	             , C_NAME=#{name}
+	             , C_UPDATE_USER_ID=#{updateUserId}
+	             , C_UPDATE_DATE=#{updateDate}
+	             , C_EQUIP_CODE=#{equipCode}
+	             , C_EQUIP_NAME=#{equipName}
+	             , C_EQUIP_ABNORMAL_ID=#{equipAbnormalId}
+	             , C_EQUIP_ABNORMAL_REPORT_ID=#{equipAbnormalReportId}
+	             , C_EQUIP_APPRAISE_ID=#{equipAppraiseId}
+	             , C_STATUS=#{status}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delByEquipAbnormalReportId" parameterType="EquipAbnormalEquipRelEntity">
+			<![CDATA[
+				DELETE FROM TB_EQUIP_ABNORMAL_EQUIP_REL WHERE C_EQUIP_ABNORMAL_REPORT_ID=#{equipAbnormalReportId}
+			]]>
+		</update>
+		<!-- 删除数据 -->
+		<update id="delByEquipAbnormalId" parameterType="EquipAbnormalEquipRelEntity">
+			<![CDATA[
+				DELETE FROM TB_EQUIP_ABNORMAL_EQUIP_REL WHERE C_EQUIP_ABNORMAL_ID=#{equipAbnormalId}
+			]]>
+		</update>
+		<!-- 删除数据 -->
+		<update id="delByEquipAppraiseId" parameterType="EquipAbnormalEquipRelEntity">
+			<![CDATA[
+				DELETE FROM TB_EQUIP_ABNORMAL_EQUIP_REL WHERE C_EQUIP_APPRAISE_ID=#{equipAppraiseId}
+			]]>
+		</update>
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="EquipAbnormalEquipRelEntity">
+			<![CDATA[
+				DELETE FROM TB_EQUIP_ABNORMAL_EQUIP_REL WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="EquipAbnormalEquipRel_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_EQUIP_ABNORMAL_EQUIP_REL 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

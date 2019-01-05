@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.personalManage">
+		<resultMap type="PersonalManageEntity" id="PersonalManage_temp">
+			<result property="id" column="C_ID" />
+			<result property="name" column="C_NAME" />
+			<result property="code" column="C_CODE" />
+			<result property="sex" column="C_SEX" />
+			<result property="unit" column="C_UNIT" />
+			<result property="mobile" column="C_MOBILE" />
+			<result property="mail" column="C_MAIL" />
+			<result property="photoUrl" column="C_PHOTO_URL" />
+			<result property="status" column="C_STATUS" />
+			<result property="remark" column="C_REMARK" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="associateUser" column="C_ASSOCIATE_USER" />	
+			<result property="outStatus" column="C_OUT_STATUS" />	
+			<result property="constructionUnits" column="C_CONSTRUCTION_UNITS" />	
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="PersonalManage_temp">
+			<![CDATA[
+				SELECT * FROM TB_BASE_PERSONAL 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_BASE_PERSONAL 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="PersonalManage_temp">
+			<![CDATA[
+				SELECT * FROM TB_BASE_PERSONAL  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="PersonalManageEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_BASE_PERSONAL 
+				(
+		          C_NAME
+		        , C_CODE
+		        , C_SEX
+		        , C_UNIT
+		        , C_MOBILE
+		        , C_MAIL
+		        , C_PHOTO_URL
+		        , C_STATUS
+		        , C_REMARK
+		        ,C_ASSOCIATE_USER
+		        ,C_OUT_STATUS
+		        ,C_CONSTRUCTION_UNITS
+				)
+				VALUES
+				(
+		         #{name}
+	           , #{code}
+	           , #{sex}
+	           , #{unit}
+	           , #{mobile}
+	           , #{mail}
+	           , #{photoUrl}
+	           , #{status}
+	           , #{remark}
+	           , #{associateUser}
+	           , #{outStatus}
+	           , #{constructionUnits}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="PersonalManageEntity">
+			<![CDATA[
+				UPDATE TB_BASE_PERSONAL SET
+                   C_NAME=#{name}
+	             , C_CODE=#{code}
+	             , C_SEX=#{sex}
+	             , C_UNIT=#{unit}
+	             , C_MOBILE=#{mobile}
+	             , C_MAIL=#{mail}
+	             , C_PHOTO_URL=#{photoUrl}
+	             , C_STATUS=#{status}
+	             , C_REMARK=#{remark}
+	             , C_ASSOCIATE_USER=#{associateUser}
+	             , C_OUT_STATUS=#{outStatus}
+	             , C_CONSTRUCTION_UNITS=#{constructionUnits}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="PersonalManageEntity">
+			<![CDATA[
+				DELETE FROM TB_BASE_PERSONAL WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="PersonalManage_temp">
+			<![CDATA[ 
+				SELECT a.C_ID USERID,a.*, b.C_NAME as C_UNIT_NAME FROM TB_BASE_PERSONAL a 
+        LEFT JOIN TP_SYS_UNIT b ON a.C_UNIT = b.C_ID 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

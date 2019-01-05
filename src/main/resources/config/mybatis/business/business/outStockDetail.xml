@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.cargo.outStockDetail">
+		<resultMap type="OutstockDetailEntity" id="OutstockDetail_temp">
+			<result property="id" column="C_ID" />
+			<result property="outstockId" column="C_OUTSTOCK_ID" />
+			<result property="materialId" column="C_MATERIAL_ID" />
+			<result property="count" column="C_COUNT" />
+			<result property="goodsAreaId" column="C_GOODS_AREA_ID" />
+			<result property="goodsAreaName" column="C_GOODS_AREA_NAME" />
+			<result property="goodsAllocationId" column="C_GOODS_ALLOCATION_ID" />
+			<result property="goodsAllocationName" column="C_GOODS_ALLOCATION_NAME" />
+			<result property="materialCode" column="C_MATERIAL_CODE" />
+			<result property="materialName" column="C_MATERIAL_NAME" />
+			<result property="wareHouseId" column="C_WARE_HOUSE_ID" />
+			<result property="wareHouseName" column="C_WARE_HOUSE_NAME" />
+			<result property="materialUnit" column="C_MATERIAL_UNIT" />
+			<result property="materialUnitName" column="C_MATERIAL_UNIT_NAME" />
+			<result property="materialModel" column="C_MATERIAL_MODEL" />
+			<result property="materialManufacturer" column="C_MATERIAL_MANUFACTURER" />
+			<result property="goodsAttribute" column="C_GOODS_ATTRIBUTE" />
+			<result property="goodsValidity" column="C_GOODS_VALIDITY" />
+			<result property="goodsPrice" column="C_GOODS_PRICE" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="OutstockDetail_temp">
+			<![CDATA[
+				SELECT * FROM TB_SPARE_OUTSTOCK_DETAIL 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_SPARE_OUTSTOCK_DETAIL 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="OutstockDetail_temp">
+			<![CDATA[
+				SELECT * FROM TB_SPARE_OUTSTOCK_DETAIL  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="OutstockDetailEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_SPARE_OUTSTOCK_DETAIL 
+				(
+		          C_OUTSTOCK_ID
+		        , C_MATERIAL_ID
+		        , C_COUNT
+		        , C_GOODS_ATTRIBUTE
+		        , C_GOODS_VALIDITY
+		        , C_GOODS_PRICE
+				)
+				VALUES
+				(
+		         #{outstockId}
+	           , #{materialId}
+	           , #{count}
+	           , #{goodsAttribute}
+	           , #{goodsValidity}
+	           , #{goodsPrice}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="OutstockDetailEntity">
+			<![CDATA[
+				UPDATE TB_SPARE_OUTSTOCK_DETAIL SET
+                   C_OUTSTOCK_ID=#{outstockId}
+	             , C_MATERIAL_ID=#{materialId}
+	             , C_COUNT=#{count} 
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="OutstockDetailEntity">
+			<![CDATA[
+				DELETE FROM TB_SPARE_OUTSTOCK_DETAIL WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="OutstockDetail_temp">
+			<![CDATA[ 
+				SELECT a.C_ID DETAILID,a.*, b.C_NAME AS C_MATERIAL_NAME, b.C_CODE AS C_MATERIAL_CODE, 
+				b.C_UNIT AS C_MATERIAL_UNIT, b.C_MODEL AS C_MATERIAL_MODEL, 
+				e.C_NAME AS C_GOODS_AREA_NAME, f.C_NAME AS C_GOODS_ALLOCATION_NAME ,
+				g.C_NAME AS C_MATERIAL_MANUFACTURER,g2.C_NAME AS C_MATERIAL_UNIT_NAME 
+				FROM TB_SPARE_OUTSTOCK_DETAIL a
+				LEFT JOIN TB_SPARE_MATERIAL_CATEGORY b ON b.C_ID = a.C_MATERIAL_ID
+				LEFT JOIN TB_SPARE_OUTSTOCK c ON c.C_ID = a.C_OUTSTOCK_ID
+				LEFT JOIN TB_WARE_HOUSE d ON d.C_ID = c.C_WARE_HOUSE_ID
+				LEFT JOIN TB_WARE_HOUSE_AREA e ON e.C_ID = a.C_GOODS_AREA_ID
+				LEFT JOIN TB_WARE_HOUSE_AREA_POSITION f ON f.C_ID = a.C_GOODS_ALLOCATION_ID
+				LEFT JOIN tp_sys_dictionary g ON g.C_CODE=b.C_MANUFACTURER AND g.C_CATEGORY_CODE='PRODUCTION_FACTORY'
+				LEFT JOIN tp_sys_dictionary g2 ON g2.C_CODE=b.C_UNIT AND g2.C_CATEGORY_CODE='DIGIT'
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+		<!-- 删除数据 -->
+		<update id="deleteByOutstockId" parameterType="OutstockDetailEntity">
+			<![CDATA[
+				DELETE FROM TB_SPARE_OUTSTOCK_DETAIL WHERE C_OUTSTOCK_ID=#{outstockId}
+			]]>
+		</update>
+    </mapper>

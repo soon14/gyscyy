@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.investmentPlan">
+		<resultMap type="InvestmentPlanEntity" id="InvestmentPlan_temp">
+			<result property="id" column="C_ID" />
+			<result property="name" column="C_NAME" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="category" column="C_CATEGORY" />
+			<result property="yearNum" column="C_YEAR_NUM" />
+			<result property="stockStruct" column="C_STOCK_STRUCT" />
+			<result property="buildSize" column="C_BUILD_SIZE" />
+			<result property="buildSizeUnit" column="C_BUILD_SIZE_UNIT" />
+			<result property="buildStage" column="C_BUILD_STAGE" />
+			<result property="content" column="C_CONTENT" />
+			<result property="totalMoney" column="C_TOTAL_MONEY" />
+			<result property="ownMoney" column="C_OWN_MONEY" />
+			<result property="loanMoney" column="C_LOAN_MONEY" />
+			<result property="other" column="C_OTHER" />
+			<result property="remark" column="C_REMARK" />
+			<result property="fileId" column="C_FILE_ID" />
+			<result property="approveStatus" column="C_APPROVE_STATUS" />
+			
+			<result property="userName" column="userName" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="InvestmentPlan_temp">
+			<![CDATA[
+				SELECT * FROM TB_INVESTMENT_PLAN 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_INVESTMENT_PLAN 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="InvestmentPlan_temp">
+			<![CDATA[
+				SELECT * FROM TB_INVESTMENT_PLAN  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="InvestmentPlanEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_INVESTMENT_PLAN 
+				(
+		          C_NAME
+		        , C_CREATE_USER_ID
+		        , C_CREATE_DATE
+		        , C_CATEGORY
+		        , C_YEAR_NUM
+		        , C_STOCK_STRUCT
+		        , C_BUILD_SIZE
+		        , C_BUILD_SIZE_UNIT
+		        , C_BUILD_STAGE
+		        , C_CONTENT
+		        , C_TOTAL_MONEY
+		        , C_OWN_MONEY
+		        , C_LOAN_MONEY
+		        , C_OTHER
+		        , C_REMARK
+		        , C_FILE_ID
+		        ,C_APPROVE_STATUS
+				)
+				VALUES
+				(
+		         #{name}
+	           , #{createUserId}
+	           , #{createDate}
+	           , #{category}
+	           , #{yearNum}
+	           , #{stockStruct}
+	           , #{buildSize}
+	           , #{buildSizeUnit}
+	           , #{buildStage}
+	           , #{content}
+	           , #{totalMoney}
+	           , #{ownMoney}
+	           , #{loanMoney}
+	           , #{other}
+	           , #{remark}
+	           , #{fileId}
+	           , #{approveStatus}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="InvestmentPlanEntity">
+			<![CDATA[
+				UPDATE TB_INVESTMENT_PLAN SET
+                   C_NAME=#{name}
+	             , C_CREATE_USER_ID=#{createUserId}
+	             , C_CREATE_DATE=#{createDate}
+	             , C_CATEGORY=#{category}
+	             , C_YEAR_NUM=#{yearNum}
+	             , C_STOCK_STRUCT=#{stockStruct}
+	             , C_BUILD_SIZE=#{buildSize}
+	             , C_BUILD_SIZE_UNIT=#{buildSizeUnit}
+	             , C_BUILD_STAGE=#{buildStage}
+	             , C_CONTENT=#{content}
+	             , C_TOTAL_MONEY=#{totalMoney}
+	             , C_OWN_MONEY=#{ownMoney}
+	             , C_LOAN_MONEY=#{loanMoney}
+	             , C_OTHER=#{other}
+	             , C_REMARK=#{remark}
+	             , C_FILE_ID=#{fileId}
+	             , C_APPROVE_STATUS=#{approveStatus}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="InvestmentPlanEntity">
+			<![CDATA[
+				DELETE FROM TB_INVESTMENT_PLAN WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="InvestmentPlan_temp">
+			<![CDATA[ 
+				SELECT a.*,b.C_NAME AS userName FROM TB_INVESTMENT_PLAN a LEFT JOIN TP_SYS_USER b ON a.C_CREATE_USER_ID = b.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

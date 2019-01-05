@@ -1,0 +1,18 @@
+package com.aptech.business.managePlanContract.purchaseType.service;
+
+import com.aptech.business.managePlanContract.purchaseType.domain.PurchaseTypeEntity;
+import com.aptech.framework.orm.IBaseEntityOperation;
+
+/**
+ * 
+ * 采购类型应用管理服务接口
+ *
+ * @author 
+ * @created 2018-07-30 16:49:32
+ * @lastModified 
+ * @history
+ *
+ */
+public interface PurchaseTypeService  extends IBaseEntityOperation<PurchaseTypeEntity> {
+	
+}

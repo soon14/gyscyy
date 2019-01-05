@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.workSafe">
+		<resultMap type="workSafeEntity" id="WorkSafe_temp">
+			<result property="id" column="C_ID" />
+			<result property="workticketId" column="C_WORKTICKET_ID" />
+			<result property="safeType" column="C_SAFE_TYPE" />
+			<result property="orderSeq" column="C_ORDER_SEQ" />
+			<result property="licensorContent" column="C_LICENSOR_CONTENT" />
+			<result property="executeSituation" column="C_EXECUTE_SITUATION" />
+			<result property="codeType" column="C_CODE_TYPE" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="updateDate" column="C_UPDATE_DATE" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="signerContent" column="C_SIGNER_CONTENT" />
+			<result property="uuidCode" column="C_UUID_CODE" />
+			<result property="safeId" column="C_SAFE_ID" />
+			
+			<result property="hfSituation" column="C_HF_SITUATION" />
+			<result property="hfDate" column="C_HF_DATE" />
+			<result property="executeDate" column="C_EXECUTE_DATE" />
+			
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="WorkSafe_temp">
+			<![CDATA[
+				SELECT * FROM TB_WORKTICKET_SAFE 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_WORKTICKET_SAFE 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="WorkSafe_temp">
+			<![CDATA[
+				SELECT * FROM TB_WORKTICKET_SAFE  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="workSafeEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_WORKTICKET_SAFE 
+				(
+	            C_WORKTICKET_ID
+		        ,
+	             C_SAFE_TYPE
+		        ,
+	             C_ORDER_SEQ
+		        ,
+	            C_LICENSOR_CONTENT
+		        ,
+	             C_EXECUTE_SITUATION
+		        ,
+	             C_CODE_TYPE
+		        ,
+	             C_CREATE_DATE
+		        ,
+	             C_UPDATE_DATE
+		        ,
+	             C_CREATE_USER_ID
+		        ,
+	             C_SIGNER_CONTENT
+	             ,
+	             C_UUID_CODE
+	             ,
+	             C_HF_SITUATION
+	             ,
+	             C_HF_DATE
+	             ,
+	             C_EXECUTE_DATE
+	             ,
+	             C_SAFE_ID
+				)
+				VALUES
+				(
+		       #{workticketId}
+	           ,
+		       #{safeType}
+	           ,
+		       #{orderSeq}
+	           ,
+		       #{licensorContent}
+	           ,
+		       #{executeSituation}
+	           ,
+		       #{codeType}
+	           ,
+		       #{createDate}
+	           ,
+		       #{updateDate}
+	           ,
+		       #{createUserId}
+	           ,
+		       #{signerContent}
+		       ,
+		       #{uuidCode}
+		       ,
+		       #{hfSituation}
+		       ,
+		       #{hfDate}
+		       ,
+		       #{executeDate}
+		       ,
+		       #{safeId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="workSafeEntity">
+			<![CDATA[
+				UPDATE TB_WORKTICKET_SAFE SET
+                 C_WORKTICKET_ID=#{workticketId}
+	             ,
+                 C_SAFE_TYPE=#{safeType}
+	             ,
+                 C_ORDER_SEQ=#{orderSeq}
+	             ,
+                 C_LICENSOR_CONTENT=#{licensorContent}
+	             ,
+                 C_EXECUTE_SITUATION=#{executeSituation}
+	             ,
+                 C_CODE_TYPE=#{codeType}
+	             ,
+                 C_CREATE_DATE=#{createDate}
+	             ,
+                 C_UPDATE_DATE=#{updateDate}
+	             ,
+                 C_CREATE_USER_ID=#{createUserId}
+	             ,
+                 C_SIGNER_CONTENT=#{signerContent}
+                 ,
+                 C_UUID_CODE=#{uuidCode}
+                 ,
+                 C_HF_SITUATION=#{hfSituation}
+                 ,
+                 C_HF_DATE=#{hfDate}
+                 ,
+                 C_EXECUTE_DATE=#{executeDate}
+                 ,
+                 C_SAFE_ID=#{safeId}
+                 
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		<update id="updateByUuid" parameterType="workSafeEntity">
+			<![CDATA[ 
+				update TB_WORKTICKET_SAFE set
+				
+				C_WORKTICKET_ID=#{workticketId}
+				
+				WHERE C_UUID_CODE=#{uuidCode}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="workSafeEntity">
+			<![CDATA[
+				DELETE FROM TB_WORKTICKET_SAFE WHERE C_ID=#{id}
+			]]>
+		</update>
+		<!-- 删除数据 -->
+		<update id="deleteByUuid" parameterType="workSafeEntity">
+			<![CDATA[
+				DELETE FROM TB_WORKTICKET_SAFE WHERE C_UUID_CODE=#{uuidCode}
+			]]>
+		</update>
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="WorkSafe_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_WORKTICKET_SAFE 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

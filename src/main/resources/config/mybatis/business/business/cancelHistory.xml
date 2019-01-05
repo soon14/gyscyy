@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.cancelHistory">
+		<resultMap type="CancelHistoryEntity" id="CancelHistory_temp">
+			<result property="id" column="C_ID" />
+			<result property="itemId" column="C_ITEM_ID" />
+			<result property="cancelReason" column="C_CANCEL_REASON" />
+			<result property="cancelTime" column="C_CANCEL_TIME" />
+			<result property="cancelUserId" column="C_CANCEL_USER_ID" />
+			<result property="itemType" column="C_ITEM_TYPE" />
+			<!-- 关联通用 -->
+			<result property="itemName" column="C_ITEM_NAME" />
+			<result property="remark" column="C_REMARK" />
+			<result property="purchaseModeName" column="C_PURCHASE_MODE_NAME" />
+			<result property="itemTime" column="C_ITEM_TIME" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="departmentName" column="C_DEPARTMENT_NAME" />
+			<result property="file" column="C_FILE" />
+			<result property="userName" column="C_USER_NAME" />
+			<!-- 立项批复 -->
+			<result property="judge" column="C_JUDGE" />
+			<!-- 合同审批/合同签订 -->
+			<result property="supplierName" column="C_SUPPLIER_NAME" />
+			<result property="contractCode" column="C_CONTRACT_CODE" />
+			<result property="money" column="C_MONEY" />
+			<result property="createTime" column="C_CREATE_TIME" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="CancelHistory_temp">
+			<![CDATA[
+				SELECT * FROM TB_CANCEL_HISTORY 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_CANCEL_HISTORY 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="CancelHistory_temp">
+			<![CDATA[
+				SELECT * FROM TB_CANCEL_HISTORY  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="CancelHistoryEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_CANCEL_HISTORY 
+				(
+		          C_ITEM_ID
+		        , C_CANCEL_REASON
+		        , C_CANCEL_TIME
+		        , C_CANCEL_USER_ID
+		        , C_ITEM_TYPE
+				)
+				VALUES
+				(
+		         #{itemId}
+	           , #{cancelReason}
+	           , #{cancelTime}
+	           , #{cancelUserId}
+	           , #{itemType}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="CancelHistoryEntity">
+			<![CDATA[
+				UPDATE TB_CANCEL_HISTORY SET
+                   C_ITEM_ID=#{itemId}
+	             , C_CANCEL_REASON=#{cancelReason}
+	             , C_CANCEL_TIME=#{cancelTime}
+	             , C_CANCEL_USER_ID=#{cancelUserId}
+	             , C_ITEM_TYPE=#{itemType}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="CancelHistoryEntity">
+			<![CDATA[
+				DELETE FROM TB_CANCEL_HISTORY WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="CancelHistory_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_CANCEL_HISTORY 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<!-- 立项批复信息查询 -->
+		<select id="findLxByCondition" parameterType="map" resultMap="CancelHistory_temp">
+			<![CDATA[ 
+				SELECT
+					ca.*,
+					us.C_NAME AS C_USER_NAME,
+					re.C_NAME AS C_ITEM_NAME,
+					dy.C_NAME AS C_PURCHASE_MODE_NAME,
+					un.C_NAME AS C_UNIT_NAME,
+					ut.C_NAME AS C_DEPARTMENT_NAME,
+					re.C_JUDGE,
+					re.C_UPDATE_DATE AS C_ITEM_TIME,
+					re.C_FILE,
+					re.C_REMARK
+				FROM
+					TB_CANCEL_HISTORY ca
+				LEFT JOIN tb_produce_reply re ON re.C_ID = ca.C_ITEM_ID 
+				LEFT JOIN tp_sys_dictionary dy ON dy.C_CODE = re.C_PURCHASE_MODE_ID
+				AND dy.C_CATEGORY_CODE = 'PURCHASE_MODE'
+				LEFT JOIN tp_sys_unit un ON un.C_ID = re.C_UNIT_ID
+				LEFT JOIN tp_sys_unit ut ON ut.C_ID = re.C_DEPARTMENT_ID
+				LEFT JOIN tp_sys_user us ON us.C_ID = ca.C_CANCEL_USER_ID 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<!-- 定标请示函信息查询 -->
+		<select id="findDbByCondition" parameterType="map" resultMap="CancelHistory_temp">
+			<![CDATA[ 
+				SELECT
+					ca.*,
+					us.C_NAME AS C_USER_NAME,
+					de.C_NAME AS C_ITEM_NAME,
+					un.C_NAME AS C_UNIT_NAME,
+					ut.C_NAME AS C_DEPARTMENT_NAME,
+					de.C_REPLY_TIME AS C_ITEM_TIME,
+					de.C_FILE,
+					de.C_REMARK
+				FROM
+					TB_CANCEL_HISTORY ca
+				LEFT JOIN tb_deal_standard de ON de.C_ID = ca.C_ITEM_ID 
+				LEFT JOIN tp_sys_unit un ON un.C_ID = de.C_UNIT_ID
+				LEFT JOIN tp_sys_unit ut ON ut.C_ID = de.C_DEPARTMENT_ID
+				LEFT JOIN tp_sys_user us ON us.C_ID = ca.C_CANCEL_USER_ID 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<!-- 合同审批信息查询 -->
+		<select id="findSpByCondition" parameterType="map" resultMap="CancelHistory_temp">
+			<![CDATA[ 
+				SELECT
+					ch.*,
+					us.C_NAME AS C_USER_NAME,
+					ca.C_NAME AS C_ITEM_NAME,
+					ca.C_CONTRACT_CODE,
+					ca.C_MONEY,
+					un.C_NAME AS C_UNIT_NAME,
+					dy.C_NAME AS C_PURCHASE_MODE_NAME,
+					ca.C_FILE,
+					su.C_NAME AS C_SUPPLIER_NAME
+				FROM
+					TB_CANCEL_HISTORY ch
+				LEFT JOIN TB_CONTRACT_APPROVE ca ON ca.C_ID = ch.C_ITEM_ID 
+				LEFT JOIN tp_sys_unit un ON un.C_ID = ca.C_UNIT_ID
+				LEFT JOIN tp_sys_dictionary dy ON dy.C_CODE = ca.C_PURCHASE_MODE_ID
+				AND dy.C_CATEGORY_CODE = 'PURCHASE_MODE'
+				LEFT JOIN tp_sys_user us ON us.C_ID = ch.C_CANCEL_USER_ID
+				LEFT JOIN tb_supplier_manage su ON su.C_ID = ca.C_SUPPLIER_ID
+				AND su.C_STATUS = '0'  
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<!-- 合同签订信息查询 -->
+		<select id="findQdByCondition" parameterType="map" resultMap="CancelHistory_temp">
+			<![CDATA[ 
+				SELECT
+					ca.*,
+					us.C_NAME AS C_USER_NAME,
+					cd.C_NAME AS C_ITEM_NAME,
+					cd.C_CONTRACT_CODE,
+					un.C_NAME AS C_UNIT_NAME,
+					cd.C_FILE,
+					cd.C_CREATE_TIME,
+					cd.C_DEAL_TIME AS C_ITEM_TIME,
+					su.C_NAME AS C_SUPPLIER_NAME
+				FROM
+					TB_CANCEL_HISTORY ca
+				LEFT JOIN TB_CONTRACT_DEAL cd ON cd.C_ID = ca.C_ITEM_ID 
+				LEFT JOIN tp_sys_unit un ON un.C_ID = cd.C_UNIT_ID
+				LEFT JOIN tp_sys_user us ON us.C_ID = ca.C_CANCEL_USER_ID
+				LEFT JOIN tb_supplier_manage su ON su.C_ID = cd.C_SUPPLIER_ID
+				AND su.C_STATUS = '0'  
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

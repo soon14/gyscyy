@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.defectManage.solve">
+		<resultMap type="solveEntity" id="Solve_temp">
+			<result property="id" column="C_ID" />
+			<result property="defectId" column="C_DEFECT_ID" />
+			<result property="userId" column="C_USER_ID" />
+			<result property="solveTime" column="C_SOLVE_TIME" />
+			<result property="solveResult" column="C_SOLVE_RESULT" />
+			<result property="solveProblem" column="C_SOLVE_PROBLEM" />
+			<result property="solveExplain" column="C_SOLVE_EXPLAIN" />
+			<result property="userName" column="C_USER_NAME" />
+			<result property="solveResultName" column="C_SOLVE_RESULT_NAME" />
+			<result property="planTime" column="C_PLAN_TIME" />
+			<result property="planEndTime" column="C_PLAN_END_TIME" />
+			<result property="fileId" column="C_FILE_ID" />
+			<result property="endSolve" column="C_END_SOLVE" />
+			<result property="approveIdea" column="C_APPROVEIDEA" />
+        </resultMap>
+		
+		<!-- ��ȡ������� -->
+		<select id="findAll" resultMap="Solve_temp">
+			<![CDATA[
+				SELECT * FROM TB_DEFECT_SOLVE 
+			]]>
+		</select>
+		
+		<!-- ��ȡ����������� -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_DEFECT_SOLVE 
+			]]>
+		</select>
+		
+		<!-- ���id��ѯ -->
+		<select id="findById" parameterType="long" resultMap="Solve_temp">
+			<![CDATA[
+				SELECT * FROM TB_DEFECT_SOLVE  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- ������ -->
+		<insert id="insert" parameterType="solveEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE ��ݿ���Ҫ����SEQUENCE����
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_DEFECT_SOLVE 
+				(
+	            C_DEFECT_ID 
+		        ,
+	            C_USER_ID 
+		        ,
+	            C_SOLVE_TIME 
+		        ,
+	            C_SOLVE_RESULT 
+		        ,
+	            C_SOLVE_PROBLEM 
+		        ,
+	            C_SOLVE_EXPLAIN 
+	             ,
+	            C_PLAN_TIME 
+	             ,
+	            C_PLAN_END_TIME 
+	             ,
+	            C_FILE_ID 
+	              ,
+	            C_END_SOLVE
+	              ,
+	            C_APPROVEIDEA
+				)
+				VALUES
+				(
+		       #{defectId}
+	           ,
+		       #{userId}
+	           ,
+		       #{solveTime}
+	           ,
+		       #{solveResult}
+	           ,
+		       #{solveProblem}
+	           ,
+		       #{solveExplain}
+		        ,
+		       #{planTime}
+		        ,
+		       #{planEndTime}
+		        ,
+		       #{fileId}
+		        ,
+		       #{endSolve}
+		        ,
+		       #{approveIdea}
+				)
+			]]>
+		</insert>
+		
+		<!-- �޸���� -->
+		<update id="update" parameterType="solveEntity">
+			<![CDATA[
+				UPDATE TB_DEFECT_SOLVE SET
+                 C_DEFECT_ID=#{defectId}
+	             ,
+                 C_USER_ID=#{userId}
+	             ,
+                 C_SOLVE_TIME=#{solveTime}
+	             ,
+                 C_SOLVE_RESULT=#{solveResult}
+	             ,
+                 C_SOLVE_PROBLEM=#{solveProblem}
+	             ,
+                 C_SOLVE_EXPLAIN=#{solveExplain}
+                 ,
+                 C_PLAN_TIME=#{planTime}
+                 ,
+                 C_PLAN_END_TIME=#{planEndTime}
+                 ,
+                 C_FILE_ID=#{fileId}
+                   ,
+                 C_END_SOLVE=#{endSolve}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- ɾ����� -->
+		<update id="delete" parameterType="solveEntity">
+			<![CDATA[
+				DELETE FROM TB_DEFECT_SOLVE WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- ���������ѯ -->
+		<select id="findByCondition" parameterType="map" resultMap="Solve_temp">
+			<![CDATA[ 
+				SELECT T.*,T1.C_NAME C_USER_NAME,T2.C_NAME  C_SOLVE_RESULT_NAME FROM TB_DEFECT_SOLVE T 
+				LEFT JOIN TP_SYS_USER T1 ON T.C_USER_ID=T1.C_ID
+				LEFT JOIN tp_sys_dictionary T2  ON   T2.C_CATEGORY_CODE='SOLVE_RESULT' AND   T.C_SOLVE_RESULT=T2.C_CODE 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.annualProdutionPlan">
+		<resultMap type="AnnualProdutionPlanEntity" id="AnnualProdutionPlan_temp">
+			<result property="id" column="C_ID" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="materialName" column="C_MATERIAL_NAME" />
+			<result property="materialType" column="C_MATERIAL_TYPE" />
+			<result property="charge" column="C_CHARGE" />
+			<result property="version" column="C_VERSION" />
+			<result property="count" column="C_COUNT" />
+			<result property="functionRequirement" column="C_FUNCTION_REQUIREMENT" />
+			<result property="userId" column="C_USER_ID" />
+			<result property="uploadTime" column="C_UPLOAD_TIME" />
+			<result property="status" column="C_STATUS" />
+			<result property="remark" column="C_REMARK" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="userName" column="C_USER_NAME" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="AnnualProdutionPlan_temp">
+			<![CDATA[
+				SELECT * FROM TB_ANNUAL_PRODUCTION_PLAN 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_ANNUAL_PRODUCTION_PLAN 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="AnnualProdutionPlan_temp">
+			<![CDATA[
+				SELECT * FROM TB_ANNUAL_PRODUCTION_PLAN  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="AnnualProdutionPlanEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_ANNUAL_PRODUCTION_PLAN 
+				(
+		          C_UNIT_ID
+		        , C_MATERIAL_NAME
+		        , C_MATERIAL_TYPE
+		        , C_CHARGE
+		        , C_VERSION
+		        , C_COUNT
+		        , C_FUNCTION_REQUIREMENT
+		        , C_USER_ID
+		        , C_UPLOAD_TIME
+		        , C_STATUS
+		        , C_REMARK
+				)
+				VALUES
+				(
+		         #{unitId}
+	           , #{materialName}
+	           , #{materialType}
+	           , #{charge}
+	           , #{version}
+	           , #{count}
+	           , #{functionRequirement}
+	           , #{userId}
+	           , #{uploadTime}
+	           , #{status}
+	           , #{remark}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="AnnualProdutionPlanEntity">
+			<![CDATA[
+				UPDATE TB_ANNUAL_PRODUCTION_PLAN SET
+                   C_UNIT_ID=#{unitId}
+	             , C_MATERIAL_NAME=#{materialName}
+	             , C_MATERIAL_TYPE=#{materialType}
+	             , C_CHARGE=#{charge}
+	             , C_VERSION=#{version}
+	             , C_COUNT=#{count}
+	             , C_FUNCTION_REQUIREMENT=#{functionRequirement}
+	             , C_USER_ID=#{userId}
+	             , C_UPLOAD_TIME=#{uploadTime}
+	             , C_STATUS=#{status}
+	             , C_REMARK=#{remark}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="AnnualProdutionPlanEntity">
+			<![CDATA[
+				DELETE FROM TB_ANNUAL_PRODUCTION_PLAN WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="AnnualProdutionPlan_temp">
+			<![CDATA[ 
+				SELECT t.*,a.C_NAME AS C_UNIT_NAME,b.C_NAME AS C_USER_NAME FROM TB_ANNUAL_PRODUCTION_PLAN t LEFT JOIN TP_SYS_UNIT a ON t.C_UNIT_ID = a.C_ID LEFT JOIN TP_SYS_USER b ON t.C_USER_ID = b.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

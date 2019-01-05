@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.overhaulWorkTaskHis">
+		<resultMap type="OverhaulWorkTaskEntity" id="OverhaulWorkTaskHis_temp">
+			<result property="id" column="C_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="updateDate" column="C_UPDATE_DATE" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="updateUserId" column="C_UPDATE_USER_ID" />
+			<result property="equipId" column="C_EQUIP_ID" />
+			<result property="equipName" column="C_EQUIP_NAME" />
+			<result property="workTask" column="C_WORK_TASK" />
+			<result property="finishStatus" column="C_FINISH_STATUS" />
+			<result property="overhaulArrangeId" column="C_OVERHAUL_ARRANGE_ID" />
+			<result property="status" column="C_STATUS" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="OverhaulWorkTaskHis_temp">
+			<![CDATA[
+				SELECT * FROM TB_OVERHAUL_WORK_TASK_HIS 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_OVERHAUL_WORK_TASK_HIS 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="OverhaulWorkTaskHis_temp">
+			<![CDATA[
+				SELECT * FROM TB_OVERHAUL_WORK_TASK_HIS  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="OverhaulWorkTaskEntity">
+<!-- 			<selectKey resultType="Long" order="AFTER" keyProperty="id"> -->
+<!-- 				SELECT LAST_INSERT_ID() AS id -->
+<!-- 			</selectKey> -->
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_OVERHAUL_WORK_TASK_HIS 
+				(
+				  C_ID
+		        , C_CREATE_DATE
+		        , C_CREATE_USER_ID
+		        , C_UPDATE_DATE
+		        , C_UPDATE_USER_ID
+		        , C_EQUIP_ID
+		        , C_EQUIP_NAME
+		        , C_WORK_TASK
+		        , C_FINISH_STATUS
+		        , C_OVERHAUL_ARRANGE_ID
+		        , C_STATUS
+				)
+				VALUES
+				(
+				 #{id}
+		       , #{createDate}
+	           , #{createUserId}
+	           , #{updateDate}
+	           , #{updateUserId}
+	           , #{equipId}
+	           , #{equipName}
+	           , #{workTask}
+	           , #{finishStatus}
+	           , #{overhaulArrangeId}
+	           , #{status}
+				)
+			]]>
+		</insert>
+		
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="OverhaulWorkTaskEntity">
+			<![CDATA[
+				UPDATE TB_OVERHAUL_WORK_TASK_HIS SET
+                   C_CREATE_DATE=#{createDate}
+	             , C_CREATE_USER_ID=#{createUserId}
+	             , C_UPDATE_DATE=#{updateDate}
+	             , C_UPDATE_USER_ID=#{updateUserId}
+	             , C_EQUIP_ID=#{equipId}
+	             , C_EQUIP_NAME=#{equipName}
+	             , C_WORK_TASK=#{workTask}
+	             , C_FINISH_STATUS=#{finishStatus}
+	             , C_OVERHAUL_ARRANGE_ID=#{overhaulArrangeId}
+	             , C_STATUS=#{status}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="OverhaulWorkTaskEntity">
+			<![CDATA[
+				DELETE FROM TB_OVERHAUL_WORK_TASK_HIS WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="OverhaulWorkTaskHis_temp">
+			<![CDATA[ 
+				SELECT O.* FROM TB_OVERHAUL_WORK_TASK_HIS O
+				LEFT JOIN TB_EQUIP_LEDGER E ON O.C_EQUIP_ID = E.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByEquip" parameterType="map" resultMap="OverhaulWorkTaskHis_temp">
+			<![CDATA[ 
+				SELECT O.* FROM TB_OVERHAUL_WORK_TASK_HIS O
+	            LEFT JOIN tb_overhaul_record F ON O.C_OVERHAUL_ARRANGE_ID = F.C_ID				
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

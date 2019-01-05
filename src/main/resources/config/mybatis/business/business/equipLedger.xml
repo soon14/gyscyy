@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.equipLedger">
+		<resultMap type="EquipLedgerEntity" id="EquipLedger_temp">
+			<result property="updateUserName" column="C_UPDATE_USER_NAME" />
+			<result property="status" column="C_STATUS" />
+			<result property="remark" column="C_REMARK" />
+			<result property="equipmentVersion" column="C_VERSION" />
+			<result property="manuFacturer" column="C_MANU_FACTURER" />
+			<result property="updateDate" column="C_UPDATE_DATE" />
+			<result property="equipType" column="C_EQUIP_TYPE" />
+			<result property="equipTypeName" column="C_TYPE_NAME" />
+			<result property="fileId" column="C_FILE_ID" />
+			<result property="id" column="C_ID" />
+			<result property="id" column="ID" />
+			<result property="name" column="NAME" />
+			<result property="name" column="C_NAME" />
+			<result property="updateUserId" column="C_UPDATE_USER_ID" />
+			<result property="updateUserName" column="C_UPDATE_USER_NAME" />
+			<result property="updateDate" column="C_UPDATE_DATE" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="createUserName" column="C_CREATE_USER_NAME" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="code" column="CODE" />
+			<result property="code" column="C_CODE" />
+			<result property="equipModelId" column="C_MODEL_ID" />
+			<result property="businessType" column="C_BUSINESS_TYPE" />
+			<result property="equipVoltageId" column="C_EQUIP_VOLTAGE_ID" />
+			<!-- tree -->
+			<result property="equipParentId" column="C_PARENT_ID" />
+			<result property="treeId" column="C_TREE_ID" />
+			<result property="name" column="C_NODE_NAME" /> 
+			<!-- sys_unit -->
+			<result property="unitId" column="UNIT_ID" /> 
+			<result property="equipManageType" column="C_EQUIP_MANAGE_TYPE" /> 
+			<result property="equipManageTypeName" column="C_EQUIPMANAGETYPENAME" /> 
+			
+		    <result property="unitName" column="unitName" /> 
+			
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="EquipLedger_temp">
+			<![CDATA[
+				SELECT * FROM TB_EQUIP_LEDGER 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_EQUIP_LEDGER 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="EquipLedger_temp">
+			<![CDATA[
+				SELECT L.*,T.C_PARENT_ID  FROM TB_EQUIP_LEDGER  L LEFT JOIN TB_EQUIP_TREE  T ON L.C_ID = T.C_EQUIP_ID  WHERE L.C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="EquipLedgerEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_EQUIP_LEDGER 
+				(
+					C_UPDATE_USER_NAME,C_STATUS,C_REMARK, C_VERSION,C_MANU_FACTURER,C_UPDATE_DATE,C_EQUIP_TYPE,C_FILE_ID,C_NAME,C_UPDATE_USER_ID,
+					C_CREATE_USER_NAME,C_CODE,C_CREATE_DATE,C_CREATE_USER_ID,C_MODEL_ID,C_BUSINESS_TYPE,C_EQUIP_VOLTAGE_ID,C_EQUIP_MANAGE_TYPE
+				)
+				VALUES
+				(
+		       		#{updateUserName},#{status},#{remark},#{equipmentVersion},#{manuFacturer},#{updateDate},#{equipType},#{fileId},#{name},#{updateUserId},
+		       		#{createUserName},#{code},#{createDate},#{createUserId},#{equipModelId},#{businessType},#{equipVoltageId},#{equipManageType}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="EquipLedgerEntity">
+			<![CDATA[
+				UPDATE TB_EQUIP_LEDGER SET
+               
+                 C_UPDATE_USER_NAME=#{updateUserName}
+                 ,
+                 C_STATUS=#{status}
+	             ,
+                 C_REMARK=#{remark}
+	             ,
+                 C_VERSION=#{equipmentVersion}
+	             ,
+                 C_MANU_FACTURER=#{manuFacturer}
+	             ,
+                 C_UPDATE_DATE=#{updateDate}
+	             ,
+                 C_EQUIP_TYPE=#{equipType}
+	             ,
+                 C_FILE_ID=#{fileId}
+	             ,
+                 C_NAME=#{name}
+	             ,
+	             C_UPDATE_USER_ID=#{updateUserId}
+	             ,
+                 C_CREATE_USER_NAME=#{createUserName}
+	             ,
+                 C_CODE=#{code}
+	             ,
+                 C_CREATE_DATE=#{createDate}
+	             ,
+                 C_CREATE_USER_ID=#{createUserId}
+                 ,
+                 C_MODEL_ID=#{equipModelId}
+                 ,
+                 C_BUSINESS_TYPE=#{businessType}
+                 ,
+                 C_EQUIP_VOLTAGE_ID=#{equipVoltageId}
+                 ,
+                 C_EQUIP_MANAGE_TYPE=#{equipManageType}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="EquipLedgerEntity">
+			<![CDATA[
+				DELETE FROM TB_EQUIP_LEDGER WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="EquipLedger_temp">
+			<![CDATA[ 
+				SELECT L.C_ID,L.C_CODE AS CODE,L.C_NAME AS NAME ,L.C_VERSION,L.C_MANU_FACTURER,L.C_EQUIP_TYPE,
+				L.C_CREATE_USER_ID,L.C_CREATE_USER_NAME,L.C_CREATE_DATE,L.C_UPDATE_USER_ID,L.C_UPDATE_USER_NAME,L.C_UPDATE_DATE,
+				L.C_STATUS,L.C_MODEL_ID,L.C_REMARK,L.C_EQUIP_VOLTAGE_ID,L.C_EQUIP_MANAGE_TYPE,U.C_ID AS UNIT_ID,TR.C_ID AS C_TREE_ID,TR.C_PARENT_ID AS C_PARENT_ID,
+				dic.C_NAME AS C_EQUIPMANAGETYPENAME,U.C_NAME as unitName  
+				FROM TB_EQUIP_LEDGER L 
+				LEFT JOIN TB_EQUIP_TREE TR ON L.C_ID = TR.C_EQUIP_ID
+				LEFT JOIN TP_SYS_UNIT U ON U.C_ID = TR.C_UNIT_ID
+				LEFT JOIN tp_sys_dictionary dic ON L.C_EQUIP_MANAGE_TYPE = dic.C_CODE AND C_CATEGORY_CODE = 'EQUIPMANAGETYPE'
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<!-- 获取节点设备信息 -->
+		<select id="findtTreeByCondition" parameterType="map" resultMap="EquipLedger_temp">
+			<![CDATA[ 
+				SELECT T.C_ID,T.C_PARENT_ID,
+				 T.C_NAME ,T1.C_CODE FROM TB_EQUIP_TREE T 
+				LEFT JOIN  TB_EQUIP_LEDGER T1 ON T.C_EQUIP_ID=T1.C_ID 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<!-- 递归获取节点相关设备 -->
+		<select id="findByConditionFromTree" parameterType="map" resultMap="EquipLedger_temp">
+			<![CDATA[ 
+				SELECT L.C_ID,L.C_CODE AS CODE,L.C_NAME AS NAME ,L.C_VERSION,L.C_MANU_FACTURER,L.C_MANU_FACTURER,L.C_EQUIP_TYPE,
+				L.C_CREATE_USER_ID,L.C_CREATE_USER_NAME,L.C_CREATE_DATE,L.C_UPDATE_USER_ID,L.C_UPDATE_USER_NAME,L.C_UPDATE_DATE,
+				L.C_STATUS,L.C_MODEL_ID,L.C_REMARK, FROM TB_EQUIP_TREE T LEFT JOIN  TB_EQUIP_LEDGER L ON T.C_EQUIP_ID=L.C_ID 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<!-- 获取设备信息运行用  -->
+		<select id="findLedgerByCondition" parameterType="map" resultMap="EquipLedger_temp">
+			<![CDATA[ 
+				SELECT T.C_ID,T.C_EQUIP_TYPE,T1.C_UNIT_ID as CODE FROM TB_EQUIP_LEDGER T 
+				LEFT JOIN  TB_EQUIP_TREE T1 ON T1.C_EQUIP_ID=T.C_ID 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

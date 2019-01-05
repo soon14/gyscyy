@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.technical.technicalWork">
+		<resultMap type="TechnicalWorkEntity" id="TechnicalWork_temp">
+			<result property="id" column="C_ID" />
+			<result property="orderSqe" column="C_ORDER_SQE" />
+			<result property="technicalId" column="C_TECHNICAL_ID" />
+			<result property="workType" column="C_WORK_TYPE" />
+			<result property="content" column="C_CONTENT" />
+			<result property="picId" column="C_PIC_ID" />
+			<result property="picName" column="C_PIC_NAME" />
+			<result property="wcstatus" column="C_WCSTATUS" />
+			<result property="status" column="C_STATUS" />
+			<result property="danger" column="C_DANGER" />
+			<result property="uuidCode" column="C_UUID_CODE" />
+			<result property="jdzyId" column="C_JXZG_ID" />
+			<result property="time" column="C_TIME" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="TechnicalWork_temp">
+			<![CDATA[
+				SELECT * FROM TB_TECHNICAL_WORK 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_TECHNICAL_WORK 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="TechnicalWork_temp">
+			<![CDATA[
+				SELECT * FROM TB_TECHNICAL_WORK  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="TechnicalWorkEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_TECHNICAL_WORK 
+				(
+		          C_ORDER_SQE
+		        , C_TECHNICAL_ID
+		        , C_WORK_TYPE
+		        , C_CONTENT
+		        , C_PIC_ID
+		        , C_PIC_NAME
+		        , C_WCSTATUS
+		        , C_STATUS
+		        , C_DANGER
+		        , C_UUID_CODE
+		        , C_JXZG_ID
+		        , C_TIME
+				)
+				VALUES
+				(
+		         #{orderSqe}
+	           , #{technicalId}
+	           , #{workType}
+	           , #{content}
+	           , #{picId}
+	           , #{picName}
+	           , #{wcstatus}
+	           , #{status}
+	           , #{danger}
+	           , #{uuidCode}
+	           , #{jdzyId}
+	           , #{time}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="TechnicalWorkEntity">
+			<![CDATA[
+				UPDATE TB_TECHNICAL_WORK SET
+                   C_ORDER_SQE=#{orderSqe}
+	             , C_TECHNICAL_ID=#{technicalId}
+	             , C_WORK_TYPE=#{workType}
+	             , C_CONTENT=#{content}
+	             , C_PIC_ID=#{picId}
+	             , C_PIC_NAME=#{picName}
+	             , C_WCSTATUS=#{wcstatus}
+	             , C_STATUS=#{status}
+	             , C_DANGER=#{danger}
+	             , C_UUID_CODE=#{uuidCode}
+	             , C_JXZG_ID=#{jdzyId}
+	             , C_TIME=#{time}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="TechnicalWorkEntity">
+			<![CDATA[
+				DELETE FROM TB_TECHNICAL_WORK WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="TechnicalWork_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_TECHNICAL_WORK 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<update id="updateByUuid" parameterType="TechnicalWorkEntity">
+			<![CDATA[ 
+				update TB_TECHNICAL_WORK set
+				
+				C_TECHNICAL_ID=#{technicalId}
+				
+				WHERE C_UUID_CODE=#{uuidCode}
+			]]>
+		</update>
+		<!-- 删除数据 -->
+		<update id="deleteByUuid" parameterType="TechnicalWorkEntity">
+			<![CDATA[
+				DELETE FROM TB_TECHNICAL_WORK WHERE C_UUID_CODE=#{uuidCode}
+			]]>
+		</update>
+    </mapper>

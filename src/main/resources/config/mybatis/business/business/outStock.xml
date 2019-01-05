@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.cargo.outStock">
+		<resultMap type="OutstockEntity" id="Outstock_temp">
+			<result property="id" column="C_ID" />
+			<result property="outstockNum" column="C_OUTSTOCK_NUM" />
+			<result property="outstockTime" column="C_OUTSTOCK_TIME" />
+			<result property="outstockType" column="C_OUTSTOCK_TYPE" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="unitName" column="C_UNIT_NAME" />			
+			<result property="applicant" column="C_APPLICANT" />			
+			<result property="approveStatus" column="C_APPROVE_STATUS" />
+			<result property="attachment" column="C_ATTACHMENT" />
+			<result property="remark" column="C_REMARK" />
+			<result property="applicantName" column="C_APPLICANT_NAME" />
+			<result property="wareHouseId" column="C_WARE_HOUSE_ID" />
+			<result property="wareHouseName" column="C_WARE_HOUSE_NAME" />
+			<result property="storeKeeper" column="C_STORE_KEEPER" />
+			<result property="approveUser" column="C_APPROVE_USER" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="Outstock_temp">
+			<![CDATA[
+				SELECT * FROM TB_SPARE_OUTSTOCK 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_SPARE_OUTSTOCK 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="Outstock_temp">
+			<![CDATA[
+				SELECT a.*, b.C_NAME AS C_UNIT_NAME, c.C_WARE_HOUSE_NAME AS C_WARE_HOUSE_NAME FROM TB_SPARE_OUTSTOCK a 
+				LEFT JOIN TP_SYS_UNIT b ON a.C_UNIT_ID = b.C_ID
+				LEFT JOIN TB_WARE_HOUSE c on a.C_WARE_HOUSE_ID = c.C_ID 
+				WHERE a.C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="outstockEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_SPARE_OUTSTOCK 
+				(
+	             C_OUTSTOCK_NUM
+		        , C_OUTSTOCK_TIME
+		        , C_OUTSTOCK_TYPE
+		        , C_UNIT_ID
+		        , C_APPLICANT
+		        , C_APPROVE_STATUS
+		        , C_ATTACHMENT
+		        , C_REMARK
+		        , C_APPLICANT_NAME
+		        , C_WARE_HOUSE_ID
+		        , C_STORE_KEEPER
+		        , C_APPROVE_USER
+				)
+				VALUES
+				(
+                #{outstockNum}
+		        , #{outstockTime}
+		        , #{outstockType}
+		        , #{unitId}
+		        , #{applicant}
+		        , #{approveStatus}
+		        , #{attachment}
+		        , #{remark}
+		        , #{applicantName}
+		        , #{wareHouseId}
+		        , #{storeKeeper}
+		        , #{approveUser}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="outstockEntity">
+			<![CDATA[
+				UPDATE TB_SPARE_OUTSTOCK SET
+                  C_OUTSTOCK_NUM=#{outstockNum}
+		        , C_OUTSTOCK_TIME=#{outstockTime}
+		        , C_OUTSTOCK_TYPE=#{outstockType}
+		        , C_UNIT_ID=#{unitId}
+		        , C_APPLICANT=#{applicant}
+		        , C_APPROVE_STATUS=#{approveStatus}
+		        , C_ATTACHMENT=#{attachment}
+		        , C_REMARK=#{remark}
+		        , C_APPLICANT_NAME=#{applicantName}
+		        , C_WARE_HOUSE_ID=#{wareHouseId}
+		        , C_STORE_KEEPER=#{storeKeeper}
+		        , C_APPROVE_USER=#{approveUser}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="outstockEntity">
+			<![CDATA[
+				DELETE FROM TB_SPARE_OUTSTOCK WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="Outstock_temp">
+			<![CDATA[ 
+				SELECT a.*, b.C_NAME AS C_UNIT_NAME, c.C_WARE_HOUSE_NAME AS C_WARE_HOUSE_NAME FROM TB_SPARE_OUTSTOCK a 
+				LEFT JOIN TP_SYS_UNIT b ON a.C_UNIT_ID = b.C_ID
+				LEFT JOIN TB_WARE_HOUSE c on a.C_WARE_HOUSE_ID = c.C_ID 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+		<!-- 查找最大id的数据的物资编码 -->
+		<select id="findMaxCode" resultMap="Outstock_temp">
+			select MAX(C_OUTSTOCK_NUM) C_OUTSTOCK_NUM from tb_spare_outstock
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+		<!-- 查找所有出库物资明细 -->
+		<select id="findDetail"  resultMap="Outstock_temp">
+			<!-- select ins.*,category.C_CODE,category.C_NAME,category.C_MODEL,category.C_UNIT, category.C_MANUFACTURER from (
+			select outstock.C_ID,outstock.C_OUTSTOCK_NUM,outstock.C_OUTSTOCK_TIME,outstock.C_OUTSTOCK_TYPE, outstock.C_STATION_NAME,outstock.C_APPLICANT,
+			outstock.C_APPROVE_STATUS,outstock.C_ATTACHMENT,outstock.C_REMARK,detail.C_ID DETAILID,detail.C_COUNT,detail.C_MATERIAL_ID,
+			detail.C_GOODS_AREA_ID C_GOODS_AREA_ID_NAME,detail.C_GOODS_ALLOCATION_ID C_GOODS_ALLOCATION_ID_NAME
+			from tb_spare_outstock outstock LEFT JOIN tb_spare_outstock_detail detail on outstock.C_ID = detail.C_OUTSTOCK_ID) ins
+			LEFT JOIN tb_spare_material_category category on  category.C_ID = ins.C_MATERIAL_ID -->
+			select ins.*,category.C_CODE,category.C_NAME,category.C_MODEL,category.C_UNIT, category.C_MANUFACTURER,a.C_NAME AS C_GOODS_AREA_ID_NAME, p.C_NAME AS C_GOODS_ALLOCATION_ID_NAME from (
+			select outstock.C_ID,outstock.C_OUTSTOCK_NUM,outstock.C_OUTSTOCK_TIME,outstock.C_OUTSTOCK_TYPE, outstock.C_STATION_NAME,outstock.C_APPLICANT,
+			outstock.C_APPROVE_STATUS,outstock.C_ATTACHMENT,outstock.C_REMARK,detail.C_ID DETAILID,detail.C_COUNT,detail.C_MATERIAL_ID,
+			detail.C_GOODS_AREA_ID,detail.C_GOODS_ALLOCATION_ID
+			from tb_spare_outstock outstock LEFT JOIN tb_spare_outstock_detail detail on outstock.C_ID = detail.C_OUTSTOCK_ID) ins
+			LEFT JOIN tb_spare_material_category category on  category.C_ID = ins.C_MATERIAL_ID
+			LEFT JOIN tb_ware_house_area a ON ins.C_GOODS_AREA_ID=a.C_ID
+			LEFT JOIN tb_ware_house_area_position p ON ins.C_GOODS_ALLOCATION_ID=p.C_ID
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

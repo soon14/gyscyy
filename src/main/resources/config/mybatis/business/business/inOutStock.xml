@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.cargo.inOutStock">
+		<resultMap type="InOutStockEntity" id="InOutStock_temp">
+			<result property="id" column="C_ID" />
+			<result property="code" column="C_CODE" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="unitName" column="C_UNIT_NAME" />			
+			<result property="time" column="C_TIME" />
+			<result property="type" column="C_TYPE" />
+			<result property="materialId" column="C_MATERIAL_ID" />
+			<result property="count" column="C_COUNT" />
+			<result property="materialCode" column="MCODE" />
+			<result property="materialName" column="C_NAME" />
+			<result property="materialModel" column="C_MODEL" />
+			<result property="materialUnit" column="C_UNIT" />
+			<result property="materialManufacturer" column="C_MANUFACTURER" />
+			<result property="materialManagement" column="C_MANAGEMENT" />
+			<result property="wareHouseId" column="C_WARE_HOUSE_ID" />
+			<result property="wareHouseName" column="C_WARE_HOUSE_NAME" />
+			<result property="materialTypeName" column="C_MATERIAL_TYPE_NAME" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="InOutStock_temp">
+			<![CDATA[
+				SELECT * FROM TB_SPARE_INOUT_STOCK 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_SPARE_INOUT_STOCK
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="InOutStock_temp">
+			<![CDATA[
+				SELECT * FROM TB_SPARE_INOUT_STOCK  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="inOutStockEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_SPARE_INOUT_STOCK 
+				(
+	              C_CODE
+		        , C_UNIT_ID
+		        , C_TIME
+		        , C_TYPE
+		        , C_MATERIAL_ID
+		        , C_COUNT
+		        , C_WARE_HOUSE_ID
+				)
+				VALUES
+				(
+		         #{code}
+	           , #{unitId}
+	           , #{time}
+	           , #{type}
+	           , #{materialId}
+	           , #{count}
+	           , #{wareHouseId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="inOutStockEntity">
+			<![CDATA[
+				UPDATE TB_SPARE_INOUT_STOCK SET
+		           C_CODE=#{code}
+	             , C_UNIT_ID=#{unitId}
+	             , C_TIME=#{time}
+	             , C_TYPE=#{type}
+	             , C_MATERIAL_ID=#{materialId}
+	             , C_COUNT=#{count}
+	             , C_WARE_HOUSE_ID=#{wareHouseId}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="inOutStockEntity">
+			<![CDATA[
+				DELETE FROM TB_SPARE_INOUT_STOCK WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="InOutStock_temp">
+			<![CDATA[ 
+				SELECT stock.C_ID,stock.C_CODE,stock.C_UNIT_ID, u.C_NAME AS C_UNIT_NAME, stock.C_TIME,stock.C_TYPE,stock.C_MATERIAL_ID,stock.C_COUNT,
+				material.C_CODE MCODE,material.C_NAME,material.C_MODEL,material.C_MANUFACTURER,material.C_UNIT,material.C_MANAGEMENT,
+				stock.C_WARE_HOUSE_ID,h.C_WARE_HOUSE_NAME C_WARE_HOUSE_NAME,s.C_NAME AS C_MATERIAL_TYPE_NAME
+				FROM TB_SPARE_INOUT_STOCK  stock 
+				LEFT JOIN tb_spare_material_category material on stock.C_MATERIAL_ID = material.C_ID
+				LEFT JOIN TP_SYS_UNIT u ON u.C_ID = stock.C_UNIT_ID
+				LEFT JOIN tb_ware_house h ON stock.C_WARE_HOUSE_ID=h.C_ID
+				LEFT JOIN tp_sys_dictionary s ON material.C_MATERIAL_TYPE = s.C_CODE
+				AND s.C_CATEGORY_CODE = 'MATERIAL_CATEGORY'
+
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+		<delete id="deleteByStockCode" parameterType="inOutStockEntity">
+			DELETE FROM TB_SPARE_INOUT_STOCK WHERE C_CODE=#{code}
+		</delete>
+    </mapper>

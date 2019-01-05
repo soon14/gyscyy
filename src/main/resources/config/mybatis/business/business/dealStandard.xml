@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.dealStandard">
+		<resultMap type="DealStandardEntity" id="DealStandard_temp">
+			<result property="id" column="C_ID" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="name" column="C_NAME" />
+			<result property="departmentId" column="C_DEPARTMENT_ID" />
+			<result property="replyTime" column="C_REPLY_TIME" />
+			<result property="remark" column="C_REMARK" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="departmentName" column="C_DEPARTMENT_NAME" />
+			<result property="status" column="C_STATUS" />
+			<result property="file" column="C_FILE" />
+			<result property="createId" column="C_CREATE_ID" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="DealStandard_temp">
+			<![CDATA[
+				SELECT * FROM TB_DEAL_STANDARD 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_DEAL_STANDARD 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="DealStandard_temp">
+			<![CDATA[
+				SELECT 
+					st.*,
+					un.C_NAME AS C_UNIT_NAME,
+					ut.C_NAME AS C_DEPARTMENT_NAME
+				FROM 
+					TB_DEAL_STANDARD st
+				LEFT JOIN tp_sys_unit un ON un.C_ID = st.C_UNIT_ID
+				LEFT JOIN tp_sys_unit ut ON ut.C_ID = st.C_DEPARTMENT_ID 
+				WHERE st.C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="DealStandardEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_DEAL_STANDARD 
+				(
+		          C_UNIT_ID
+		        , C_NAME
+		        , C_DEPARTMENT_ID
+		        , C_REPLY_TIME
+		        , C_REMARK
+		        , C_STATUS
+		        , C_FILE
+		        , C_CREATE_ID
+				)
+				VALUES
+				(
+		         #{unitId}
+	           , #{name}
+	           , #{departmentId}
+	           , #{replyTime}
+	           , #{remark}
+	           , #{status}
+	           , #{file}
+	           , #{createId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="DealStandardEntity">
+			<![CDATA[
+				UPDATE TB_DEAL_STANDARD SET
+                   C_UNIT_ID=#{unitId}
+	             , C_NAME=#{name}
+	             , C_DEPARTMENT_ID=#{departmentId}
+	             , C_REPLY_TIME=#{replyTime}
+	             , C_REMARK=#{remark}
+	             , C_STATUS=#{status}
+	             , C_FILE=#{file}
+	             , C_CREATE_ID=#{createId}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="DealStandardEntity">
+			<![CDATA[
+				DELETE FROM TB_DEAL_STANDARD WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="DealStandard_temp">
+			<![CDATA[ 
+				SELECT 
+					st.*,
+					un.C_NAME AS C_UNIT_NAME,
+					ut.C_NAME AS C_DEPARTMENT_NAME
+				FROM 
+					TB_DEAL_STANDARD st
+				LEFT JOIN tp_sys_unit un ON un.C_ID = st.C_UNIT_ID
+				LEFT JOIN tp_sys_unit ut ON ut.C_ID = st.C_DEPARTMENT_ID  
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

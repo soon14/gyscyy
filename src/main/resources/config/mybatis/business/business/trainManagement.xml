@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.trainManagement">
+		<resultMap type="trainManagementEntity" id="TrainManagement_temp">
+			<result property="id" column="C_ID" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="titleName" column="C_TITLE_NAME" />
+			<result property="classify" column="C_CLASSIFY" />
+			<result property="range" column="C_RANGE" />
+			<result property="time" column="C_TIME" />
+			<result property="count" column="C_COUNT" />
+			<result property="duration" column="C_DURATION" />
+			<result property="remark" column="C_REMARK" />
+			<result property="message" column="C_MESSAGE" />
+			<result property="status" column="C_STATUS" />
+			<result property="people" column="C_PEOPLE" />
+			<result property="createPeopleId" column="C_CREATE_PEOPLE_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="trainPersion" column="C_TRAIN_PERSION" />
+			<result property="reviewerID" column="C_REVIEW_PERSION_ID" />
+			<result property="reviewerName" column="C_REVIEW_PERSION_NAME" />
+			<result property="reviewTime" column="C_REVIEW_TIME" />
+			<result property="reviewResult" column="C_REVIEW_RESULT" />
+			<result property="dispatchTitle" column="C_DISPATCH_TITLE" />
+			<result property="dispatchNumber" column="C_DISPATCH_NUMBER" />
+			<result property="dispatchId" column="C_DISPATCH_ID" />
+			<result property="trainLocation" column="C_TRAIN_LOCATION" />
+			<result property="assessmentMethod" column="C_ASSESSMENT_METHOD" />
+			<result property="trainContent" column="C_TRAIN_CONTENT" />
+		</resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="TrainManagement_temp">
+			<![CDATA[
+				SELECT * FROM tb_train_management 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM tb_train_management 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="TrainManagement_temp">
+			<![CDATA[
+				SELECT * FROM tb_train_management  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="trainManagementEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<![CDATA[
+				INSERT INTO tb_train_management 
+				(
+					C_UNIT_ID,
+					C_UNIT_NAME, 
+					C_TITLE_NAME, 
+					C_CLASSIFY,
+					C_RANGE,
+					C_TIME,
+					C_COUNT,
+					C_DURATION, 
+					C_REMARK, 
+					C_STATUS, 
+					C_MESSAGE, 
+					C_PEOPLE, 
+					C_CREATE_PEOPLE_ID, 
+					C_CREATE_DATE,
+					C_TRAIN_PERSION,
+					C_DISPATCH_TITLE,
+					C_DISPATCH_NUMBER,
+					C_DISPATCH_ID,
+					C_TRAIN_LOCATION,
+					C_ASSESSMENT_METHOD,
+					C_TRAIN_CONTENT
+				)
+				VALUES
+				(
+					#{unitId},
+					#{unitName},
+					#{titleName}, 
+					#{classify}, 
+					#{range}, 
+					#{time}, 
+					#{count}, 
+					#{duration}, 
+					#{remark}, 
+					#{status}, 
+					#{message}, 
+					#{people}, 
+					#{createPeopleId}, 
+					#{createDate},
+					#{trainPersion},
+					#{dispatchTitle},
+					#{dispatchNumber},
+					#{dispatchId},
+					#{trainLocation},
+					#{assessmentMethod},
+					#{trainContent}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="trainManagementEntity">
+			<![CDATA[
+				UPDATE tb_train_management SET
+						C_UNIT_NAME=#{unitName}, 
+						C_UNIT_ID=#{unitId}, 
+						C_TITLE_NAME=#{titleName}, 
+						C_CLASSIFY=#{classify}, 
+						C_RANGE=#{range}, 
+						C_TIME=#{time}, 
+						C_COUNT=#{count}, 
+						C_DURATION=#{duration}, 
+						C_REMARK=#{remark}, 
+						C_STATUS=#{status}, 
+						C_MESSAGE=#{message}, 
+						C_PEOPLE=#{people}, 
+						C_CREATE_PEOPLE_ID=#{createPeopleId}, 
+						C_CREATE_DATE=#{createDate}, 
+						C_TRAIN_PERSION=#{trainPersion},
+						C_REVIEW_PERSION_ID=#{reviewerID}, 
+						C_REVIEW_PERSION_NAME=#{reviewerName}, 
+						C_REVIEW_TIME=#{reviewTime}, 
+						C_REVIEW_RESULT=#{reviewResult},
+						C_DISPATCH_TITLE=#{dispatchTitle}, 
+						C_DISPATCH_NUMBER=#{dispatchNumber}, 
+						C_DISPATCH_ID=#{dispatchId},
+						C_TRAIN_LOCATION=#{trainLocation},
+						C_ASSESSMENT_METHOD=#{assessmentMethod},
+						C_TRAIN_CONTENT=#{trainContent}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="trainManagementEntity">
+			<![CDATA[
+				DELETE FROM tb_train_management WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="TrainManagement_temp">
+			<![CDATA[ 
+				SELECT p.* FROM tb_train_management p
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

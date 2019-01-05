@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.mobile.userMobile">
+		<resultMap type="UserMobileEntity" id="UserMobile_temp">
+			<result property="id" column="C_ID" />
+			<result property="loginName" column="C_LOGIN_NAME" />
+				<result property="mobileFlag" column="C_MOBILE_FLAG" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="UserMobile_temp">
+			<![CDATA[
+			SELECT * FROM  TP_SYS_USER_MOBILE
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) from TP_SYS_USER_MOBILE
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="UserMobile_temp">
+			<![CDATA[
+			SELECT * FROM  TP_SYS_USER_MOBILE  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="UserMobileEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TP_SYS_USER_MOBILE
+				(
+		          C_LOGIN_NAME,C_MOBILE_FLAG
+				)
+				VALUES
+				(
+		         #{loginName},#{mobileFlag}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="UserMobileEntity">
+			<![CDATA[
+				UPDATE TP_SYS_USER_MOBILE SET
+                C_LOGIN_NAME=#{equipmentCode},
+                C_MOBILE_FLAG=#{equipmentCode}
+                where C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="UserMobileEntity">
+			<![CDATA[
+				DELETE TP_SYS_USER_MOBILE   where C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="UserMobile_temp">
+			<![CDATA[ 
+			SELECT * from TP_SYS_USER_MOBILE
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

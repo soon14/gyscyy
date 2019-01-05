@@ -1,0 +1,120 @@
+/**登录样式表**/
+html{
+	height:100%;
+}
+.login-layout {
+	background-size:100%;
+    justify-content: center;
+    align-items: center;
+    position:relative;
+    display: flex;
+    align-items: center;
+}
+#loginBox{
+    border-radius: 4px;
+	padding: 20px;
+	text-align: center;
+	width: 400px;
+	background: #fff;
+	margin: 0 auto;
+	height: 320px;
+}
+#loginBox .oneInput{
+	margin: 0 auto;
+    height: 42px;
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 3px !important;
+    width: 90%;
+    font-size: 16px;
+    text-indent: 40px;
+}
+#loginBox #passWordOne{
+	background-image: url(../../../images/lock.png);
+	background-repeat: no-repeat;
+    background-position: 12px 9px;
+}
+#loginBox #userNameOne{
+	background-image: url(../../../images/user.png);
+	background-repeat: no-repeat;
+    background-position: 12px 11px;
+}
+#loginBox .title{
+    font-size: 24px;
+    color: #999;
+}
+#loginBox .title .titleRight{
+	font-size: 20px;
+	margin-left: 20px;
+}
+#loginBox #btnLogin{
+	font-size:16px;
+	font-family:'微软雅黑';
+}
+#loginBox .ckeckBox{
+	height:0;
+	text-align: left;
+    padding-left: 15px;
+    margin: 16px 0;
+    color: #999;
+    font-size: 14px;
+}
+#loginBox .ckeckBox .input_check {
+	position: absolute;
+	width: 16px;height:16px;
+	visibility: hidden;
+	background: #E92333;
+}
+#loginBox .ckeckBox span{
+	color: rgba(175,175,175,.9);
+}
+#loginBox .ckeckBox span{position: relative;}
+#loginBox .ckeckBox .input_check+label {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    background: url(../../../images/check.png) no-repeat;
+    background-position: -30px;
+    border: 1px solid #ddd;
+    position: relative;
+    top: 3px;
+    margin-right: 10px;
+}
+#loginBox .ckeckBox .remberPassword{
+	position: relative;
+    top: -10px;
+}
+.headDiv{
+    padding-left: 50px;
+    height: 84px;
+    line-height: 110px;
+    width: 100%;
+    background: rgba(0,0,0,.2);
+    position: absolute;
+    top: 20px;
+}
+.login-logo{
+    background: rgba(0, 0, 0, 0) url("../../../images/top_center_logo.png") no-repeat scroll 0 0 / 100% auto;
+  	display:inline-block;
+    height: 40px;
+    width: 40px;
+}
+
+.login-text{  
+	display:inline-block;
+	 top: -12px;
+    margin-left: 10px;
+	font-size: 26px;
+	position: relative;
+	color:#fff;
+	font-family: '黑体';
+	font-weight: 400;
+}
+.footerDiv{
+	height:20px;
+	width:100%;
+	position:absolute;
+	bottom:0;
+	 background: rgba(0,0,0,.2);
+}

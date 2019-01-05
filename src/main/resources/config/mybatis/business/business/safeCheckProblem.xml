@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.safeCheckProblem">
+		<resultMap type="SafeCheckProblemEntity" id="SafeCheckProblem_temp">
+			<result property="id" column="C_ID" />
+			<result property="discrible" column="C_PROBLEM_DESCRIBLE" />
+			<result property="discoveryTime" column="C_DISCOVERY_TIME" />
+			<result property="mode" column="C_CHECK_MODE" />
+			<result property="checkPersionId" column="C_CHECK_PERSION_ID" />
+			<result property="correctiveMeasures" column="C_CORRECTIVE_MEASURES" />
+			<result property="planTime" column="C_PLAN_TIME" />
+			<result property="correctivePersionId" column="C_CORRECTIVE_PERSION_ID" />
+			<result property="isCorrective" column="C_IS_CORRECTIVE" />
+			<result property="completionTime" column="C_COMPLETION_TIME" />
+			<result property="remark" column="C_REMARK" />
+			<result property="createTime" column="C_CREATE_TIME" />
+			<result property="updateTime" column="C_UPDATE_TIME" />
+			<result property="unitId" column="C_UNIT_ID" />
+		</resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="SafeCheckProblem_temp">
+			<![CDATA[
+				SELECT * FROM TB_SAFE_CHECK_PROBLEM 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_SAFE_CHECK_PROBLEM 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="SafeCheckProblem_temp">
+			<![CDATA[
+				SELECT * FROM TB_SAFE_CHECK_PROBLEM  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="SafeCheckProblemEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+			  select SEQ_TP_APP.nextval from dual  
+			</selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_SAFE_CHECK_PROBLEM 
+				(
+				   C_PROBLEM_DESCRIBLE
+				 , C_DISCOVERY_TIME
+				 , C_CHECK_MODE
+				 , C_CHECK_PERSION_ID
+				 , C_CORRECTIVE_MEASURES
+				 , C_PLAN_TIME
+				 , C_CORRECTIVE_PERSION_ID
+				 , C_IS_CORRECTIVE
+				 , C_COMPLETION_TIME
+				 , C_REMARK
+				 , C_CREATE_TIME
+				 , C_UPDATE_TIME
+				 , C_UNIT_ID
+				)
+				VALUES
+				(
+				  #{discrible}
+				, #{discoveryTime}
+				, #{mode}
+				, #{checkPersionId}
+				, #{correctiveMeasures}
+				, #{planTime}
+				, #{correctivePersionId}
+				, #{isCorrective}
+				, #{completionTime}
+				, #{remark}
+				, #{createTime}
+				, #{updateTime}
+				, #{unitId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="SafeCheckProblemEntity">
+			<![CDATA[
+				UPDATE TB_SAFE_CHECK_PROBLEM SET
+					 C_PROBLEM_DESCRIBLE=#{discrible}
+				  , C_DISCOVERY_TIME=#{discoveryTime}
+				  , C_CHECK_MODE=#{mode}
+				  , C_CHECK_PERSION_ID=#{checkPersionId}
+				  , C_CORRECTIVE_MEASURES=#{correctiveMeasures}
+				  , C_PLAN_TIME=#{planTime}
+				  , C_CORRECTIVE_PERSION_ID=#{correctivePersionId}
+				  , C_IS_CORRECTIVE=#{isCorrective}
+				  , C_COMPLETION_TIME=#{completionTime}
+				  , C_REMARK=#{remark}
+				  , C_CREATE_TIME=#{createTime}
+				  , C_UPDATE_TIME=#{updateTime}
+				  , C_UNIT_ID=#{unitId}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="SafeCheckProblemEntity">
+			<![CDATA[
+				DELETE FROM TB_SAFE_CHECK_PROBLEM WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="SafeCheckProblem_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_SAFE_CHECK_PROBLEM 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+	</mapper>

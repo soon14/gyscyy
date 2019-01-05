@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.OAManagement.jointlySign.DispatchJointlySign">
+		<resultMap type="DispatchJointlySign" id="DispatchJointlySign_temp">
+			<result property="id" column="C_ID" /> 
+			<result property="dispatchId" column="C_DISPATCH_ID" /> 
+			<result property="signResult" column="C_SIGN_RESULT" /> 
+			<result property="signComment" column="C_SIGN_COMMENT" /> 
+			<result property="signPersionId" column="C_SIGN_PERSION_ID" /> 
+			<result property="signPersionName" column="C_SIGN_PERSION_NAME" /> 
+			<result property="signTime" column="C_SIGN_TIME" /> 
+		</resultMap>
+		<select id="findAll" resultMap="DispatchJointlySign_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_dispatch_jointly_sign 
+			]]>
+		</select>
+		
+		<select id="total" resultType="int">
+			<![CDATA[ 
+				SELECT count(1) FROM tb_dispatch_jointly_sign 
+			]]>
+		</select>
+		
+		<select id="findById" parameterType="long" resultMap="DispatchJointlySign_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_dispatch_jointly_sign WHERE C_ID=#{id}
+			]]>
+		</select> 
+		 
+		
+		<!-- ORACLE 数据库需要增加SEQUENCE配置 -->
+		<insert id="insert" parameterType="DispatchJointlySign">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<![CDATA[ 
+				insert into tb_dispatch_jointly_sign 
+				(C_ID,C_DISPATCH_ID,C_SIGN_RESULT,C_SIGN_COMMENT,C_SIGN_PERSION_ID,C_SIGN_PERSION_NAME,C_SIGN_TIME)
+				values
+				(#{id},#{dispatchId},#{signResult},#{signComment},#{signPersionId},#{signPersionName},#{signTime})
+			]]>
+		</insert>
+		
+		
+		<update id="update" parameterType="DispatchJointlySign">
+			<![CDATA[ 
+				update tb_dispatch_jointly_sign set
+				C_DISPATCH_ID=#{dispatchId},
+				C_SIGN_RESULT=#{signResult},
+				C_SIGN_COMMENT=#{signComment},
+				C_SIGN_PERSION_ID=#{signPersionId},
+				C_SIGN_PERSION_NAME=#{signPersionName},
+				C_SIGN_TIME=#{signTime}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 不完全修改 -->
+		<update id="updateDynamic" parameterType="DispatchJointlySign">
+			update tb_dispatch_jointly_sign
+				<set>
+				<if test="C_DISPATCH_ID !=null">
+				C_DISPATCH_ID=#{dispatchId},
+				</if>
+				<if test="C_SIGN_RESULT !=null">
+				C_SIGN_RESULT=#{signResult},
+				</if>
+				<if test="C_SIGN_COMMENT !=null">
+				C_SIGN_COMMENT=#{signComment},
+				</if>
+				<if test="C_SIGN_PERSION_ID !=null">
+				C_SIGN_PERSION_ID=#{signPersionId},
+				</if>
+				<if test="C_SIGN_PERSION_NAME !=null">
+				C_SIGN_PERSION_NAME=#{signPersionName},
+				</if>
+				<if test="C_SIGN_TIME !=null">
+				C_SIGN_TIME=#{signTime}
+				</if>
+				</set>
+				WHERE C_ID=#{id}
+		</update>
+		
+		<update id="delete" parameterType="DispatchJointlySign">
+			<![CDATA[ 
+				DELETE FROM tb_dispatch_jointly_sign WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<select id="findByCondition" parameterType="map" resultMap="DispatchJointlySign_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_dispatch_jointly_sign 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+
+	</mapper>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.workRecord">
+		<resultMap type="workRecordEntity" id="WorkRecord_temp">
+			<result property="id" column="C_ID" />
+			<result property="dutyPersonId" column="C_DUTY_PERSON_ID" />
+			<result property="workTime" column="C_WORK_TIME" />
+			<result property="workType" column="C_WORK_TYPE" />
+			<result property="conclusion" column="C_CONCLUSION" />
+			<result property="code" column="C_CODE" />
+			<result property="planId" column="C_PLAN_ID" />
+			<result property="team" column="C_TEAM" />
+			<result property="question" column="C_QUESTION" />
+			<result property="delayStates" column="C_DELAY_STATES" />
+			<result property="deviceId" column="C_DEVICE_ID" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="joinPersonIds" column="C_JOIN_PERSON_IDS" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="dutyPersonName" column="C_DUTY_PERSON_NAME" />
+			<result property="checkState" column="C_CHECK_STATE" />		
+			<result property="teamName" column="C_TEAM_NAME" />		
+			<result property="planCode" column="C_PLAN_CODE" />				
+			<result property="equipName" column="C_EQUIP_NAME" />												
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="WorkRecord_temp">
+			<![CDATA[
+				SELECT * FROM TB_WORK_RECORD 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_WORK_RECORD 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="WorkRecord_temp">
+			<![CDATA[
+				SELECT * FROM TB_WORK_RECORD  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="workRecordEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_WORK_RECORD 
+				(
+	          C_DUTY_PERSON_ID  
+		        ,
+	          C_WORK_TIME  
+		        ,
+	           C_WORK_TYPE 
+		        ,
+	           C_CONCLUSION 
+		        ,
+	           C_CODE 
+		        ,
+	           C_PLAN_ID 
+		        ,
+	           C_TEAM 
+		        ,
+	           C_QUESTION 
+		        ,
+	          C_DELAY_STATES  
+		        ,
+	           C_DEVICE_ID 
+		        ,
+	           C_UNIT_ID 
+		        ,
+	           C_JOIN_PERSON_IDS
+	           ,
+	           C_CHECK_STATE 
+				)
+				VALUES
+				(
+		       #{dutyPersonId}
+	           ,
+		       #{workTime}
+	           ,
+		       #{workType}
+	           ,
+		       #{conclusion}
+	           ,
+		       #{code}
+	           ,
+		       #{planId}
+	           ,
+		       #{team}
+	           ,
+		       #{question}
+	           ,
+		       #{delayStates}
+	           ,
+		       #{deviceId}
+	           ,
+		       #{unitId}
+	           ,
+		       #{joinPersonIds}
+		       ,
+		       #{checkState}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="workRecordEntity">
+			<![CDATA[
+				UPDATE TB_WORK_RECORD SET
+                 C_DUTY_PERSON_ID=#{dutyPersonId}
+	             ,
+                 C_WORK_TIME=#{workTime}
+	             ,
+                 C_WORK_TYPE=#{workType}
+	             ,
+                 C_CONCLUSION=#{conclusion}
+	             ,
+                 C_CODE=#{code}
+	             ,
+                 C_PLAN_ID=#{planId}
+	             ,
+                 C_TEAM=#{team}
+	             ,
+                 C_QUESTION=#{question}
+	             ,
+                 C_DELAY_STATES=#{delayStates}
+	             ,
+                 C_DEVICE_ID=#{deviceId}
+	             ,
+                 C_UNIT_ID=#{unitId}
+	             ,
+                 C_JOIN_PERSON_IDS=#{joinPersonIds}
+                 ,
+                 C_CHECK_STATE=#{checkState}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="workRecordEntity">
+			<![CDATA[
+				DELETE FROM TB_WORK_RECORD WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="WorkRecord_temp">
+			<![CDATA[ 
+				SELECT a.*, b.C_NAME as C_UNIT_NAME,c.C_NAME as C_DUTY_PERSON_NAME ,d.C_NAME as C_TEAM_NAME,e.C_CODE as C_PLAN_CODE , f.C_NAME as C_EQUIP_NAME
+				FROM TB_WORK_RECORD a 
+				LEFT JOIN TP_SYS_UNIT b ON a.C_UNIT_ID = b.C_ID
+				LEFT JOIN TP_SYS_USER c on a. C_DUTY_PERSON_ID=c.C_ID
+				LEFT JOIN TB_TEAM_GROUP d on a.C_TEAM = d.C_ID	
+				LEFT JOIN TB_WORK_PLAN e on a.C_PLAN_ID = e.C_ID
+				LEFT JOIN tb_equip_ledger  f ON  a.C_DEVICE_ID=f.C_ID											
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

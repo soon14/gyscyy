@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.annualProductionCapacity">
+		<resultMap type="AnnualProductionCapacityEntity" id="AnnualProductionCapacity_temp">
+			<result property="id" column="C_ID" />
+			<result property="farmId" column="C_FARM_ID" />
+			<result property="quotaId" column="C_QUOTA_ID" />
+			<result property="planCompareId" column="C_PLAN_COMPARE_ID" />
+			<result property="jan" column="C_JAN" />
+			<result property="feb" column="C_FEB" />
+			<result property="mar" column="C_MAR" />
+			<result property="apr" column="C_APR" />
+			<result property="may" column="C_MAY" />
+			<result property="jun" column="C_JUN" />
+			<result property="jul" column="C_JUL" />
+			<result property="aug" column="C_AUG" />
+			<result property="sep" column="C_SEP" />
+			<result property="oct" column="C_OCT" />
+			<result property="nov" column="C_NOV" />
+			<result property="dec" column="C_DEC" />
+			<result property="type" column="C_TYPE" />
+			<result property="farmName" column="C_FARM_NAME" />
+			<result property="quotaName" column="C_QUOTA_NAME" />
+			<result property="planCompareName" column="C_PLAN_COMPARE_NAME" />
+			<result property="total" column="C_TOTAL" />
+			<result property="status" column="C_STATUS" />
+			<result property="year" column="C_YEAR" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="AnnualProductionCapacity_temp">
+			<![CDATA[
+				SELECT * FROM TB_ANNUAL_PRODUCTION_CAPACITY 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_ANNUAL_PRODUCTION_CAPACITY 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="AnnualProductionCapacity_temp">
+			<![CDATA[
+				SELECT * FROM TB_ANNUAL_PRODUCTION_CAPACITY  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="AnnualProductionCapacityEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_ANNUAL_PRODUCTION_CAPACITY 
+				(
+		          C_FARM_ID
+		        , C_QUOTA_ID
+		        , C_PLAN_COMPARE_ID
+		        , C_JAN
+		        , C_FEB
+		        , C_MAR
+		        , C_APR
+		        , C_MAY
+		        , C_JUN
+		        , C_JUL
+		        , C_AUG
+		        , C_SEP
+		        , C_OCT
+		        , C_NOV
+		        , C_DEC
+		        , C_TYPE
+		        , C_STATUS
+		        , C_YEAR
+				)
+				VALUES
+				(
+		         #{farmId}
+	           , #{quotaId}
+	           , #{planCompareId}
+	           , #{jan}
+	           , #{feb}
+	           , #{mar}
+	           , #{apr}
+	           , #{may}
+	           , #{jun}
+	           , #{jul}
+	           , #{aug}
+	           , #{sep}
+	           , #{oct}
+	           , #{nov}
+	           , #{dec}
+	           , #{type}
+	           , #{status}
+	           , #{year}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="AnnualProductionCapacityEntity">
+			<![CDATA[
+				UPDATE TB_ANNUAL_PRODUCTION_CAPACITY SET
+                   C_FARM_ID=#{farmId}
+	             , C_QUOTA_ID=#{quotaId}
+	             , C_PLAN_COMPARE_ID=#{planCompareId}
+	             , C_JAN=#{jan}
+	             , C_FEB=#{feb}
+	             , C_MAR=#{mar}
+	             , C_APR=#{apr}
+	             , C_MAY=#{may}
+	             , C_JUN=#{jun}
+	             , C_JUL=#{jul}
+	             , C_AUG=#{aug}
+	             , C_SEP=#{sep}
+	             , C_OCT=#{oct}
+	             , C_NOV=#{nov}
+	             , C_DEC=#{dec}
+	             , C_TYPE=#{type}
+	             , C_STATUS=#{status}
+	             , C_YEAR=#{year}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="AnnualProductionCapacityEntity">
+			<![CDATA[
+				DELETE FROM TB_ANNUAL_PRODUCTION_CAPACITY WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		
+		<!-- 根据条件查询(年度生产量计划) -->
+		<select id="findByCondition" parameterType="map" resultMap="AnnualProductionCapacity_temp">
+			<![CDATA[ 
+				SELECT
+					ac.*, un.C_NAME C_FARM_NAME,
+					dy.C_NAME C_QUOTA_NAME,
+					di.C_NAME C_PLAN_COMPARE_NAME,
+					ROUND(
+						SUM(
+							IFNULL(ac.C_JAN, 0) + IFNULL(ac.C_FEB, 0) + IFNULL(ac.C_MAR, 0) + IFNULL(ac.C_APR, 0) + IFNULL(ac.C_MAY, 0) + IFNULL(ac.C_JUN, 0) + IFNULL(ac.C_JUL, 0) + IFNULL(ac.C_AUG, 0) + IFNULL(ac.C_SEP, 0) + IFNULL(ac.C_OCT, 0) + IFNULL(ac.C_NOV, 0) + IFNULL(ac.C_DEC, 0)
+						),
+						2
+					) C_TOTAL
+				FROM
+					tb_annual_production_capacity ac
+				LEFT JOIN tp_sys_dictionary dy ON dy.C_CODE = ac.C_QUOTA_ID
+				AND dy.C_CATEGORY_CODE = 'ANNUAL_PRODUCTION_TYPE'
+				LEFT JOIN tp_sys_dictionary di ON di.C_CODE = ac.C_PLAN_COMPARE_ID
+				AND di.C_CATEGORY_CODE = 'QUOTATYPE'
+				LEFT JOIN tp_sys_unit un ON un.C_ID = ac.C_FARM_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+			GROUP BY
+				ac.C_FARM_ID,
+				ac.C_QUOTA_ID,
+				ac.C_PLAN_COMPARE_ID 
+			limit 0,1000
+		</select>
+		
+		<!-- 根据条件查询(年度生产指标计划) -->
+		<select id="findQuotaByCondition" parameterType="map" resultMap="AnnualProductionCapacity_temp">
+			<![CDATA[ 
+				SELECT
+					ac.*, un.C_NAME C_FARM_NAME,
+					dy.C_NAME C_QUOTA_NAME,
+					di.C_NAME C_PLAN_COMPARE_NAME,
+					ROUND(
+						SUM(
+							IFNULL(ac.C_JAN, 0) + IFNULL(ac.C_FEB, 0) + IFNULL(ac.C_MAR, 0) + IFNULL(ac.C_APR, 0) + IFNULL(ac.C_MAY, 0) + IFNULL(ac.C_JUN, 0) + IFNULL(ac.C_JUL, 0) + IFNULL(ac.C_AUG, 0) + IFNULL(ac.C_SEP, 0) + IFNULL(ac.C_OCT, 0) + IFNULL(ac.C_NOV, 0) + IFNULL(ac.C_DEC, 0)
+						),
+						2
+					) C_TOTAL
+				FROM
+					tb_annual_production_capacity ac
+				LEFT JOIN tp_sys_dictionary dy ON dy.C_CODE = ac.C_QUOTA_ID
+				AND dy.C_CATEGORY_CODE = 'ANNUALQUOTATYPE'
+				LEFT JOIN tp_sys_dictionary di ON di.C_CODE = ac.C_PLAN_COMPARE_ID
+				AND di.C_CATEGORY_CODE = 'QUOTATYPE'
+				LEFT JOIN tp_sys_unit un ON un.C_ID = ac.C_FARM_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+			GROUP BY
+				ac.C_FARM_ID,
+				ac.C_QUOTA_ID,
+				ac.C_PLAN_COMPARE_ID
+			limit 0,1000
+		</select>
+		
+    </mapper>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.unit">
+		<resultMap type="Unit" id="Unit_temp">
+			<result property="id" column="C_ID" />
+			<result property="code" column="C_CODE" />
+			<result property="name" column="C_NAME" />
+			<result property="nameAB" column="C_NAME_AB" />
+			<result property="parentId" column="C_PARENT_ID" />				
+			<result property="order" column="C_ORDER" />
+			<result property="parentCode" column="C_PARENT_CODE" />
+			<result property="level" column="C_LEVEL" />
+			<result property="region" column="C_REGION"/>
+			<result property="place" column="C_PLACE"/>
+			<result property="stationRegion" column="C_STATION_REGION"/>
+			<result property="generationType" column="C_GENERATION_TYPE"/>															
+			<result property="equipmentCount" column="C_EQUIPMENT_COUNT" />		
+			<result property="capacity" column="C_CAPACITY" />	
+			<result property="status" column="C_STATUS" />				
+			<result property="remark" column="C_REMARK" />
+			<result property="deleteFlag" column="C_DELETE_FLAG" />
+			<result property="organization" column="C_ORGANIZATION" />
+		</resultMap>
+		<select id="findAll" resultMap="Unit_temp">
+			<![CDATA[ 
+				SELECT * FROM TP_SYS_UNIT 
+			]]>
+		</select>
+		
+		<select id="total" resultType="int">
+			<![CDATA[ 
+				SELECT count(1) FROM TP_SYS_UNIT 
+			]]>
+		</select>
+		
+		<select id="findById" parameterType="long" resultMap="Unit_temp">
+			<![CDATA[ 
+				SELECT * FROM TP_SYS_UNIT WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<insert id="insert" parameterType="Unit">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<![CDATA[ 
+				insert into TP_SYS_UNIT 
+				(C_CODE, C_NAME, 
+				 C_NAME_AB, C_PARENT_ID, 
+				 C_ORDER, C_PARENT_CODE, 
+				 C_LEVEL, C_REGION, C_PLACE,
+				 C_STATION_REGION, C_GENERATION_TYPE,
+				 C_EQUIPMENT_COUNT, C_CAPACITY,
+				 C_STATUS,C_REMARK,C_DELETE_FLAG,C_ORGANIZATION)
+				values
+				(#{code}, #{name},
+				 #{nameAB}, #{parentId},
+				 #{order}, #{parentCode},
+				 #{level},#{region},#{place}, 
+				 #{stationRegion}, #{generationType},
+				  #{equipmentCount},#{capacity},
+				 #{status},#{remark},'N',#{organization})
+			]]>
+		</insert>
+		
+		<!-- ORACLE 数据库需要增加SEQUENCE配置
+		<insert id="insert" parameterType="Unit">
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">  
+		      select SEQ_TP_SYS_UNIT.nextval from dual  
+		    </selectKey>
+			<![CDATA[ 
+				insert into TP_SYS_UNIT 
+				(C_ID, C_CODE, C_NAME, 
+				 C_NAME_AB, C_PARENT_ID, 
+				 C_ORDER, C_PARENT_CODE, 
+				 C_LEVEL, C_REGION, C_PLACE, 
+				 C_STATION_REGION, C_GENERATION_TYPE, 
+				 C_EQUIPMENT_COUNT, C_CAPACITY,
+				 C_STATUS, C_REMARK)
+				values
+				(#{id}, #{code}, #{name},
+				 #{nameAB}, #{parentId},
+				 #{order}, #{parentCode},
+				 #{level},#{region},#{place}, 
+				 #{stationRegion}, #{generationType},
+				  #{equipmentCount},#{capacity},
+				 #{status},#{remark})
+			]]>
+		</insert> -->
+		
+		
+		<update id="update" parameterType="Unit">
+			<![CDATA[ 
+				update TP_SYS_UNIT set
+				C_CODE=#{code},
+				C_NAME=#{name},
+				C_NAME_AB=#{nameAB},
+				C_PARENT_ID=#{parentId},
+				C_ORDER=#{order},
+				C_PARENT_CODE=#{parentCode},
+				C_LEVEL=#{level},
+				C_REGION=#{region},
+				C_PLACE=#{place},
+				C_STATION_REGION=#{stationRegion},
+				C_GENERATION_TYPE=#{generationType},
+				C_EQUIPMENT_COUNT=#{equipmentCount},
+				C_CAPACITY=#{capacity},
+				C_STATUS=#{status},
+				C_REMARK=#{remark},
+				C_DELETE_FLAG=#{deleteFlag},									
+				C_ORGANIZATION=#{organization}								
+				WHERE C_ID =#{id}
+			]]>
+		</update>
+		
+		<update id="delete" parameterType="Unit">
+			<![CDATA[ 
+				DELETE FROM TP_SYS_UNIT WHERE C_ID =#{id}
+			]]>
+		</update>
+		
+		<select id="findByCondition" parameterType="map" resultMap="Unit_temp">
+			<![CDATA[ 
+				SELECT * FROM TP_SYS_UNIT 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+		<select id="findUnitList" parameterType="map" resultMap="Unit_temp">
+			<![CDATA[ 
+				SELECT * FROM TP_SYS_UNIT 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+	</mapper>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.planManage.planDetail">
+		<resultMap type="PlanDetailEntity" id="PlanDetail_temp">
+			<result property="id" column="C_ID" />
+			<result property="planWholeId" column="C_PLAN_WHOLE_ID" />
+			<result property="num" column="C_NUM" />
+			<result property="projectName" column="C_PROJECT_NAME" />
+			<result property="projectDetail" column="C_PROJECT_DETAIL" />
+			<result property="step" column="C_STEP" />
+			<result property="stratTime" column="C_STRAT_TIME" />
+			<result property="endTime" column="C_END_TIME" />
+			<result property="planTotal" column="C_PLAN_TOTAL" />
+			<result property="finish" column="C_FINISH" />
+			<result property="remark" column="C_REMARK" />
+			<result property="fileId" column="C_FILE_ID" />
+			<result property="uuidWhole" column="C_UUID_WHOLE" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="PlanDetail_temp">
+			<![CDATA[
+				SELECT * FROM TB_PLAN_DETAIL 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_PLAN_DETAIL 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="PlanDetail_temp">
+			<![CDATA[
+				SELECT * FROM TB_PLAN_DETAIL  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="PlanDetailEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_PLAN_DETAIL 
+				(
+		          C_PLAN_WHOLE_ID
+		        , C_NUM
+		        , C_PROJECT_NAME
+		        , C_PROJECT_DETAIL
+		        , C_STEP
+		        , C_STRAT_TIME
+		        , C_END_TIME
+		        , C_PLAN_TOTAL
+		        , C_FINISH
+		        , C_REMARK
+		        , C_FILE_ID
+		        , C_UUID_WHOLE
+				)
+				VALUES
+				(
+		         #{planWholeId}
+	           , #{num}
+	           , #{projectName}
+	           , #{projectDetail}
+	           , #{step}
+	           , #{stratTime}
+	           , #{endTime}
+	           , #{planTotal}
+	           , #{finish}
+	           , #{remark}
+	           , #{fileId}
+	           , #{uuidWhole}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="PlanDetailEntity">
+			<![CDATA[
+				UPDATE TB_PLAN_DETAIL SET
+                   C_PLAN_WHOLE_ID=#{planWholeId}
+	             , C_NUM=#{num}
+	             , C_PROJECT_NAME=#{projectName}
+	             , C_PROJECT_DETAIL=#{projectDetail}
+	             , C_STEP=#{step}
+	             , C_STRAT_TIME=#{stratTime}
+	             , C_END_TIME=#{endTime}
+	             , C_PLAN_TOTAL=#{planTotal}
+	             , C_FINISH=#{finish}
+	             , C_REMARK=#{remark}
+	             , C_FILE_ID=#{fileId}
+	             , C_UUID_WHOLE=#{uuidWhole}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="PlanDetailEntity">
+			<![CDATA[
+				DELETE FROM TB_PLAN_DETAIL WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="PlanDetail_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_PLAN_DETAIL 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

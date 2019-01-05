@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.com.aptech.business.workticketRepair">
+		<resultMap type="WorkticketRepairEntity" id="WorkticketRepair_temp">
+			<result property="id" column="C_ID" />
+			<result property="workticketId" column="C_WORKTICKET_ID" />
+			<result property="repairPersonId" column="C_REPAIR_PERSON_ID" />
+			<result property="repairPersonName" column="C_REPAIR_PERSON_NAME" />
+			<result property="allowPicPersonId" column="C_ALLOW_PIC_PERSON_ID" />
+			<result property="allowPicPersonName" column="C_ALLOW_PIC_PERSON_NAME" />
+			<result property="dutyMonitorId" column="C_DUTY_MONITOR_ID" />
+			<result property="dutyMonitorName" column="C_DUTY_MONITOR_NAME" />
+			<result property="endDutyMonitorId" column="C_END_DUTY_MONITOR_ID" />
+			<result property="endDutyMonitorName" column="C_END_DUTY_MONITOR_NAME" />
+			<result property="endDutyMonitorDate" column="C_END_DUTY_MONITOR_DATE" />
+			<result property="situation" column="C_SITUATION" />
+			<result property="safe" column="C_SAFE" />
+			<result property="otherSafe" column="C_OTHER_SAFE" />
+			<result property="retainSafe" column="C_RETAIN_SAFE" />
+			<result property="repairResult" column="C_REPAIR_RESULT" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="WorkticketRepair_temp">
+			<![CDATA[
+				SELECT * FROM TB_WORKTICKET_REPAIR 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_WORKTICKET_REPAIR 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="WorkticketRepair_temp">
+			<![CDATA[
+				SELECT * FROM TB_WORKTICKET_REPAIR  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="WorkticketRepairEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_WORKTICKET_REPAIR 
+				(
+		          C_WORKTICKET_ID
+		        , C_REPAIR_PERSON_ID
+		        , C_REPAIR_PERSON_NAME
+		        , C_ALLOW_PIC_PERSON_ID
+		        , C_ALLOW_PIC_PERSON_NAME
+		        , C_DUTY_MONITOR_ID
+		        , C_DUTY_MONITOR_NAME
+		        , C_END_DUTY_MONITOR_ID
+		        , C_END_DUTY_MONITOR_NAME
+		        , C_END_DUTY_MONITOR_DATE
+		        , C_SITUATION
+		        , C_SAFE
+		        , C_OTHER_SAFE
+		        , C_RETAIN_SAFE
+		        , C_REPAIR_RESULT
+				)
+				VALUES
+				(
+		         #{workticketId}
+	           , #{repairPersonId}
+	           , #{repairPersonName}
+	           , #{allowPicPersonId}
+	           , #{allowPicPersonName}
+	           , #{dutyMonitorId}
+	           , #{dutyMonitorName}
+	           , #{endDutyMonitorId}
+	           , #{endDutyMonitorName}
+	           , #{endDutyMonitorDate}
+	           , #{situation}
+	           , #{safe}
+	           , #{otherSafe}
+	           , #{retainSafe}
+	           , #{repairResult}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="WorkticketRepairEntity">
+			<![CDATA[
+				UPDATE TB_WORKTICKET_REPAIR SET
+                   C_WORKTICKET_ID=#{workticketId}
+	             , C_REPAIR_PERSON_ID=#{repairPersonId}
+	             , C_REPAIR_PERSON_NAME=#{repairPersonName}
+	             , C_ALLOW_PIC_PERSON_ID=#{allowPicPersonId}
+	             , C_ALLOW_PIC_PERSON_NAME=#{allowPicPersonName}
+	             , C_DUTY_MONITOR_ID=#{dutyMonitorId}
+	             , C_DUTY_MONITOR_NAME=#{dutyMonitorName}
+	             , C_END_DUTY_MONITOR_ID=#{endDutyMonitorId}
+	             , C_END_DUTY_MONITOR_NAME=#{endDutyMonitorName}
+	             , C_END_DUTY_MONITOR_DATE=#{endDutyMonitorDate}
+	             , C_SITUATION=#{situation}
+	             , C_SAFE=#{safe}
+	             , C_OTHER_SAFE=#{otherSafe}
+	             , C_RETAIN_SAFE=#{retainSafe}
+	             , C_REPAIR_RESULT =#{repairResult}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="WorkticketRepairEntity">
+			<![CDATA[
+				DELETE FROM TB_WORKTICKET_REPAIR WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="WorkticketRepair_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_WORKTICKET_REPAIR 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

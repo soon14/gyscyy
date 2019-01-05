@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.technical.technicalPlandetail">
+		<resultMap type="TechnicalPlandetailEntity" id="TechnicalPlandetail_temp">
+			<result property="id" column="C_ID" />
+			<result property="orderSeq" column="C_ORDER_SEQ" />
+			<result property="planName" column="C_PLAN_NAME" />
+			<result property="djzq" column="C_DJZQ" />
+			<result property="nowTime" column="C_NOW_TIME" />
+			<result property="wcTime" column="C_WC_TIME" />
+			<result property="wcStatus" column="C_WC_STATUS" />
+			<result property="wcqk" column="C_WCQK" />
+			<result property="danger" column="C_DANGER" />
+			<result property="fileid" column="C_FILEID" />
+			<result property="uuidCode" column="C_UUID_CODE" />
+			<result property="technicalWorkid" column="C_TECHNICAL_WORKID" />
+			<result property="status" column="C_STATUS" />
+			<result property="technicalId" column="C_TECHNICAL_ID" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="TechnicalPlandetail_temp">
+			<![CDATA[
+				SELECT * FROM TB_TECHNICAL_PLANDETAIL 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_TECHNICAL_PLANDETAIL 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="TechnicalPlandetail_temp">
+			<![CDATA[
+				SELECT * FROM TB_TECHNICAL_PLANDETAIL  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="TechnicalPlandetailEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_TECHNICAL_PLANDETAIL 
+				(
+		          C_ORDER_SEQ
+		        , C_PLAN_NAME
+		        , C_DJZQ
+		        , C_NOW_TIME
+		        , C_WC_TIME
+		        , C_WC_STATUS
+		        , C_WCQK
+		        , C_DANGER
+		        , C_FILEID
+		        , C_UUID_CODE
+		        , C_TECHNICAL_WORKID
+		        , C_STATUS
+		        ,C_TECHNICAL_ID 
+				)
+				VALUES
+				(
+		         #{orderSeq}
+	           , #{planName}
+	           , #{djzq}
+	           , #{nowTime}
+	           , #{wcTime}
+	           , #{wcStatus}
+	           , #{wcqk}
+	           , #{danger}
+	           , #{fileid}
+	           , #{uuidCode}
+	           , #{technicalWorkid}
+	           , #{status}
+	           , #{technicalId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="TechnicalPlandetailEntity">
+			<![CDATA[
+				UPDATE TB_TECHNICAL_PLANDETAIL SET
+                   C_ORDER_SEQ=#{orderSeq}
+	             , C_PLAN_NAME=#{planName}
+	             , C_DJZQ=#{djzq}
+	             , C_NOW_TIME=#{nowTime}
+	             , C_WC_TIME=#{wcTime}
+	             , C_WC_STATUS=#{wcStatus}
+	             , C_WCQK=#{wcqk}
+	             , C_DANGER=#{danger}
+	             , C_FILEID=#{fileid}
+	             , C_UUID_CODE=#{uuidCode}
+	             , C_TECHNICAL_WORKID=#{technicalWorkid}
+	             , C_STATUS=#{status}
+	             , C_TECHNICAL_ID=#{technicalId}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="TechnicalPlandetailEntity">
+			<![CDATA[
+				DELETE FROM TB_TECHNICAL_PLANDETAIL WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="TechnicalPlandetail_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_TECHNICAL_PLANDETAIL 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+		<update id="updateByUuid" parameterType="TechnicalPlandetailEntity">
+			<![CDATA[ 
+				update TB_TECHNICAL_PLANDETAIL set
+				
+				C_TECHNICAL_ID=#{technicalId}
+				
+				WHERE C_UUID_CODE=#{uuidCode}
+			]]>
+		</update>
+    </mapper>

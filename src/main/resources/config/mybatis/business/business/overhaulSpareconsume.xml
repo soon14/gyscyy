@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.overhaulSpareconsume">
+		<resultMap type="OverhaulSpareconsumeEntity" id="OverhaulSpareconsume_temp">
+			<result property="id" column="C_ID" />
+			<result property="name" column="C_NAME" />
+			<result property="code" column="C_CODE" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="model" column="C_MODEL" />
+			<result property="manufacturer" column="C_MANUFACTURER" />
+			<result property="unit" column="C_UNIT" />
+			<result property="number" column="C_NUMBER" />
+			<result property="equipName" column="C_EQUIP_NAME" />
+			<result property="overhaulRecordId" column="C_OVERHAUL_RECORD_ID" />
+			<result property="status" column="C_STATUS" />
+			<result property="equipId" column="C_EQUIP_ID" />
+			
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="OverhaulSpareconsume_temp">
+			<![CDATA[
+				SELECT * FROM TB_OVERHAUL_SPARECONSUME 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_OVERHAUL_SPARECONSUME 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="OverhaulSpareconsume_temp">
+			<![CDATA[
+				SELECT * FROM TB_OVERHAUL_SPARECONSUME  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="OverhaulSpareconsumeEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_OVERHAUL_SPARECONSUME 
+				(
+		          C_NAME
+		        , C_CODE
+		        , C_CREATE_DATE
+		        , C_CREATE_USER_ID
+		        , C_MODEL
+		        , C_MANUFACTURER
+		        , C_UNIT
+		        , C_NUMBER
+		        , C_EQUIP_NAME
+		        , C_OVERHAUL_RECORD_ID
+		        , C_STATUS
+		        , C_EQUIP_ID 
+				)
+				VALUES
+				(
+		         #{name}
+	           , #{code}
+	           , #{createDate}
+	           , #{createUserId}
+	           , #{model}
+	           , #{manufacturer}
+	           , #{unit}
+	           , #{number}
+	           , #{equipName}
+	           , #{overhaulRecordId}
+	           , #{status}
+	           , #{equipId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="OverhaulSpareconsumeEntity">
+			<![CDATA[
+				UPDATE TB_OVERHAUL_SPARECONSUME SET
+                   C_NAME=#{name}
+	             , C_CODE=#{code}
+	             , C_CREATE_DATE=#{createDate}
+	             , C_CREATE_USER_ID=#{createUserId}
+	             , C_MODEL=#{model}
+	             , C_MANUFACTURER=#{manufacturer}
+	             , C_UNIT=#{unit}
+	             , C_NUMBER=#{number}
+	             , C_EQUIP_NAME=#{equipName}
+	             , C_OVERHAUL_RECORD_ID=#{overhaulRecordId}
+	             , C_STATUS=#{status} 
+	             , C_EQUIP_ID=#{equipId}  
+	             
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="OverhaulSpareconsumeEntity">
+			<![CDATA[
+				DELETE FROM TB_OVERHAUL_SPARECONSUME WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="deleteByoverhaulArrangeId" parameterType="OverhaulSpareconsumeEntity">
+			<![CDATA[
+				DELETE FROM TB_OVERHAUL_SPARECONSUME WHERE C_OVERHAUL_RECORD_ID=#{overhaulRecordId}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="OverhaulSpareconsume_temp">
+			<![CDATA[ 
+				SELECT O.* FROM TB_OVERHAUL_SPARECONSUME O  
+					LEFT JOIN tb_spare_material_category g ON O.C_CODE = g.C_CODE
+				
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

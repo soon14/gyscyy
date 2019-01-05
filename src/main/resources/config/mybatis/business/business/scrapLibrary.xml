@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.scarpLibrary">
+		<resultMap type="ScrapLibraryEntity" id="ScrapLibrary_temp">
+			<result property="id" column="C_ID" />
+			<result property="code" column="C_CODE" />
+			<result property="instockTime" column="C_INSTOCK_TIME" />
+			<result property="scrapSource" column="C_SCRAP_SOURCE" />
+			<result property="stationSourceId" column="C_STATION_SOURCE_ID" />
+			<result property="instockType" column="C_INSTOCK_TYPE" />
+			<result property="processMode" column="C_PROCESS_MODE" />
+			<result property="fileId" column="C_FILE_ID" />
+			<result property="remark" column="C_REMARK" />
+			<result property="warehouseId" column="C_WAREHOUSE_ID" />
+			<result property="status" column="C_STATUS" />
+			<result property="stationSourceName" column="C_STATION_SOURCE_NAME" />
+			<result property="userId" column="C_USER_ID" />
+			<result property="userName" column="C_USER_NAME" />
+			<result property="type" column="C_TYPE" />
+			<result property="storeKeeper" column="C_STORE_KEEPER" />
+			<result property="approveUser" column="C_APPROVE_USER" />
+			<result property="stockId" column="C_STOCK_ID" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="ScrapLibrary_temp">
+			<![CDATA[
+				SELECT * FROM TB_SCRAP_LIBRARY 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_SCRAP_LIBRARY 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="ScrapLibrary_temp">
+			<![CDATA[
+				SELECT s.*, b.C_NAME AS C_STATION_SOURCE_NAME
+				FROM TB_SCRAP_LIBRARY s
+				LEFT JOIN TP_SYS_UNIT b ON s.C_STATION_SOURCE_ID = b.C_ID
+				WHERE s.C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="ScrapLibraryEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_SCRAP_LIBRARY 
+				(
+		          C_CODE
+		        , C_INSTOCK_TIME
+		        , C_SCRAP_SOURCE
+		        , C_STATION_SOURCE_ID
+		        , C_INSTOCK_TYPE
+		        , C_PROCESS_MODE
+		        , C_FILE_ID
+		        , C_REMARK
+		        , C_WAREHOUSE_ID
+		        , C_STATUS
+		        , C_USER_ID
+		        , C_TYPE
+		        , C_STORE_KEEPER
+		        , C_APPROVE_USER
+		        , C_STOCK_ID
+				)
+				VALUES
+				(
+		         #{code}
+	           , #{instockTime}
+	           , #{scrapSource}
+	           , #{stationSourceId}
+	           , #{instockType}
+	           , #{processMode}
+	           , #{fileId}
+	           , #{remark}
+	           , #{warehouseId}
+	           , #{status}
+	           , #{userId}
+	           , #{type}
+	           , #{storeKeeper}
+	           , #{approveUser}
+	           , #{stockId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="ScrapLibraryEntity">
+			<![CDATA[
+				UPDATE TB_SCRAP_LIBRARY SET
+                   C_CODE=#{code}
+	             , C_INSTOCK_TIME=#{instockTime}
+	             , C_SCRAP_SOURCE=#{scrapSource}
+	             , C_STATION_SOURCE_ID=#{stationSourceId}
+	             , C_INSTOCK_TYPE=#{instockType}
+	             , C_PROCESS_MODE=#{processMode}
+	             , C_FILE_ID=#{fileId}
+	             , C_REMARK=#{remark}
+	             , C_WAREHOUSE_ID=#{warehouseId}
+	             , C_STATUS=#{status}
+	             , C_USER_ID=#{userId}
+	             , C_TYPE=#{type}
+	             , C_STORE_KEEPER=#{storeKeeper}
+	             , C_APPROVE_USER=#{approveUser}
+	             , C_STOCK_ID=#{stockId}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="ScrapLibraryEntity">
+			<![CDATA[
+				DELETE FROM TB_SCRAP_LIBRARY WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="ScrapLibrary_temp">
+			<![CDATA[ 
+				SELECT t.*,a.C_NAME AS C_STATION_SOURCE_NAME , b.C_NAME AS C_USER_NAME FROM TB_SCRAP_LIBRARY t LEFT JOIN TP_SYS_UNIT a ON t.C_STATION_SOURCE_ID = a.C_ID
+				LEFT JOIN TP_SYS_USER b ON t.C_USER_ID = b.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

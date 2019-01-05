@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.overhaulPlan">
+		<resultMap type="overhaulPlanEntity" id="OverhaulPlan_temp">
+			<result property="status" column="C_STATUS" />
+			<result property="remark" column="C_REMARK" />
+			<result property="attachementIds" column="C_ATTACHEMENT_IDS" />
+			<result property="id" column="C_ID" />
+			<result property="dutyUserId" column="C_DUTY_USER_ID" />
+			<result property="approveStatus" column="C_APPROVE_STATUS" />
+			<result property="planYear" column="C_PLAN_YEAR" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="dutyUserName" column="C_DUTY_USER_NAME" />
+			<result property="planNumber" column="C_PLAN_NUMBER" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="updateProject" column="C_UPDATE_PROJECT" />
+			<result property="planName" column="C_PLAN_NAME" />
+			<result property="planNameId" column="C_PLAN_NAME_ID" />
+			
+			<result property="accidentId" column="C_ACCIDENT_ID" />
+			<result property="maintenanceId" column="C_MAINTENANCE_ID" />
+			<result property="technicalId" column="C_TECHNICAL_ID" />
+			<result property="dispatchTitle" column="C_DISPATCH_TITLE" />
+			<result property="dispatchNumber" column="C_DISPATCH_NUMBER" />
+			<result property="dispatchId" column="C_DISPATCH_ID" />
+			
+			<result property="overhaulWorkerReviewFlag" column="C_OVERHAUL_WORKER_REVIEW" />
+			<result property="overhaulWorkerReviewer" column="C_OVERHAUL_WORKER_REVIEWER" />
+			<result property="overhaulWorkerSelected" column="C_OVERHAUL_WORKER_SELECTED" />
+			<result property="centralizedReviewFlag" column="C_CENTRALIZED_REVIEW" />
+			<result property="centralizedReviewer" column="C_CENTRALIZED_REVIEWER" />
+			<result property="centralizedSelected" column="C_CENTRALIZED_SELECTED" />
+			<result property="safetyReviewFlag" column="C_SAFETY_REVIEW" />
+			<result property="safetyReviewer" column="C_SAFETY_REVIEWER" />
+			<result property="safetySelected" column="C_SAFETY_SELECTED" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="OverhaulPlan_temp">
+			<![CDATA[
+				SELECT * FROM TB_OVERHUAL_PLAN 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_OVERHUAL_PLAN 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="OverhaulPlan_temp">
+			<![CDATA[
+				SELECT * FROM TB_OVERHUAL_PLAN  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="overhaulPlanEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_OVERHUAL_PLAN 
+				(C_STATUS
+		        ,
+	            
+	            C_REMARK
+		        ,
+	            C_ATTACHEMENT_IDS
+		        ,
+	            C_DUTY_USER_ID
+		        ,
+	            C_APPROVE_STATUS
+		        ,
+	            C_PLAN_YEAR
+		        ,
+	            C_UNIT_NAME
+		        ,
+	            C_DUTY_USER_NAME
+		        ,
+	            C_PLAN_NUMBER
+		        ,
+	            C_CREATE_DATE
+		        ,
+	            C_UNIT_ID
+		        ,
+	            C_UPDATE_PROJECT
+		        ,
+	            C_PLAN_NAME
+		        ,
+	            C_ACCIDENT_ID
+	            ,
+	            C_MAINTENANCE_ID
+	            ,
+	            C_TECHNICAL_ID
+	            ,
+	            C_PLAN_NAME_ID,
+	            C_DISPATCH_TITLE,
+				C_DISPATCH_NUMBER,
+				C_DISPATCH_ID
+				)
+				VALUES
+			( #{status}
+	           ,
+		      
+		       #{remark}
+	           ,
+		       #{attachementIds}
+	           ,
+		       #{dutyUserId}
+	           ,
+		       #{approveStatus}
+	           ,
+		       #{planYear}
+	           ,
+		       #{unitName}
+	           ,
+		       #{dutyUserName}
+	           ,
+		       #{planNumber}
+	           ,
+		       #{createDate}
+	           ,
+		       #{unitId}
+	           ,
+		       #{updateProject}
+	           ,
+		       #{planName}
+	           ,
+		       #{accidentId}
+	           ,
+		       #{maintenanceId}
+	           ,
+		       #{technicalId}
+	           ,
+		       #{planNameId},
+		       #{dispatchTitle},
+			   #{dispatchNumber},
+			   #{dispatchId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="overhaulPlanEntity">
+			<![CDATA[
+				UPDATE TB_OVERHUAL_PLAN SET
+				C_ID=#{id}
+				,
+				  C_STATUS=#{status}
+	             ,
+               
+                 C_REMARK=#{remark}
+	             ,
+                 C_ATTACHEMENT_IDS=#{attachementIds}
+	             ,
+                 C_DUTY_USER_ID=#{dutyUserId}
+	             ,
+                 C_APPROVE_STATUS=#{approveStatus}
+	             ,
+                 C_PLAN_YEAR=#{planYear}
+	             ,
+                 C_UNIT_NAME=#{unitName}
+	             ,
+                 C_DUTY_USER_NAME=#{dutyUserName}
+	             ,
+                 C_PLAN_NUMBER=#{planNumber}
+	             ,
+                 C_CREATE_DATE=#{createDate}
+	             ,
+                 C_UNIT_ID=#{unitId}
+	             ,
+                 C_UPDATE_PROJECT=#{updateProject}
+	             ,
+                 C_PLAN_NAME=#{planName}
+	             ,
+                 C_ACCIDENT_ID=#{accidentId}
+	             ,
+                 C_MAINTENANCE_ID=#{maintenanceId}
+                 ,C_TECHNICAL_ID=#{technicalId}
+                 ,C_PLAN_NAME_ID=#{planNameId}
+                 ,C_DISPATCH_TITLE=#{dispatchTitle}
+				 ,C_DISPATCH_NUMBER=#{dispatchNumber}
+				 ,C_DISPATCH_ID=#{dispatchId} 
+
+                 ,C_OVERHAUL_WORKER_REVIEW=#{overhaulWorkerReviewFlag}
+				 ,C_OVERHAUL_WORKER_REVIEWER=#{overhaulWorkerReviewer}
+				 ,C_OVERHAUL_WORKER_SELECTED=#{overhaulWorkerSelected} 
+                 ,C_CENTRALIZED_REVIEW=#{centralizedReviewFlag}
+				 ,C_CENTRALIZED_REVIEWER=#{centralizedReviewer}
+				 ,C_CENTRALIZED_SELECTED=#{centralizedSelected} 
+                 ,C_SAFETY_REVIEW=#{safetyReviewFlag}
+				 ,C_SAFETY_REVIEWER=#{safetyReviewer}
+				 ,C_SAFETY_SELECTED=#{safetySelected} 
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="overhaulPlanEntity">
+			<![CDATA[
+				DELETE FROM TB_OVERHUAL_PLAN WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="OverhaulPlan_temp">
+			<![CDATA[ 
+				SELECT o.*,DM.C_TITLE DISPATCH_TITLE  FROM TB_OVERHUAL_PLAN o 
+				LEFT JOIN TB_DISPATCH_MANAGEMENT DM ON o.C_DISPATCH_ID = DM.C_ID 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

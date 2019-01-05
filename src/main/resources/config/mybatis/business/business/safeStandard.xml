@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.safeManage.safeStandard">
+		<resultMap type="SafeStandardEntity" id="SafeStandard_temp">
+			<result property="id" column="C_ID" />
+			<result property="standardName" column="C_STANDARD_NAME" />
+			<result property="category" column="C_CATEGORY" />
+			<result property="time" column="C_TIME" />
+			<result property="yearNum" column="C_YEAR_NUM" />
+			<result property="fileName" column="C_FILE_NAME" />
+			<result property="fileAddress" column="C_FILE_ADDRESS" />
+			<result property="createPeopleId" column="C_CREATE_PEOPLE_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="unitName" column="unitName" />
+			<result property="userName" column="userName" />
+			
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="SafeStandard_temp">
+			<![CDATA[
+				SELECT * FROM TB_SAFE_STANDARD 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_SAFE_STANDARD 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="SafeStandard_temp">
+			<![CDATA[
+				SELECT * FROM TB_SAFE_STANDARD  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="SafeStandardEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_SAFE_STANDARD 
+				(
+		          C_STANDARD_NAME
+		        , C_CATEGORY
+		        , C_TIME
+		        , C_YEAR_NUM
+		        , C_FILE_NAME
+		        , C_FILE_ADDRESS
+		        , C_CREATE_PEOPLE_ID
+		        , C_CREATE_DATE
+		        , C_UNIT_ID
+				)
+				VALUES
+				(
+		         #{standardName}
+	           , #{category}
+	           , #{time}
+	           , #{yearNum}
+	           , #{fileName}
+	           , #{fileAddress}
+	           , #{createPeopleId}
+	           , #{createDate}
+	           , #{unitId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="SafeStandardEntity">
+			<![CDATA[
+				UPDATE TB_SAFE_STANDARD SET
+                   C_STANDARD_NAME=#{standardName}
+	             , C_CATEGORY=#{category}
+	             , C_TIME=#{time}
+	             , C_YEAR_NUM=#{yearNum}
+	             , C_FILE_NAME=#{fileName}
+	             , C_FILE_ADDRESS=#{fileAddress}
+	             , C_CREATE_PEOPLE_ID=#{createPeopleId}
+	             , C_CREATE_DATE=#{createDate}
+	             , C_UNIT_ID=#{unitId}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="SafeStandardEntity">
+			<![CDATA[
+				DELETE FROM TB_SAFE_STANDARD WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="SafeStandard_temp">
+			<![CDATA[ 
+				SELECT a.*,u.C_NAME AS unitName,b.C_NAME AS userName FROM TB_SAFE_STANDARD a 
+				LEFT JOIN tp_sys_unit u ON a.C_UNIT_ID=u.C_ID 
+				LEFT JOIN TP_SYS_USER b ON a.C_CREATE_PEOPLE_ID = b.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

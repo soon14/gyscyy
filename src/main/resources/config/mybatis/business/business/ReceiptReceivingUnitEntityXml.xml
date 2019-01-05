@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.OAManagement.receivingUnit.ReceiptReceivingUnit">
+		<resultMap type="ReceiptReceivingUnit" id="ReceiptReceivingUnit_temp">
+			<result property="id" column="C_ID" /> 
+			<result property="receiptId" column="C_RECEIPT_ID" /> 
+			<result property="handleResult" column="C_HANDLE_RESULT" /> 
+			<result property="handleComment" column="C_HANDLE_COMMENT" /> 
+			<result property="handlePersionId" column="C_HANDLE_PERSION_ID" /> 
+			<result property="handlePersionName" column="C_HANDLE_PERSION_NAME" /> 
+			<result property="handleTime" column="C_HANDLE_TIME" /> 
+		</resultMap>
+		<select id="findAll" resultMap="ReceiptReceivingUnit_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_receipt_receiving_unit 
+			]]>
+		</select>
+		
+		<select id="total" resultType="int">
+			<![CDATA[ 
+				SELECT count(1) FROM tb_receipt_receiving_unit 
+			]]>
+		</select>
+		
+		<select id="findById" parameterType="long" resultMap="ReceiptReceivingUnit_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_receipt_receiving_unit WHERE C_ID=#{id}
+			]]>
+		</select> 
+		 
+		
+		<!-- ORACLE 数据库需要增加SEQUENCE配置 -->
+		<insert id="insert" parameterType="ReceiptReceivingUnit">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<![CDATA[ 
+				insert into tb_receipt_receiving_unit 
+				(C_ID,C_RECEIPT_ID,C_HANDLE_RESULT,C_HANDLE_COMMENT,C_HANDLE_PERSION_ID,C_HANDLE_PERSION_NAME,C_HANDLE_TIME)
+				values
+				(#{id},#{receiptId},#{handleResult},#{handleComment},#{handlePersionId},#{handlePersionName},#{handleTime})
+			]]>
+		</insert>
+
+		<update id="update" parameterType="ReceiptReceivingUnit">
+			<![CDATA[ 
+				update tb_receipt_receiving_unit set
+				C_RECEIPT_ID=#{receiptId},
+				C_HANDLE_RESULT=#{handleResult},
+				C_HANDLE_COMMENT=#{handleComment},
+				C_HANDLE_PERSION_ID=#{handlePersionId},
+				C_HANDLE_PERSION_NAME=#{handlePersionName},
+				C_HANDLE_TIME=#{handleTime}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		<update id="delete" parameterType="ReceiptReceivingUnit">
+			<![CDATA[ 
+				DELETE FROM tb_receipt_receiving_unit WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<select id="findByCondition" parameterType="map" resultMap="ReceiptReceivingUnit_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_receipt_receiving_unit 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+
+	</mapper>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.safeCheck">
+		<resultMap type="SafeCheckEntity" id="SafeCheck_temp">
+			<result property="id" column="C_ID" />
+			<result property="checkName" column="C_CHECK_NAME" />
+			<result property="yearNum" column="C_YEAR_NUM" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="category" column="C_CATEGORY" />
+			<result property="checkDate" column="C_CHECK_DATE" />
+			<result property="fileName" column="C_FILE_NAME" />
+			<result property="fileAddress" column="C_FILE_ADDRESS" />
+			<result property="type" column="C_TYPE" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="createPeopleId" column="C_CREATE_PEOPLE_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="correctionRectify" column="C_CORRECTION_RECTIFY" />
+			<result property="correctionDate" column="C_CORRECTION_DATE" />
+			<result property="remark" column="C_REMARK" />
+			<result property="userName" column="userName" />
+			<result property="rectificationTime" column="C_RECTIFICATION_TIME" />
+			<result property="landWaiter" column="C_LAND_WAITER" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="SafeCheck_temp">
+			<![CDATA[
+				SELECT * FROM TB_SAFE_CHECK 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_SAFE_CHECK 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="SafeCheck_temp">
+			<![CDATA[
+				SELECT c.*,u.C_NAME AS C_UNIT_NAME
+				FROM TB_SAFE_CHECK c
+				LEFT JOIN tp_sys_unit u ON c.C_UNIT_ID=u.C_ID  
+				WHERE c.C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="SafeCheckEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_SAFE_CHECK 
+				(
+		          C_CHECK_NAME
+		        , C_YEAR_NUM
+		        , C_UNIT_ID
+		        , C_CATEGORY
+		        , C_CHECK_DATE
+		        , C_FILE_NAME
+		        , C_FILE_ADDRESS
+		        , C_TYPE
+		        , C_CREATE_PEOPLE_ID
+		        , C_CREATE_DATE
+		        , C_CORRECTION_RECTIFY
+		        , C_CORRECTION_DATE
+		        , C_REMARK
+		        , C_RECTIFICATION_TIME
+		        , C_LAND_WAITER
+				)
+				VALUES
+				(
+		         #{checkName}
+	           , #{yearNum}
+	           , #{unitId}
+	           , #{category}
+	           , #{checkDate}
+	           , #{fileName}
+	           , #{fileAddress}
+	           , #{type}
+	           , #{createPeopleId}
+	           , #{createDate}
+	           , #{correctionRectify}
+	           , #{correctionDate}
+	           , #{remark}
+	           , #{rectificationTime}
+	           , #{landWaiter}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="SafeCheckEntity">
+			<![CDATA[
+				UPDATE TB_SAFE_CHECK SET
+                   C_CHECK_NAME=#{checkName}
+	             , C_YEAR_NUM=#{yearNum}
+	             , C_UNIT_ID=#{unitId}
+	             , C_CATEGORY=#{category}
+	             , C_CHECK_DATE=#{checkDate}
+	             , C_FILE_NAME=#{fileName}
+	             , C_FILE_ADDRESS=#{fileAddress}
+	             , C_TYPE=#{type}
+	             , C_CREATE_PEOPLE_ID=#{createPeopleId}
+	             , C_CREATE_DATE=#{createDate}
+	             , C_CORRECTION_RECTIFY=#{correctionRectify}
+	             , C_CORRECTION_DATE=#{correctionDate}
+	             , C_REMARK=#{remark}
+	             , C_RECTIFICATION_TIME=#{rectificationTime}
+	             , C_LAND_WAITER=#{landWaiter}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="SafeCheckEntity">
+			<![CDATA[
+				DELETE FROM TB_SAFE_CHECK WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="SafeCheck_temp">
+			<![CDATA[ 
+				SELECT c.*,u.C_NAME AS C_UNIT_NAME,b.C_NAME AS userName
+				FROM TB_SAFE_CHECK c
+				LEFT JOIN tp_sys_unit u ON c.C_UNIT_ID=u.C_ID 
+				LEFT JOIN TP_SYS_USER b ON c.C_CREATE_PEOPLE_ID = b.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

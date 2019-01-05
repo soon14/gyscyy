@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.runRecordWind">
+		<resultMap type="runRecordEntity" id="RunRecordWind_temp">
+			<result property="id" column="C_ID" />
+			<result property="rlId" column="C_RL_ID" />
+			<result property="recordType" column="C_RECORD_TYPE" />
+			<result property="recordTime" column="C_RECORD_TIME" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="recordContent" column="C_RECORD_CONTENT" />
+			<result property="recordTypeName" column="C_RECORD_TYPE_NAME" />			
+       			<result property="unitName" column="C_UNIT_NAME" />
+ 			<result property="fZR" column="C_FZR" />			
+       
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="RunRecordWind_temp">
+			<![CDATA[
+				SELECT * FROM TB_RUN_RECORD_WIND 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_RUN_RECORD_WIND 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="RunRecordWind_temp">
+			<![CDATA[
+				SELECT * FROM TB_RUN_RECORD_WIND  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="runRecordEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_RUN_RECORD_WIND 
+				(
+	           C_RL_ID 
+		        ,
+	           C_RECORD_TYPE 
+		        ,
+	           C_RECORD_TIME 
+		        ,
+	           C_UNIT_ID 
+		        ,
+	           C_RECORD_CONTENT ,
+	           C_FZR 
+				)
+				VALUES
+				(
+		       #{rlId}
+	           ,
+		       #{recordType}
+	           ,
+		       #{recordTime}
+	           ,
+		       #{unitId}
+	           ,
+		       #{recordContent},
+		       #{fZR}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="runRecordEntity">
+			<![CDATA[
+				UPDATE TB_RUN_RECORD_WIND SET
+                 C_RL_ID=#{rlId}
+	             ,
+                 C_RECORD_TYPE=#{recordType}
+	             ,
+                 C_RECORD_TIME=#{recordTime}
+	             ,
+                 C_UNIT_ID=#{unitId}
+	             ,
+                 C_RECORD_CONTENT=#{recordContent} ,
+                 C_FZR=#{fZR}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="runRecordEntity">
+			<![CDATA[
+				DELETE FROM TB_RUN_RECORD_WIND WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="RunRecordWind_temp">
+			<![CDATA[ 
+				SELECT a.*,b.C_NAME as C_UNIT_NAME,d.C_NAME as C_RECORD_TYPE_NAME FROM TB_RUN_RECORD_WIND a 
+				LEFT JOIN TP_SYS_UNIT b ON a.C_UNIT_ID = b.C_ID
+				LEFT JOIN TP_SYS_DICTIONARY d on d.C_CODE = a.C_RECORD_TYPE
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

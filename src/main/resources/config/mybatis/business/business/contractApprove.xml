@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.contractApprove">
+		<resultMap type="ContractApproveEntity" id="ContractApprove_temp">
+			<result property="id" column="C_ID" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="contractCode" column="C_CONTRACT_CODE" />
+			<result property="name" column="C_NAME" />
+			<result property="supplierId" column="C_SUPPLIER_ID" />
+			<result property="money" column="C_MONEY" />
+			<result property="purchaseModeId" column="C_PURCHASE_MODE_ID" />
+			<result property="status" column="C_STATUS" />
+			<result property="file" column="C_FILE" />
+			<result property="purchaseModeName" column="C_PURCHASE_MODE_NAME" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="supplierName" column="C_SUPPLIER_NAME" />
+			<result property="createId" column="C_CREATE_ID" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="ContractApprove_temp">
+			<![CDATA[
+				SELECT * FROM TB_CONTRACT_APPROVE 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_CONTRACT_APPROVE 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="ContractApprove_temp">
+			<![CDATA[
+				SELECT 
+					ca.*,
+					dy.C_NAME AS C_PURCHASE_MODE_NAME,
+					un.C_NAME AS C_UNIT_NAME,
+					su.C_NAME AS C_SUPPLIER_NAME
+				FROM 
+					TB_CONTRACT_APPROVE ca
+				LEFT JOIN tp_sys_dictionary dy ON dy.C_CODE = ca.C_PURCHASE_MODE_ID
+				AND dy.C_CATEGORY_CODE = 'PURCHASE_MODE'
+				LEFT JOIN tp_sys_unit un ON un.C_ID = ca.C_UNIT_ID
+				LEFT JOIN tb_supplier_manage su ON su.C_ID = ca.C_SUPPLIER_ID
+				AND su.C_STATUS = '0'
+				WHERE ca.C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="ContractApproveEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_CONTRACT_APPROVE 
+				(
+		          C_UNIT_ID
+		        , C_CONTRACT_CODE
+		        , C_NAME
+		        , C_SUPPLIER_ID
+		        , C_MONEY
+		        , C_PURCHASE_MODE_ID
+		        , C_STATUS
+		        , C_FILE
+		        , C_CREATE_ID
+				)
+				VALUES
+				(
+		         #{unitId}
+	           , #{contractCode}
+	           , #{name}
+	           , #{supplierId}
+	           , #{money}
+	           , #{purchaseModeId}
+	           , #{status}
+	           , #{file}
+	           , #{createId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="ContractApproveEntity">
+			<![CDATA[
+				UPDATE TB_CONTRACT_APPROVE SET
+                   C_UNIT_ID=#{unitId}
+	             , C_CONTRACT_CODE=#{contractCode}
+	             , C_NAME=#{name}
+	             , C_SUPPLIER_ID=#{supplierId}
+	             , C_MONEY=#{money}
+	             , C_PURCHASE_MODE_ID=#{purchaseModeId}
+	             , C_STATUS=#{status}
+	             , C_FILE=#{file}
+	             , C_CREATE_ID=#{createId}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="ContractApproveEntity">
+			<![CDATA[
+				DELETE FROM TB_CONTRACT_APPROVE WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="ContractApprove_temp">
+			<![CDATA[ 
+				SELECT 
+					ca.*,
+					dy.C_NAME AS C_PURCHASE_MODE_NAME,
+					un.C_NAME AS C_UNIT_NAME,
+					su.C_NAME AS C_SUPPLIER_NAME
+				FROM 
+					TB_CONTRACT_APPROVE ca
+				LEFT JOIN tp_sys_dictionary dy ON dy.C_CODE = ca.C_PURCHASE_MODE_ID
+				AND dy.C_CATEGORY_CODE = 'PURCHASE_MODE'
+				LEFT JOIN tp_sys_unit un ON un.C_ID = ca.C_UNIT_ID
+				LEFT JOIN tb_supplier_manage su ON su.C_ID = ca.C_SUPPLIER_ID
+				AND su.C_STATUS = '0' 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

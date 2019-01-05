@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.defectManage.typicalTicket">
+		<resultMap type="TypicalTicketEntity" id="TypicalTicket_temp">
+			<result property="id" column="C_ID" />
+			<result property="name" column="C_NAME" />
+			<result property="type" column="C_TYPE" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="createPersonId" column="C_CREATE_PERSON_ID" />
+			<result property="createPersonName" column="C_CREATE_PERSON_NAME" />
+			<result property="approveStatus" column="C_APPROVE_STATUS" />
+			<result property="ticketType" column="C_TICKET_TYPE" />
+			<result property="workticket_id" column="C_WORKTICKET_ID" />
+			<result property="status" column="C_STATUS" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			
+			<result property="identify" column="C_IDENTIFY" />
+			<result property="invalidDate" column="C_IDENTIFY_DATE" />
+			<result property="invalidId" column="C_IDENTIFY_ID" />
+			<result property="invalidContent" column="C_IDENTIFY_CONTENT" />
+			
+			<result property="flag" column="C_FLAG" />
+			
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="TypicalTicket_temp">
+			<![CDATA[
+				SELECT * FROM TB_TYPICAL_TICKET 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_TYPICAL_TICKET 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="TypicalTicket_temp">
+			<![CDATA[
+				SELECT * FROM TB_TYPICAL_TICKET  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="typicalTicketEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_TYPICAL_TICKET 
+				(
+		          C_NAME
+		        , C_TYPE
+		        , C_UNIT_ID
+		        , C_UNIT_NAME
+		        , C_CREATE_PERSON_ID
+		        , C_CREATE_PERSON_NAME
+		        , C_APPROVE_STATUS
+		        , C_TICKET_TYPE
+		        , C_WORKTICKET_ID
+		        , C_STATUS
+		        ,C_CREATE_DATE
+		        ,C_IDENTIFY
+		        ,C_IDENTIFY_DATE
+		        ,C_IDENTIFY_ID
+		        ,C_IDENTIFY_CONTENT
+		        ,C_FLAG
+		        
+				)
+				VALUES
+				(
+		         #{name}
+	           , #{type}
+	           , #{unitId}
+	           , #{unitName}
+	           , #{createPersonId}
+	           , #{createPersonName}
+	           , #{approveStatus}
+	           , #{ticketType}
+	           , #{workticket_id}
+	           , #{status}
+	           , #{createDate}
+	           , #{identify}
+	           , #{invalidDate}
+	           , #{invalidId}
+	           , #{invalidContent}
+	           , #{flag}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="typicalTicketEntity">
+			<![CDATA[
+				UPDATE TB_TYPICAL_TICKET SET
+                   C_NAME=#{name}
+	             , C_TYPE=#{type}
+	             , C_UNIT_ID=#{unitId}
+	             , C_UNIT_NAME=#{unitName}
+	             , C_CREATE_PERSON_ID=#{createPersonId}
+	             , C_CREATE_PERSON_NAME=#{createPersonName}
+	             , C_APPROVE_STATUS=#{approveStatus}
+	             , C_TICKET_TYPE=#{ticketType}
+	             , C_WORKTICKET_ID=#{workticket_id}
+	             , C_STATUS=#{status}
+	             ,C_CREATE_DATE=#{createDate}
+                  ,
+                 C_IDENTIFY=#{identify} 
+	               ,
+                 C_IDENTIFY_DATE=#{invalidDate}
+                  ,
+                 C_IDENTIFY_ID=#{invalidId}
+                  ,
+                 C_IDENTIFY_CONTENT=#{invalidContent}
+                  ,
+                 C_FLAG=#{flag} 
+                 
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="typicalTicketEntity">
+			<![CDATA[
+				DELETE FROM TB_TYPICAL_TICKET WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="TypicalTicket_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_TYPICAL_TICKET 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

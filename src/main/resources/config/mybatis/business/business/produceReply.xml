@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.produceReply">
+		<resultMap type="ProduceReplyEntity" id="ProduceReply_temp">
+			<result property="id" column="C_ID" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="name" column="C_NAME" />
+			<result property="departmentId" column="C_DEPARTMENT_ID" />
+			<result property="judge" column="C_JUDGE" />
+			<result property="purchaseModeId" column="C_PURCHASE_MODE_ID" />
+			<result property="updateDate" column="C_UPDATE_DATE" />
+			<result property="remark" column="C_REMARK" />
+			<result property="purchaseModeName" column="C_PURCHASE_MODE_NAME" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="departmentName" column="C_DEPARTMENT_NAME" />
+			<result property="status" column="C_STATUS" />
+			<result property="file" column="C_FILE" />
+			<result property="createId" column="C_CREATE_ID" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="ProduceReply_temp">
+			<![CDATA[
+				SELECT * FROM TB_PRODUCE_REPLY 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_PRODUCE_REPLY 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="ProduceReply_temp">
+			<![CDATA[
+				SELECT 
+					p.*,
+					dy.C_NAME AS C_PURCHASE_MODE_NAME,
+					un.C_NAME AS C_UNIT_NAME,
+					ut.C_NAME AS C_DEPARTMENT_NAME
+				FROM 
+					TB_PRODUCE_REPLY p
+				LEFT JOIN tp_sys_dictionary dy ON dy.C_CODE = p.C_PURCHASE_MODE_ID
+				AND dy.C_CATEGORY_CODE = 'PURCHASE_MODE'
+				LEFT JOIN tp_sys_unit un ON un.C_ID = P.C_UNIT_ID
+				LEFT JOIN tp_sys_unit ut ON ut.C_ID = P.C_DEPARTMENT_ID 
+				WHERE p.C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="ProduceReplyEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_PRODUCE_REPLY 
+				(
+		          C_UNIT_ID
+		        , C_NAME
+		        , C_DEPARTMENT_ID
+		        , C_JUDGE
+		        , C_PURCHASE_MODE_ID
+		        , C_UPDATE_DATE
+		        , C_REMARK
+		        , C_STATUS
+		        , C_FILE
+		        , C_CREATE_ID
+				)
+				VALUES
+				(
+		         #{unitId}
+	           , #{name}
+	           , #{departmentId}
+	           , #{judge}
+	           , #{purchaseModeId}
+	           , #{updateDate}
+	           , #{remark}
+	           , #{status}
+	           , #{file}
+	           , #{createId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="ProduceReplyEntity">
+			<![CDATA[
+				UPDATE TB_PRODUCE_REPLY SET
+                   C_UNIT_ID=#{unitId}
+	             , C_NAME=#{name}
+	             , C_DEPARTMENT_ID=#{departmentId}
+	             , C_JUDGE=#{judge}
+	             , C_PURCHASE_MODE_ID=#{purchaseModeId}
+	             , C_UPDATE_DATE=#{updateDate}
+	             , C_REMARK=#{remark}
+	             , C_STATUS=#{status}
+	             , C_FILE=#{file}
+	             , C_CREATE_ID=#{createId}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="ProduceReplyEntity">
+			<![CDATA[
+				DELETE FROM TB_PRODUCE_REPLY WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="ProduceReply_temp">
+			<![CDATA[ 
+				SELECT 
+					p.*,
+					dy.C_NAME AS C_PURCHASE_MODE_NAME,
+					un.C_NAME AS C_UNIT_NAME,
+					ut.C_NAME AS C_DEPARTMENT_NAME
+				FROM 
+					TB_PRODUCE_REPLY p
+				LEFT JOIN tp_sys_dictionary dy ON dy.C_CODE = p.C_PURCHASE_MODE_ID
+				AND dy.C_CATEGORY_CODE = 'PURCHASE_MODE'
+				LEFT JOIN tp_sys_unit un ON un.C_ID = P.C_UNIT_ID
+				LEFT JOIN tp_sys_unit ut ON ut.C_ID = P.C_DEPARTMENT_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

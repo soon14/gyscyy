@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.annualProductionJob">
+		<resultMap type="AnnualProductionJobEntity" id="AnnualProductionJob_temp">
+			<result property="id" column="C_ID" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="updateUserId" column="C_UPDATE_USER_ID" />
+			<result property="updateDate" column="C_UPDATE_DATE" />
+			<result property="planTime" column="C_PLAN_TIME" />
+			<result property="content" column="C_CONTENT" />
+			<result property="workName" column="C_WORK_NAME" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="progress" column="C_PROGRESS" />
+			<result property="file" column="C_FILE" />
+			<result property="approveStatus" column="C_APPROVE_STATUS" />
+			<result property="type" column="C_TYPE" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="sealStatus" column="C_SEAL_STATUS" />
+			<result property="completeStatus" column="C_COMPLETE_STATUS" />
+			<result property="completeDate" column="C_COMPLETE_DATE" />
+			<result property="result" column="C_RESULT" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="AnnualProductionJob_temp">
+			<![CDATA[
+				SELECT * FROM TB_ANNUAL_PRODUCTION_JOB 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_ANNUAL_PRODUCTION_JOB 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="AnnualProductionJob_temp">
+			<![CDATA[
+				SELECT 
+					ap.*,
+					un.C_NAME AS C_UNIT_NAME
+				FROM 
+					TB_ANNUAL_PRODUCTION_JOB ap
+				LEFT JOIN tp_sys_unit un ON un.C_ID = ap.C_UNIT_ID 
+				WHERE ap.C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="AnnualProductionJobEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_ANNUAL_PRODUCTION_JOB 
+				(
+		          C_CREATE_USER_ID
+		        , C_CREATE_DATE
+		        , C_UPDATE_USER_ID
+		        , C_UPDATE_DATE
+		        , C_PLAN_TIME
+		        , C_CONTENT
+		        , C_WORK_NAME
+		        , C_UNIT_ID
+		        , C_PROGRESS
+		        , C_FILE
+		        , C_APPROVE_STATUS
+		        , C_TYPE
+		        , C_SEAL_STATUS
+		        , C_COMPLETE_STATUS
+		        , C_COMPLETE_DATE
+		        , C_RESULT
+				)
+				VALUES
+				(
+		         #{createUserId}
+	           , #{createDate}
+	           , #{updateUserId}
+	           , #{updateDate}
+	           , #{planTime}
+	           , #{content}
+	           , #{workName}
+	           , #{unitId}
+	           , #{progress}
+	           , #{file}
+	           , #{approveStatus}
+	           , #{type}
+	           , #{sealStatus}
+	           , #{completeStatus}
+	           , #{completeDate}
+	           , #{result}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="AnnualProductionJobEntity">
+			<![CDATA[
+				UPDATE TB_ANNUAL_PRODUCTION_JOB SET
+                   C_CREATE_USER_ID=#{createUserId}
+	             , C_CREATE_DATE=#{createDate}
+	             , C_UPDATE_USER_ID=#{updateUserId}
+	             , C_UPDATE_DATE=#{updateDate}
+	             , C_PLAN_TIME=#{planTime}
+	             , C_CONTENT=#{content}
+	             , C_WORK_NAME=#{workName}
+	             , C_UNIT_ID=#{unitId}
+	             , C_PROGRESS=#{progress}
+	             , C_FILE=#{file}
+	             , C_APPROVE_STATUS=#{approveStatus}
+	             , C_TYPE=#{type}
+	             , C_SEAL_STATUS=#{sealStatus}
+	             , C_COMPLETE_STATUS=#{completeStatus}
+	             , C_COMPLETE_DATE=#{completeDate}
+	             , C_RESULT=#{result}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="AnnualProductionJobEntity">
+			<![CDATA[
+				DELETE FROM TB_ANNUAL_PRODUCTION_JOB WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="AnnualProductionJob_temp">
+			<![CDATA[ 
+				SELECT 
+					ap.*,
+					un.C_NAME AS C_UNIT_NAME
+				FROM 
+					TB_ANNUAL_PRODUCTION_JOB ap
+				LEFT JOIN tp_sys_unit un ON un.C_ID = ap.C_UNIT_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.power">
+		<resultMap type="PowerEntity" id="Power_temp">
+			<result property="id" column="C_ID" />
+			<result property="requestNumber" column="C_REQUEST_NUMBER" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="equipNumber" column="C_EQUIP_NUMBER" />
+			<result property="equipName" column="C_EQUIP_NAME" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="requestDate" column="C_REQUEST_DATE" />
+			<result property="requestUserId" column="C_REQUEST_USER_ID" />
+			<result property="requestUserName" column="C_REQUEST_USER_NAME" />
+			<result property="powerStatus" column="C_POWER_STATUS" />
+			<result property="powerDec" column="C_POWER_DEC" />
+			<result property="remark" column="C_REMARK" />
+			<result property="attchmentIds" column="C_ATTCHMENT_IDS" />
+			<result property="status" column="C_STATUS" />
+			<result property="endDate" column="C_END_DATE" />
+			<result property="excuteUserId" column="C_EXCUTE_USER_ID" />
+			<result property="excuteUserName" column="C_EXCUTE_USER_NAME" />
+			<result property="costodyUserId" column="C_COSTODY_USER_ID" />
+			<result property="costodyUserName" column="C_COSTODY_USER_NAME" />
+			<result property="measur" column="C_MEASUR" />
+			<result property="attchmentResultIds" column="C_ATTCHMENT_RESULT_IDS" />
+			<result property="overhaulPlanId" column="C_OVERHAUL_PLAN_ID" />
+			
+			<result property="isPower" column="C_IS_POWER" />
+			<result property="equipLocalName" column="C_EQUIP_LOCAL_NAME" />
+			<result property="powerRange" column="C_POWER_RANGE" />
+			<result property="powerLevel" column="C_POWER_LEVEL" />
+			<result property="planName" column="C_PLAN_NAME" />
+			<result property="endEquipLocalName" column="C_END_EQUIP_LOCAL_NAME" />
+			<result property="endPowerRange" column="C_END_POWER_RANGE" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="Power_temp">
+			<![CDATA[
+				SELECT * FROM TB_POWER 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_POWER 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="Power_temp">
+			<![CDATA[
+				SELECT * FROM TB_POWER  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="PowerEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_POWER 
+				(
+		          C_REQUEST_NUMBER
+		        , C_UNIT_ID
+		        , C_EQUIP_NUMBER
+		        , C_EQUIP_NAME
+		        , C_UNIT_NAME
+		        , C_REQUEST_DATE
+		        , C_REQUEST_USER_ID
+		        , C_REQUEST_USER_NAME
+		        , C_POWER_STATUS
+		        , C_POWER_DEC
+		        , C_REMARK
+		        , C_ATTCHMENT_IDS
+		        , C_STATUS
+		        , C_END_DATE
+		        , C_EXCUTE_USER_ID
+		        , C_EXCUTE_USER_NAME
+		        , C_COSTODY_USER_ID
+		        , C_COSTODY_USER_NAME
+		        , C_MEASUR
+		        , C_ATTCHMENT_RESULT_IDS
+		        , C_OVERHAUL_PLAN_ID
+		        , C_IS_POWER
+		        , C_EQUIP_LOCAL_NAME
+		        , C_POWER_RANGE
+		        , C_POWER_LEVEL
+		        , C_PLAN_NAME
+		        , C_END_EQUIP_LOCAL_NAME
+		        , C_END_POWER_RANGE
+				)
+				VALUES
+				(
+		         #{requestNumber}
+	           , #{unitId}
+	           , #{equipNumber}
+	           , #{equipName}
+	           , #{unitName}
+	           , #{requestDate}
+	           , #{requestUserId}
+	           , #{requestUserName}
+	           , #{powerStatus}
+	           , #{powerDec}
+	           , #{remark}
+	           , #{attchmentIds}
+	           , #{status}
+	           , #{endDate}
+	           , #{excuteUserId}
+	           , #{excuteUserName}
+	           , #{costodyUserId}
+	           , #{costodyUserName}
+	           , #{measur}
+	           , #{attchmentResultIds}
+	           , #{overhaulPlanId}
+	           , #{isPower}
+	           , #{equipLocalName}
+	           , #{powerRange}
+	           , #{powerLevel}
+	           , #{planName}
+	           , #{endEquipLocalName}
+	           , #{endPowerRange}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="PowerEntity">
+			<![CDATA[
+				UPDATE TB_POWER SET
+                   C_REQUEST_NUMBER=#{requestNumber}
+	             , C_UNIT_ID=#{unitId}
+	             , C_EQUIP_NUMBER=#{equipNumber}
+	             , C_EQUIP_NAME=#{equipName}
+	             , C_UNIT_NAME=#{unitName}
+	             , C_REQUEST_DATE=#{requestDate}
+	             , C_REQUEST_USER_ID=#{requestUserId}
+	             , C_REQUEST_USER_NAME=#{requestUserName}
+	             , C_POWER_STATUS=#{powerStatus}
+	             , C_POWER_DEC=#{powerDec}
+	             , C_REMARK=#{remark}
+	             , C_ATTCHMENT_IDS=#{attchmentIds}
+	             , C_STATUS=#{status}
+	             , C_END_DATE=#{endDate}
+	             , C_EXCUTE_USER_ID=#{excuteUserId}
+	             , C_EXCUTE_USER_NAME=#{excuteUserName}
+	             , C_COSTODY_USER_ID=#{costodyUserId}
+	             , C_COSTODY_USER_NAME=#{costodyUserName}
+	             , C_MEASUR=#{measur}
+	             , C_ATTCHMENT_RESULT_IDS=#{attchmentResultIds}
+	             , C_OVERHAUL_PLAN_ID=#{overhaulPlanId}
+	             , C_IS_POWER=#{isPower}
+	             , C_EQUIP_LOCAL_NAME=#{equipLocalName}
+	             , C_POWER_RANGE=#{powerRange}
+	             , C_POWER_LEVEL=#{powerLevel}
+	             , C_PLAN_NAME=#{planName}
+	             , C_END_EQUIP_LOCAL_NAME=#{endEquipLocalName}
+	             , C_END_POWER_RANGE=#{endPowerRange}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="PowerEntity">
+			<![CDATA[
+				DELETE FROM TB_POWER WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="Power_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_POWER 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

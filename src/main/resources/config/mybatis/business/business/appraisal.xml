@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.defectManage.appraisal">
+		<resultMap type="AppraisalEntity" id="Appraisal_temp">
+			<result property="id" column="C_ID" />
+			<result property="appraisalOpinions" column="C_APPRAISAL_OPINIONS" />
+			<result property="appraisalResult" column="C_APPRAISAL_RESULT" />
+			<result property="defectId" column="C_DEFECT_ID" />
+			<result property="userId" column="C_USER_ID" />
+			<result property="approvalOpinions" column="C_APPROVAL_OPINIONS" />
+			<result property="appraisalTime" column="C_APPRAISAL_TIME" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="userName" column="C_USER_NAME" />
+			<result property="endTime" column="C_END_TIME" />
+			<result property="grade" column="C_GRADE" />
+			<result property="repeat" column="C_REPEAT" />
+			<result property="reportTime" column="C_REPORT_TIME" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="Appraisal_temp">
+			<![CDATA[
+				SELECT * FROM TB_DEFECT_APPRAISAL 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_DEFECT_APPRAISAL 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="Appraisal_temp">
+			<![CDATA[
+				SELECT * FROM TB_DEFECT_APPRAISAL  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="AppraisalEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_DEFECT_APPRAISAL 
+				(
+	            C_APPRAISAL_OPINIONS 
+		        ,
+	            C_APPRAISAL_RESULT 
+		        ,
+	            C_DEFECT_ID 
+		        ,
+	            C_USER_ID
+		        ,
+	            C_APPROVAL_OPINIONS 
+		        ,
+	            C_APPRAISAL_TIME 
+		        ,
+	            C_UNIT_ID 
+	              ,
+	            C_END_TIME 
+	              ,
+	            C_GRADE 
+	              ,
+	            C_REPEAT 
+	              ,
+	            C_REPORT_TIME 
+				)
+				VALUES
+				(
+		       #{appraisalOpinions}
+	           ,
+		       #{appraisalResult}
+	           ,
+		       #{defectId}
+	           ,
+		       #{userId}
+	           ,
+		       #{approvalOpinions}
+	           ,
+		       #{appraisalTime}
+	           ,
+		       #{unitId}
+		        ,
+		       #{endTime}
+		        ,
+		       #{grade}
+		        ,
+		       #{repeat}
+		        ,
+		       #{reportTime}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="AppraisalEntity">
+			<![CDATA[
+				UPDATE TB_DEFECT_APPRAISAL SET
+                 C_APPRAISAL_OPINIONS=#{appraisalOpinions}
+	             ,
+                 C_APPRAISAL_RESULT=#{appraisalResult}
+	             ,
+                 C_DEFECT_ID=#{defectId}
+	             ,
+                 C_USER_ID=#{userId}
+	             ,
+                 C_APPROVAL_OPINIONS=#{approvalOpinions}
+	             ,
+                 C_APPRAISAL_TIME=#{appraisalTime}
+	             ,
+                 C_UNIT_ID=#{unitId}
+                   ,
+                 C_END_TIME=#{endTime}
+                   ,
+                 C_GRADE=#{grade}
+                   ,
+                 C_REPEAT=#{repeat}
+                   ,
+                 C_REPORT_TIME=#{reportTime}
+                 
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="AppraisalEntity">
+			<![CDATA[
+				DELETE FROM TB_DEFECT_APPRAISAL WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="Appraisal_temp">
+			<![CDATA[ 
+				SELECT T.*,T1.C_NAME C_USER_NAME,T2.C_NAME C_UNIT_NAME FROM TB_DEFECT_APPRAISAL T 
+				LEFT JOIN TP_SYS_USER T1 ON T.C_USER_ID=T1.C_ID
+				LEFT JOIN TP_SYS_UNIT T2 ON T.C_UNIT_ID=T2.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

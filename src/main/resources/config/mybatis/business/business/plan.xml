@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.planManage.plan">
+		<resultMap type="PlanEntity" id="Plan_temp">
+			<result property="id" column="C_ID" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="userId" column="C_USER_ID" />
+			<result property="cycle" column="C_CYCLE" />
+			<result property="type" column="C_TYPE" />
+			<result property="time" column="C_TIME" />
+			<result property="timeEnd" column="C_TIME_END" />
+			<result property="remark" column="C_REMARK" />
+			<result property="fileId" column="C_FILE_ID" />
+			<result property="status" column="C_STATUS" />
+			<result property="flag" column="C_FLAG" />
+			<result property="planSum" column="C_PLAN_SUM" />
+			<result property="uuid" column="C_UUID" />
+			
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="userName" column="C_USER_NAME" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="Plan_temp">
+			<![CDATA[
+				SELECT * FROM TB_PLAN 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_PLAN 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="Plan_temp">
+			<![CDATA[
+			SELECT T.* ,
+				 T3.C_NAME C_UNIT_NAME,
+				 T4.C_NAME C_USER_NAME
+				FROM TB_PLAN T
+				LEFT JOIN TP_SYS_UNIT T3 ON T.C_UNIT_ID=T3.C_ID
+				LEFT JOIN TP_SYS_USER T4 ON T.C_USER_ID=T4.C_ID
+			    WHERE T.C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="PlanEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_PLAN 
+				(
+		          C_UNIT_ID
+		        , C_USER_ID
+		        , C_CYCLE
+		        , C_TYPE
+		        , C_TIME
+		        , C_TIME_END
+		        , C_REMARK
+		        , C_FILE_ID
+		        , C_STATUS
+		        , C_FLAG
+		        , C_PLAN_SUM
+		        , C_UUID
+				)
+				VALUES
+				(
+		         #{unitId}
+	           , #{userId}
+	           , #{cycle}
+	           , #{type}
+	           , #{time}
+	            , #{timeEnd}
+	           , #{remark}
+	           , #{fileId}
+	           , #{status}
+	           , #{flag}
+	           , #{planSum}
+	           , #{uuid}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="PlanEntity">
+			<![CDATA[
+				UPDATE TB_PLAN SET
+                   C_UNIT_ID=#{unitId}
+	             , C_USER_ID=#{userId}
+	             , C_CYCLE=#{cycle}
+	             , C_TYPE=#{type}
+	             , C_TIME=#{time}
+	             , C_TIME_END=#{timeEnd}
+	             , C_REMARK=#{remark}
+	             , C_FILE_ID=#{fileId}
+	             , C_STATUS=#{status}
+	             , C_FLAG=#{flag}
+	             , C_PLAN_SUM=#{planSum}
+	             , C_UUID=#{uuid}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="PlanEntity">
+			<![CDATA[
+				DELETE FROM TB_PLAN WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="Plan_temp">
+			<![CDATA[ 
+				SELECT T.* ,
+				 T3.C_NAME C_UNIT_NAME,
+				 T4.C_NAME C_USER_NAME
+				FROM TB_PLAN T
+				LEFT JOIN TP_SYS_UNIT T3 ON T.C_UNIT_ID=T3.C_ID
+				LEFT JOIN TP_SYS_USER T4 ON T.C_USER_ID=T4.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

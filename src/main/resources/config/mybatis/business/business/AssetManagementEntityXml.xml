@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.assetManage.AssetManagement">
+		<resultMap type="AssetManagement" id="AssetManagement_temp">
+			<result property="id" column="C_ID" /> 
+			<result property="name" column="C_NAME" /> 
+			<result property="year" column="C_YEAR" /> 
+			<result property="time" column="C_TIME" /> 
+			<result property="relevantInfo" column="C_RELEVANT_INFO" /> 
+			<result property="appendix" column="C_APPENDIX" /> 
+			<result property="defualtType" column="C_DEFUALT_TYPE" /> 
+			<result property="defualtTypeName" column="C_DEFUALT_TYPE_NAME" /> 
+			<result property="type" column="C_TYPE" /> 
+			<result property="createDate" column="C_CREATE_DATE" /> 
+			<result property="updateDate" column="C_UPDATE_DATE" /> 
+			<result property="creater" column="C_CREATER" /> 
+			<result property="createrName" column="C_CREATER_NAME" /> 
+			<result property="code" column="C_CODE" /> 
+			<result property="assetName" column="C_ASSET_NAME" /> 
+			<result property="certificate" column="C_CERTIFICATE" /> 
+			<result property="unitId" column="C_UNIT_ID" /> 
+			<result property="unitName" column="C_UNIT_NAME" /> 
+		</resultMap>
+		<select id="findAll" resultMap="AssetManagement_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_asset_management 
+			]]>
+		</select>
+		
+		<select id="total" resultType="int">
+			<![CDATA[ 
+				SELECT count(1) FROM tb_asset_management 
+			]]>
+		</select>
+		
+		<select id="findById" parameterType="long" resultMap="AssetManagement_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_asset_management WHERE C_ID=#{id}
+			]]>
+		</select> 
+		 
+		
+		<!-- ORACLE 数据库需要增加SEQUENCE配置 -->
+		<insert id="insert" parameterType="AssetManagement">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<![CDATA[ 
+				insert into tb_asset_management 
+				(C_NAME,C_YEAR,C_TIME,C_RELEVANT_INFO,C_APPENDIX,C_DEFUALT_TYPE,C_DEFUALT_TYPE_NAME,C_TYPE,C_CREATE_DATE,C_UPDATE_DATE,C_CREATER,C_CODE,C_ASSET_NAME,C_CERTIFICATE,C_UNIT_ID)
+				values
+				(#{name},#{year},#{time},#{relevantInfo},#{appendix},#{defualtType},#{defualtTypeName},#{type},#{createDate},#{updateDate},#{creater},#{code},#{assetName},#{certificate},#{unitId})
+			]]>
+		</insert>
+		
+		
+		<update id="update" parameterType="AssetManagement">
+			<![CDATA[ 
+				update tb_asset_management set
+				C_NAME=#{name},
+				C_YEAR=#{year},
+				C_TIME=#{time},
+				C_RELEVANT_INFO=#{relevantInfo},
+				C_APPENDIX=#{appendix},
+				C_DEFUALT_TYPE=#{defualtType},
+				C_DEFUALT_TYPE_NAME=#{defualtTypeName},
+				C_UPDATE_DATE=#{updateDate},
+				C_CREATER=#{creater},
+				C_CODE=#{code},
+				C_ASSET_NAME=#{assetName},
+				C_CERTIFICATE=#{certificate},
+				C_UNIT_ID=#{unitId}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+
+		<update id="delete" parameterType="AssetManagement">
+			<![CDATA[ 
+				DELETE FROM tb_asset_management WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<select id="findByCondition" parameterType="map" resultMap="AssetManagement_temp">
+			<![CDATA[ 
+				SELECT t.*,a.C_NAME AS C_CREATER_NAME ,b.C_NAME AS C_UNIT_NAME FROM tb_asset_management t LEFT JOIN TP_SYS_USER a ON t.C_CREATER = a.C_ID
+				LEFT JOIN TP_SYS_UNIT b ON t.C_UNIT_ID = b.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+
+	</mapper>

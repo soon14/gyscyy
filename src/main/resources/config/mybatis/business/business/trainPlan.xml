@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.trainPlan">
+		<resultMap type="TrainPlanEntity" id="TrainPlan_temp">
+			<result property="id" column="C_ID" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="titleName" column="C_TITLE_NAME" />
+			<result property="classify" column="C_CLASSIFY" />
+			<result property="range" column="C_RANGE" />
+			<result property="time" column="C_TIME" />
+			<result property="count" column="C_COUNT" />
+			<result property="duration" column="C_DURATION" />
+			<result property="remark" column="C_REMARK" />
+			<result property="message" column="C_MESSAGE" />
+			<result property="status" column="C_STATUS" />
+			<result property="people" column="C_PEOPLE" />
+			<result property="createPeopleId" column="C_CREATE_PEOPLE_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="TrainPlan_temp">
+			<![CDATA[
+				SELECT * FROM TB_TRAIN_PLAN 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_TRAIN_PLAN 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="TrainPlan_temp">
+			<![CDATA[
+				SELECT * FROM TB_TRAIN_PLAN  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="TrainPlanEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_TRAIN_PLAN 
+				(
+		          C_UNIT_ID
+		        , C_TITLE_NAME
+		        , C_CLASSIFY
+		        , C_RANGE
+		        , C_TIME
+		        , C_COUNT
+		        , C_DURATION
+		        , C_REMARK
+		        , C_STATUS
+		        , C_MESSAGE
+		        , C_PEOPLE
+		        , C_CREATE_PEOPLE_ID
+		        , C_CREATE_DATE
+				)
+				VALUES
+				(
+		         #{unitId}
+	           , #{titleName}
+	           , #{classify}
+	           , #{range}
+	           , #{time}
+	           , #{count}
+	           , #{duration}
+	           , #{remark}
+	           , #{status}
+	           , #{message}
+	           , #{people}
+	           , #{createPeopleId}
+	           , #{createDate}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="TrainPlanEntity">
+			<![CDATA[
+				UPDATE TB_TRAIN_PLAN SET
+                   C_UNIT_ID=#{unitId}
+	             , C_TITLE_NAME=#{titleName}
+	             , C_CLASSIFY=#{classify}
+	             , C_RANGE=#{range}
+	             , C_TIME=#{time}
+	             , C_COUNT=#{count}
+	             , C_DURATION=#{duration}
+	             , C_REMARK=#{remark}
+	             , C_STATUS=#{status}
+	             , C_MESSAGE=#{message}
+	             , C_PEOPLE=#{people}
+	             , C_CREATE_PEOPLE_ID=#{createPeopleId}
+	             , C_CREATE_DATE=#{createDate}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="TrainPlanEntity">
+			<![CDATA[
+				DELETE FROM TB_TRAIN_PLAN WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="TrainPlan_temp">
+			<![CDATA[ 
+				SELECT p.*,u.C_NAME AS C_UNIT_NAME
+				FROM TB_TRAIN_PLAN p
+				LEFT JOIN tp_sys_unit u ON p.C_UNIT_ID=u.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

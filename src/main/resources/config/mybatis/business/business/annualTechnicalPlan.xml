@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.annualTechnicalPlan">
+		<resultMap type="AnnualTechnicalPlanEntity" id="AnnualTechnicalPlan_temp">
+			<result property="id" column="C_ID" />
+			<result property="subject" column="C_SUBJECT" />
+			<result property="purposePlan" column="C_PURPOSE_PLAN" />
+			<result property="charge" column="C_CHARGE" />
+			<result property="planDate" column="C_PLAN_DATE" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="remark" column="C_REMARK" />
+			<result property="fileId" column="C_FILE_ID" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="uploadPerson" column="C_UPLOAD_PERSON" />
+			<result property="uploadPersonName" column="C_UPLOAD_PERSON_NAME" />
+			<result property="status" column="C_STATUS" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="AnnualTechnicalPlan_temp">
+			<![CDATA[
+				SELECT * FROM TB_ANNUAL_TECHNICAL_PLAN 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_ANNUAL_TECHNICAL_PLAN 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="AnnualTechnicalPlan_temp">
+			<![CDATA[
+				SELECT * FROM TB_ANNUAL_TECHNICAL_PLAN  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="AnnualTechnicalPlanEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_ANNUAL_TECHNICAL_PLAN 
+				(
+		          C_SUBJECT
+		        , C_PURPOSE_PLAN
+		        , C_CHARGE
+		        , C_PLAN_DATE
+		        , C_UNIT_ID
+		        , C_REMARK
+		        , C_FILE_ID
+		        , C_UPLOAD_PERSON
+		        , C_STATUS
+				)
+				VALUES
+				(
+		         #{subject}
+	           , #{purposePlan}
+	           , #{charge}
+	           , #{planDate}
+	           , #{unitId}
+	           , #{remark}
+	           , #{fileId}
+	           , #{uploadPerson}
+	           , #{status}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="AnnualTechnicalPlanEntity">
+			<![CDATA[
+				UPDATE TB_ANNUAL_TECHNICAL_PLAN SET
+                   C_SUBJECT=#{subject}
+	             , C_PURPOSE_PLAN=#{purposePlan}
+	             , C_CHARGE=#{charge}
+	             , C_PLAN_DATE=#{planDate}
+	             , C_UNIT_ID=#{unitId}
+	             , C_REMARK=#{remark}
+	             , C_FILE_ID=#{fileId}
+	             , C_UPLOAD_PERSON=#{uploadPerson}
+	             , C_STATUS=#{status}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="AnnualTechnicalPlanEntity">
+			<![CDATA[
+				DELETE FROM TB_ANNUAL_TECHNICAL_PLAN WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="AnnualTechnicalPlan_temp">
+			<![CDATA[ 
+				SELECT t.*,a.C_NAME AS C_UNIT_NAME,b.C_NAME AS C_UPLOAD_PERSON_NAME  FROM  TB_ANNUAL_TECHNICAL_PLAN t LEFT JOIN TP_SYS_UNIT a ON t.C_UNIT_ID = a.C_ID
+				LEFT JOIN TP_SYS_USER b ON t.C_UPLOAD_PERSON = b.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

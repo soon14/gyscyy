@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.OAManagement.leaderApproval.ReceiptLeaderApproval">
+		<resultMap type="ReceiptLeaderApproval" id="ReceiptLeaderApproval_temp">
+			<result property="id" column="C_ID" /> 
+			<result property="receiptId" column="C_RECEIPT_ID" /> 
+			<result property="approvalResult" column="C_APPROVAL_RESULT" /> 
+			<result property="approvalComment" column="C_APPROVAL_COMMENT" /> 
+			<result property="approvalPersionId" column="C_APPROVAL_PERSION_ID" /> 
+			<result property="approvalPersionName" column="C_APPROVAL_PERSION_NAME" /> 
+			<result property="approvalTime" column="C_APPROVAL_TIME" /> 
+		</resultMap>
+		<select id="findAll" resultMap="ReceiptLeaderApproval_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_receipt_leader_approval 
+			]]>
+		</select>
+		
+		<select id="total" resultType="int">
+			<![CDATA[ 
+				SELECT count(1) FROM tb_receipt_leader_approval 
+			]]>
+		</select>
+		
+		<select id="findById" parameterType="long" resultMap="ReceiptLeaderApproval_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_receipt_leader_approval WHERE C_ID=#{id}
+			]]>
+		</select> 
+		 
+		
+		<!-- ORACLE 数据库需要增加SEQUENCE配置 -->
+		<insert id="insert" parameterType="ReceiptLeaderApproval">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<![CDATA[ 
+				insert into tb_receipt_leader_approval 
+				(C_ID,C_RECEIPT_ID,C_APPROVAL_RESULT,C_APPROVAL_COMMENT,C_APPROVAL_PERSION_ID,C_APPROVAL_PERSION_NAME,C_APPROVAL_TIME)
+				values
+				(#{id},#{receiptId},#{approvalResult},#{approvalComment},#{approvalPersionId},#{approvalPersionName},#{approvalTime})
+			]]>
+		</insert>
+		
+		
+		<update id="update" parameterType="ReceiptLeaderApproval">
+			<![CDATA[ 
+				update tb_receipt_leader_approval set
+				C_RECEIPT_ID=#{receiptId},
+				C_APPROVAL_RESULT=#{approvalResult},
+				C_APPROVAL_COMMENT=#{approvalComment},
+				C_APPROVAL_PERSION_ID=#{approvalPersionId},
+				C_APPROVAL_PERSION_NAME=#{approvalPersionName},
+				C_APPROVAL_TIME=#{approvalTime}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<update id="delete" parameterType="ReceiptLeaderApproval">
+			<![CDATA[ 
+				DELETE FROM tb_receipt_leader_approval WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<select id="findByCondition" parameterType="map" resultMap="ReceiptLeaderApproval_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_receipt_leader_approval 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+
+	</mapper>

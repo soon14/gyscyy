@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.ticketStatistics">
+		<resultMap type="workTicketEntity" id="WorkTicketEntity_temp">
+			<result property="appendid" column="C_APPENDID" />
+			<result property="guarderId" column="C_GUARDER_ID" />
+			<result property="endPicId" column="C_END_PIC_ID" />
+			<result property="unitNameId" column="C_UNIT_NAME_ID" />
+			<result property="type" column="C_TYPE" />
+			<result property="endTime" column="C_END_TIME" />
+			<result property="id" column="C_ID" />
+			<result property="changeAllowDate" column="C_CHANGE_ALLOW_DATE" />
+			<result property="plandateStart" column="C_PLANDATE_START" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="guarderName" column="C_GUARDER_NAME" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="workClassPeople" column="C_WORK_CLASS_PEOPLE" />
+			<result property="workClassMember" column="C_WORK_CLASS_MEMBER" />
+			<result property="isSet" column="C_IS_SET" />
+			<result property="status" column="C_STATUS" />
+			<result property="flawCode" column="C_FLAW_CODE" />
+			<result property="endAllowName" column="C_END_ALLOW_NAME" />
+			<result property="code" column="C_CODE" />
+			<result property="istypical" column="C_ISTYPICAL" />
+			<result property="updateDate" column="C_UPDATE_DATE" />
+			<result property="content" column="C_CONTENT" />
+			<result property="groupId" column="C_GROUP_ID" />
+			<result property="equipmentName" column="C_EQUIPMENT_NAME" />
+			<result property="annexId" column="C_ANNEX_ID" />
+			<result property="address" column="C_ADDRESS" />
+			<result property="endAllowId" column="C_END_ALLOW_ID" />
+			<result property="endPicName" column="C_END_PIC_NAME" />
+			<result property="equipmentCode" column="C_EQUIPMENT_CODE" />
+			<result property="changeAllowId" column="C_CHANGE_ALLOW_ID" />
+			<result property="changeAllowName" column="C_CHANGE_ALLOW_NAME" />
+			<result property="workStatus" column="C_WORK_STATUS" />
+			<result property="plandateEnd" column="C_PLANDATE_END" />
+			<result property="invalidDate" column="C_INVALID_DATE" />
+			<result property="invalidId" column="C_INVALID_ID" />
+			<result property="invalidContent" column="C_INVALID_CONTENT" />
+			<result property="unitName" column="unitName" />
+			<result property="groupName" column="groupName" />
+			<result property="identify" column="C_IDENTIFY" />
+		</resultMap>
+		
+		<resultMap type="ticketStatisticsEntity" id="TicketStatisticsVO">
+			
+		</resultMap>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="WorkTicketEntity_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_WORKTICKET 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+
+		<resultMap type="OperationTicketEntity" id="OperationTicketEntity_temp">
+			<result property="id" column="C_ID" />
+			<result property="code" column="C_CODE" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="equipmentCode" column="C_EQUIPMENT_CODE" />
+			<result property="equipmentName" column="C_EQUIPMENT_NAME" />
+			<result property="startDate" column="C_START_DATE" />
+			<result property="endDate" column="C_END_DATE" />
+			<result property="workticketCode" column="C_WORKTICKET_CODE" />
+			<result property="defectCode" column="C_DEFECT_CODE" />
+			<result property="workText" column="C_WORK_TEXT" />
+			<result property="remark" column="C_REMARK" />
+			<result property="fileId" column="C_FILE_ID" />
+			<result property="isSet" column="C_IS_SET" />
+			<result property="operateName" column="C_OPERATE_NAME" />
+			<result property="operateId" column="C_OPERATE_ID" />
+			<result property="guardianName" column="C_GUARDIAN_NAME" />
+			<result property="guardianId" column="C_GUARDIAN_ID" />
+			<result property="guardianDate" column="C_GUARDIAN_DATE" />
+			<result property="picName" column="C_PIC_NAME" />
+			<result property="picId" column="C_PIC_ID" />
+			<result property="workManagerName" column="C_WORK_MANAGER_NAME" />
+			<result property="workManagerId" column="C_WORK_MANAGER_ID" />
+			<result property="status" column="C_STATUS" />
+			<result property="reason" column="C_REASON" />
+			<result property="istypical" column="C_ISTYPICAL" />
+			<result property="identify" column="C_IDENTIFY" />
+			<result property="endTime" column="C_END_TIME" />
+		</resultMap>
+				<!-- 根据条件查询 -->
+		<select id="findOperationTicketData" parameterType="map" resultMap="OperationTicketEntity_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_operation_ticket t 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

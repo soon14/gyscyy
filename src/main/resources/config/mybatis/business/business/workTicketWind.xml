@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aptech.business.workTicketWind">
+	<resultMap type="workTicketWindEntity" id="WorkTicketWind_temp">
+		<result property="id" column="C_ID" />
+		<result property="workticketId" column="C_WORKTICKET_ID" />
+		<result property="signerId" column="C_SIGNER_ID" />
+		<result property="signerName" column="C_SIGNER_NAME" />
+		<result property="signerDate" column="C_SIGNER_DATE" />
+		<result property="getticketTime" column="C_GETTICKET_TIME" />
+		<result property="ondutyId" column="C_ONDUTY_ID" />
+		<result property="ondutyName" column="C_ONDUTY_NAME" />
+		<result property="approveStarttime" column="C_APPROVE_STARTTIME" />
+		<result property="approveEndtime" column="C_APPROVE_ENDTIME" />
+		<result property="dutyMonitorId" column="C_DUTY_MONITOR_ID" />
+		<result property="dutyMonitorName" column="C_DUTY_MONITOR_NAME" />
+		<result property="allowPicPersonId" column="C_ALLOW_PIC_PERSON_ID" />
+		<result property="allowPicPersonName" column="C_ALLOW_PIC_PERSON_NAME" />
+		<result property="allowMonitorId" column="C_DUIT_MANAGER_ID" />
+		<result property="allowMonitorName" column="C_DUIT_MANAGER_NAME" />
+		<result property="changeOldPicId" column="C_CHANGE_OLD_PIC_ID" />
+		<result property="changeOldPicName" column="C_CHANGE_OLD_PIC_NAME" />
+		<result property="changeNewPicId" column="C_CHANGE_NEW_PIC_ID" />
+		<result property="changeNewPicName" column="C_CHANGE_NEW_PIC_NAME" />
+		<result property="changeSignerId" column="C_CHANGE_SIGNER_ID" />
+		<result property="changeSignerName" column="C_CHANGE_SIGNER_NAME" />
+		<result property="changeSignerDate" column="C_CHANGE_SIGNER_DATE" />
+		<result property="changeAllowId" column="C_CHANGE_ALLOW_ID" />
+		<result property="changeAllowName" column="C_CHANGE_ALLOW_NAME" />
+		<result property="changeAllowDate" column="C_CHANGE_ALLOW_DATE" />
+		<result property="workPersonGroup" column="C_WORK_PERSON_GROUP" />
+		<result property="workPersonPicId" column="C_WORK_PERSON_PIC_ID" />
+		<result property="workPersonPicName" column="C_WORK_PERSON_PIC_NAME" />
+		<result property="delayDate" column="C_DELAY_DATE" />
+		<result property="delayPicId" column="C_DELAY_PIC_ID" />
+		<result property="delayPicName" column="C_DELAY_PIC_NAME" />
+		<result property="delayPicSureDate" column="C_DELAY_PIC_SURE_DATE" />
+		<result property="delayAllowId" column="C_DELAY_ALLOW_ID" />
+		<result property="delayAllowName" column="C_DELAY_ALLOW_NAME" />
+		<result property="delayAllowSureDate" column="C_DELAY_ALLOW_SURE_DATE" />
+		<result property="delayDutyMonitorId" column="C_DELAY_DUTY_MONITOR_ID" />
+		<result property="delayDutyMonitorName" column="C_DELAY_DUTY_MONITOR_NAME" />
+		<result property="runAllowId" column="C_RUN_ALLOW_ID" />
+		<result property="runAllowName" column="C_RUN_ALLOW_NAME" />
+		<result property="runPicId" column="C_RUN_PIC_ID" />
+		<result property="runPicName" column="C_RUN_PIC_NAME" />
+		<result property="runSureDate" column="C_RUN_SURE_DATE" />
+		<result property="stopAllowId" column="C_STOP_ALLOW_ID" />
+		<result property="stopAllowName" column="C_STOP_ALLOW_NAME" />
+		<result property="stopPicId" column="C_STOP_PIC_ID" />
+		<result property="stopPicName" column="C_STOP_PIC_NAME" />
+		<result property="stopSureDate" column="C_STOP_SURE_DATE" />
+		<result property="endGroup" column="C_END_GROUP" />
+		<result property="endGroupIndex" column="C_END_GROUP_INDEX" />
+		<result property="endStand" column="C_END_STAND" />
+		<result property="endStandIndex" column="C_END_STAND_INDEX" />
+		<result property="endPicDate" column="C_END_PIC_DATE" />
+		<result property="endAllowDate" column="C_END_ALLOW_DATE" />
+		<result property="remarkGuarderId" column="C_REMARK_GUARDER_ID" />
+		<result property="remarkGuarderName" column="C_REMARK_GUARDER_NAME" />
+		<result property="remarkResponsibleName" column="C_REMARK_RESPONSIBLE_NAME" />
+		<result property="remarkOther" column="C_REMARK_OTHER" />
+		<result property="heatCode" column="C_HEAT_CODE" />
+		<result property="heatPersonId" column="C_HEAT_PERSON_ID" />
+		<result property="heatPersonName" column="C_HEAT_PERSON_NAME" />
+		<result property="electricCode" column="C_ELECTRIC_CODE" />
+		<result property="electricPersonId" column="C_ELECTRIC_PERSON_ID" />
+		<result property="electricPersonName" column="C_ELECTRIC_PERSON_NAME" />
+		<result property="machineCode" column="C_MACHINE_CODE" />
+		<result property="machinePersonId" column="C_MACHINE_PERSON_ID" />
+		<result property="machinePersonName" column="C_MACHINE_PERSON_NAME" />
+		<result property="recoverOther" column="C_RECOVER_OTHER" />
+		<result property="runManagerId" column="C_RUN_MANAGER_ID" />
+		<result property="runManagerName" column="C_RUN_MANAGER_NAME" />
+		<result property="stopManagerId" column="C_STOP_MANAGER_ID" />
+		<result property="stopManagerName" column="C_STOP_MANAGER_NAME" />
+		<result property="workCondition" column="C_WORK_CONDITION" />
+		<result property="createTime" column="C_CREATE_TIME" />
+	</resultMap>
+
+	<!-- 获取所有数据 -->
+	<select id="findAll" resultMap="WorkTicketWind_temp">
+			<![CDATA[
+				SELECT * FROM TB_WORKTICKET_WINDPOWER 
+			]]>
+	</select>
+
+	<!-- 获取所有数据条数 -->
+	<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_WORKTICKET_WINDPOWER 
+			]]>
+	</select>
+
+	<!-- 根据id查询 -->
+	<select id="findById" parameterType="long" resultMap="WorkTicketWind_temp">
+			<![CDATA[
+				SELECT * FROM TB_WORKTICKET_WINDPOWER  WHERE C_ID=#{id}
+			]]>
+	</select>
+
+	<!-- 添加数据 -->
+	<insert id="insert" parameterType="workTicketWindEntity">
+			<![CDATA[
+				INSERT INTO TB_WORKTICKET_WINDPOWER
+		(
+	    C_APPROVE_STARTTIME
+	    ,
+	    C_GETTICKET_TIME
+	    ,
+	    C_DELAY_DUTY_MONITOR_ID
+	    ,
+	    C_END_PIC_DATE
+	    ,
+	    C_DELAY_PIC_SURE_DATE
+	    ,
+	    C_CHANGE_OLD_PIC_NAME
+	    ,
+	    C_SIGNER_ID
+	    ,
+	    C_DELAY_ALLOW_SURE_DATE
+	    ,
+	    C_DELAY_DUTY_MONITOR_NAME
+	    ,
+	    C_ALLOW_MONITOR_NAME
+	    ,
+	    C_WORKTICKET_ID
+	    ,
+	    C_DELAY_PIC_NAME
+	    ,
+	    C_REMARK_GUARDER_ID
+	    ,
+	    C_END_STAND_INDEX
+	    ,
+	    C_WORK_PERSON_PIC_NAME
+	    ,
+	    C_REMARK_GUARDER_NAME
+	    ,
+	    C_HEAT_PERSON_ID
+	    ,
+	    C_CREATE_USER_ID
+	    ,
+	    C_ELECTRIC_PERSON_ID
+	    ,
+	    C_STOP_PIC_ID
+	    ,
+	    C_STOP_PIC_NAME
+	    ,
+	    C_SIGNER_NAME
+	    ,
+	    C_DELAY_ALLOW_ID
+	    ,
+	    C_ONDUTY_ID
+	    ,
+	    C_WORK_PERSON_GROUP
+	    ,
+	    C_END_ALLOW_DATE
+	    ,
+	    C_CHANGE_NEW_PIC_NAME
+	    ,
+	    C_DELAY_ALLOW_NAME
+	    ,
+	    C_WORK_PERSON_PIC_ID
+	    ,
+	    C_HEAT_CODE
+	    ,
+	    C_DUTY_MONITOR_ID
+	    ,
+	    C_CHANGE_ALLOW_ID
+	    ,
+	    C_MACHINE_CODE
+	    ,
+	    C_SIGNER_DATE
+	    ,
+	    C_DELAY_DATE
+	    ,
+	    C_END_STAND
+	    ,
+	    C_CHANGE_SIGNER_NAME
+	    ,
+	    C_MACHINE_PERSON_ID
+	    ,
+	    C_ELECTRIC_PERSON_NAME
+	    ,
+	    C_CHANGE_NEW_PIC_ID
+	    ,
+	    C_RUN_ALLOW_ID
+	    ,
+	    C_CHANGE_OLD_PIC_ID
+	    ,
+	    C_STOP_ALLOW_ID
+	    ,
+	    C_ALLOW_PIC_PERSON_NAME
+	    ,
+	    C_ONDUTY_NAME
+	    ,
+	    C_RUN_ALLOW_NAME
+	    ,
+	    C_CHANGE_ALLOW_DATE
+	    ,
+	    C_END_GROUP_INDEX
+	    ,
+	    C_CHANGE_SIGNER_DATE
+	    ,
+	    C_CREATE_DATE
+	    ,
+	    C_APPROVE_ENDTIME
+	    ,
+	    C_DUTY_MONITOR_NAME
+	    ,
+	    C_HEAT_PERSON_NAME
+	    ,
+	    C_UPDATE_DATE
+	    ,
+	    C_ALLOW_PIC_PERSON_ID
+	    ,
+	    C_STOP_ALLOW_NAME
+	    ,
+	    C_DELAY_PIC_ID
+	    ,
+	    C_RUN_PIC_NAME
+	    ,
+	    C_ALLOW_MONITOR_ID
+	    ,
+	    C_RECOVER_OTHER
+	    ,
+	    C_END_GROUP
+	    ,
+	    C_REMARK_OTHER
+	    ,
+	    C_CHANGE_ALLOW_NAME
+	    ,
+	    C_ELECTRIC_CODE
+	    ,
+	    C_RUN_SURE_DATE
+	    ,
+	    C_STOP_SURE_DATE
+	    ,
+	    C_RUN_PIC_ID
+	    ,
+	    C_REMARK_RESPONSIBLE_NAME
+	    ,
+	    C_MACHINE_PERSON_NAME
+	    ,
+	    C_CHANGE_SIGNER_ID,C_RUN_MANAGER_ID,C_RUN_MANAGER_NAME,C_STOP_MANAGER_ID,C_STOP_MANAGER_NAME,
+	    C_WORK_CONDITION
+	)
+	VALUES
+	(
+			#{approveStarttime}
+		    ,
+		    #{getticketTime}
+		    ,
+		    #{delayDutyMonitorId}
+		    ,
+		    #{endPicDate}
+		    ,
+		    #{delayPicSureDate}
+		    ,
+		    #{changeOldPicName}
+		    ,
+		    #{signerId}
+		    ,
+		    #{delayAllowSureDate}
+		    ,
+		    #{delayDutyMonitorName}
+		    ,
+		    #{allowMonitorName}
+		    ,
+		    #{workticketId}
+		    ,
+		    #{delayPicName}
+		    ,
+		    #{remarkGuarderId}
+		    ,
+		    #{endStandIndex}
+		    ,
+		    #{workPersonPicName}
+		    ,
+		    #{remarkGuarderName}
+		    ,
+		    #{heatPersonId}
+		    ,
+		    #{createUserId}
+		    ,
+		    #{electricPersonId}
+		    ,
+		    #{stopPicId}
+		    ,
+		    #{stopPicName}
+		    ,
+		    #{signerName}
+		    ,
+		    #{delayAllowId}
+		    ,
+		    #{ondutyId}
+		    ,
+		    #{workPersonGroup}
+		    ,
+		    #{endAllowDate}
+		    ,
+		    #{changeNewPicName}
+		    ,
+		    #{delayAllowName}
+		    ,
+		    #{workPersonPicId}
+		    ,
+		    #{heatCode}
+		    ,
+		    #{dutyMonitorId}
+		    ,
+		    #{changeAllowId}
+		    ,
+		    #{machineCode}
+		    ,
+		    #{signerDate}
+		    ,
+		    #{delayDate}
+		    ,
+		    #{endStand}
+		    ,
+		    #{changeSignerName}
+		    ,
+		    #{machinePersonId}
+		    ,
+		    #{electricPersonName}
+		    ,
+		    #{changeNewPicId}
+		    ,
+		    #{runAllowId}
+		    ,
+		    #{changeOldPicId}
+		    ,
+		    #{stopAllowId}
+		    ,
+		    #{allowPicPersonName}
+		    ,
+		    #{ondutyName}
+		    ,
+		    #{runAllowName}
+		    ,
+		    #{changeAllowDate}
+		    ,
+		    #{endGroupIndex}
+		    ,
+		    #{changeSignerDate}
+		    ,
+		    #{createDate}
+		    ,
+		    #{approveEndtime}
+		    ,
+		    #{dutyMonitorName}
+		    ,
+		    #{heatPersonName}
+		    ,
+		    #{updateDate}
+		    ,
+		    #{allowPicPersonId}
+		    ,
+		    #{stopAllowName}
+		    ,
+		    #{delayPicId}
+		    ,
+		    #{runPicName}
+		    ,
+		    #{allowMonitorId}
+		    ,
+		    #{recoverOther}
+		    ,
+		    #{endGroup}
+		    ,
+		    #{remarkOther}
+		    ,
+		    #{changeAllowName}
+		    ,
+		    #{electricCode}
+		    ,
+		    #{runSureDate}
+		    ,
+		    #{stopSureDate}
+		    ,
+		    #{runPicId}
+		    ,
+		    #{remarkResponsibleName}
+		    ,
+		    #{machinePersonName}
+		    ,
+		    #{changeSignerId}
+		    ,
+		    #{runManagerId}
+		    ,
+		    #{runManagerName}
+		    ,
+		    #{stopManagerId}
+		    ,
+		    #{stopManagerName}
+		    ,
+		    #{workCondition}
+		    
+			)
+			]]>
+	</insert>
+
+	<!-- 修改数据 -->
+	<update id="update" parameterType="workTicketWindEntity">
+			<![CDATA[
+				UPDATE TB_WORKTICKET_WINDPOWER SET
+	             
+                 C_APPROVE_STARTTIME=#{approveStarttime}
+                 ,
+                 C_GETTICKET_TIME=#{getticketTime}
+	             ,
+                 C_DELAY_DUTY_MONITOR_ID=#{delayDutyMonitorId}
+	             ,
+                 C_END_PIC_DATE=#{endPicDate}
+	             ,
+                 C_DELAY_PIC_SURE_DATE=#{delayPicSureDate}
+	             ,
+                 C_CHANGE_OLD_PIC_NAME=#{changeOldPicName}
+	             ,
+                 C_SIGNER_ID=#{signerId}
+	             ,
+                 C_DELAY_ALLOW_SURE_DATE=#{delayAllowSureDate}
+	             ,
+                 C_DELAY_DUTY_MONITOR_NAME=#{delayDutyMonitorName}
+	             ,
+                 C_ALLOW_MONITOR_NAME=#{allowMonitorName}
+	             ,
+                 C_WORKTICKET_ID=#{workticketId}
+	             ,
+                 C_DELAY_PIC_NAME=#{delayPicName}
+	             ,
+                 C_REMARK_GUARDER_ID=#{remarkGuarderId}
+	             ,
+                 C_END_STAND_INDEX=#{endStandIndex}
+	             ,
+                 C_WORK_PERSON_PIC_NAME=#{workPersonPicName}
+	             ,
+                 C_REMARK_GUARDER_NAME=#{remarkGuarderName}
+	             ,
+                 C_HEAT_PERSON_ID=#{heatPersonId}
+	             ,
+                 C_CREATE_USER_ID=#{createUserId}
+	             ,
+                 C_ELECTRIC_PERSON_ID=#{electricPersonId}
+	             ,
+                 C_STOP_PIC_ID=#{stopPicId}
+	             ,
+                 C_STOP_PIC_NAME=#{stopPicName}
+	             ,
+                 C_SIGNER_NAME=#{signerName}
+	             ,
+                 C_DELAY_ALLOW_ID=#{delayAllowId}
+	             ,
+                 C_ONDUTY_ID=#{ondutyId}
+	             ,
+                 C_WORK_PERSON_GROUP=#{workPersonGroup}
+	             ,
+                 C_END_ALLOW_DATE=#{endAllowDate}
+	             ,
+                 C_CHANGE_NEW_PIC_NAME=#{changeNewPicName}
+	             ,
+                 C_DELAY_ALLOW_NAME=#{delayAllowName}
+	             ,
+                 C_WORK_PERSON_PIC_ID=#{workPersonPicId}
+	             ,
+                 C_HEAT_CODE=#{heatCode}
+	             ,
+                 C_DUTY_MONITOR_ID=#{dutyMonitorId}
+	             ,
+                 C_CHANGE_ALLOW_ID=#{changeAllowId}
+	             ,
+                 C_MACHINE_CODE=#{machineCode}
+	             ,
+                 C_SIGNER_DATE=#{signerDate}
+	             ,
+                 C_DELAY_DATE=#{delayDate}
+	             ,
+                 C_END_STAND=#{endStand}
+	             ,
+                 C_CHANGE_SIGNER_NAME=#{changeSignerName}
+	             ,
+                 C_MACHINE_PERSON_ID=#{machinePersonId}
+	             ,
+                 C_ELECTRIC_PERSON_NAME=#{electricPersonName}
+	             ,
+                 C_CHANGE_NEW_PIC_ID=#{changeNewPicId}
+	             ,
+                 C_RUN_ALLOW_ID=#{runAllowId}
+	             ,
+                 C_CHANGE_OLD_PIC_ID=#{changeOldPicId}
+	             ,
+                 C_STOP_ALLOW_ID=#{stopAllowId}
+	             ,
+                 C_ALLOW_PIC_PERSON_NAME=#{allowPicPersonName}
+	             ,
+                 C_ONDUTY_NAME=#{ondutyName}
+	             ,
+                 C_RUN_ALLOW_NAME=#{runAllowName}
+	             ,
+                 C_CHANGE_ALLOW_DATE=#{changeAllowDate}
+	             ,
+                 C_END_GROUP_INDEX=#{endGroupIndex}
+	             ,
+                 C_CHANGE_SIGNER_DATE=#{changeSignerDate}
+	             ,
+                 C_CREATE_DATE=#{createDate}
+	             ,
+                 C_APPROVE_ENDTIME=#{approveEndtime}
+	             ,
+                 C_DUTY_MONITOR_NAME=#{dutyMonitorName}
+	             ,
+                 C_HEAT_PERSON_NAME=#{heatPersonName}
+	             ,
+                 C_UPDATE_DATE=#{updateDate}
+	             ,
+                 C_ALLOW_PIC_PERSON_ID=#{allowPicPersonId}
+	             ,
+                 C_STOP_ALLOW_NAME=#{stopAllowName}
+	             ,
+                 C_DELAY_PIC_ID=#{delayPicId}
+	             ,
+                 C_RUN_PIC_NAME=#{runPicName}
+	             ,
+                 C_ALLOW_MONITOR_ID=#{allowMonitorId}
+	             ,
+                 C_RECOVER_OTHER=#{recoverOther}
+	             ,
+                 C_END_GROUP=#{endGroup}
+	             ,
+                 C_REMARK_OTHER=#{remarkOther}
+	             ,
+                 C_CHANGE_ALLOW_NAME=#{changeAllowName}
+	             ,
+                 C_ELECTRIC_CODE=#{electricCode}
+	             ,
+                 C_RUN_SURE_DATE=#{runSureDate}
+	             ,
+                 C_STOP_SURE_DATE=#{stopSureDate}
+	             ,
+                 C_RUN_PIC_ID=#{runPicId}
+	             ,
+                 C_REMARK_RESPONSIBLE_NAME=#{remarkResponsibleName}
+	             ,
+                 C_MACHINE_PERSON_NAME=#{machinePersonName}
+	             ,
+                 C_CHANGE_SIGNER_ID=#{changeSignerId}
+                 ,
+				 C_RUN_MANAGER_ID=#{runManagerId}
+				 ,
+				 C_RUN_MANAGER_NAME=#{runManagerName}
+				 ,
+				 C_STOP_MANAGER_ID=#{stopManagerId}
+				 ,
+				 C_STOP_MANAGER_NAME=#{stopManagerName}
+				 ,
+				 C_WORK_CONDITION=#{workCondition}
+				 
+				WHERE C_ID=#{id}
+			]]>
+	</update>
+
+	<!-- 删除数据 -->
+	<update id="delete" parameterType="workTicketWindEntity">
+			<![CDATA[
+				DELETE FROM TB_WORKTICKET_WINDPOWER WHERE C_ID=#{id}
+			]]>
+	</update>
+
+	<!-- 根据条件查询 -->
+	<select id="findByCondition" parameterType="map" resultMap="WorkTicketWind_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_WORKTICKET_WINDPOWER 
+			]]>
+		<include refid="com.aptech.dao.base.conditionSql" />
+	</select>
+</mapper>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.overhaul.overhaulLogDetailHis">
+		<resultMap type="OverhaulLogDetailEntity" id="OverhaulLogDetailHis_temp">
+			<result property="id" column="C_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="updateDate" column="C_UPDATE_DATE" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="updateUserId" column="C_UPDATE_USER_ID" />
+			<result property="overhaulArrangeId" column="C_OVERHAUL_ARRANGE_ID" />
+			<result property="logDate" column="C_LOG_DATE" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="teamMember" column="C_TEAM_MEMBER" />
+			<result property="workFinishInfo" column="C_WORK_FINISH_INFO" />
+			<result property="problemMeasures" column="C_PROBLEM_MEASURES" />
+			<result property="beforeMeet" column="C_BEFORE_MEET" />
+			<result property="afterMeet" column="C_AFTER_MEET" />
+			<result property="fileId" column="C_FILE_ID" />
+			<result property="dutyPerson" column="C_DUTY_PERSON" />
+			<result property="dutyPersonName" column="C_DUTY_PERSON_NAME" />
+			<result property="logDate" column="C_LOG_DATE" />
+			<result property="status" column="C_STATUS" />
+			<result property="endDate" column="C_END_DATE" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="OverhaulLogDetailHis_temp">
+			<![CDATA[
+				SELECT * FROM TB_OVERHAUL_LOG_DETAIL_HIS 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_OVERHAUL_LOG_DETAIL_HIS 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="OverhaulLogDetailHis_temp">
+			<![CDATA[
+				SELECT * FROM TB_OVERHAUL_LOG_DETAIL_HIS  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="OverhaulLogDetailEntity">
+<!-- 			<selectKey resultType="Long" order="AFTER" keyProperty="id"> -->
+<!-- 				SELECT LAST_INSERT_ID() AS id -->
+<!-- 			</selectKey> -->
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_OVERHAUL_LOG_DETAIL_HIS 
+				(
+		          C_ID
+		        , C_CREATE_DATE
+		        , C_UPDATE_DATE
+		        , C_CREATE_USER_ID
+		        , C_UPDATE_USER_ID
+		        , C_OVERHAUL_ARRANGE_ID
+		        , C_LOG_DATE
+		        , C_UNIT_NAME
+		        , C_TEAM_MEMBER
+		        , C_WORK_FINISH_INFO
+		        , C_PROBLEM_MEASURES
+		        , C_BEFORE_MEET
+		        , C_AFTER_MEET
+		        , C_FILE_ID
+		        , C_DUTY_PERSON
+		        , C_STATUS
+		        , C_END_DATE
+				)
+				VALUES
+				(
+				 #{id}
+		       , #{createDate}
+	           , #{updateDate}
+	           , #{createUserId}
+	           , #{updateUserId}
+	           , #{overhaulArrangeId}
+	           , #{logDate}
+	           , #{unitName}
+	           , #{teamMember}
+	           , #{workFinishInfo}
+	           , #{problemMeasures}
+	           , #{beforeMeet}
+	           , #{afterMeet}
+	           , #{fileId}
+	           , #{dutyPerson}
+	           , #{status}
+	           , #{endDate}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="OverhaulLogDetailEntity">
+			<![CDATA[
+				UPDATE TB_OVERHAUL_LOG_DETAIL_HIS SET
+                   C_CREATE_DATE=#{createDate}
+	             , C_UPDATE_DATE=#{updateDate}
+	             , C_CREATE_USER_ID=#{createUserId}
+	             , C_UPDATE_USER_ID=#{updateUserId}
+	             , C_OVERHAUL_ARRANGE_ID=#{overhaulArrangeId}
+	             , C_LOG_DATE=#{logDate}
+	             , C_UNIT_NAME=#{unitName}
+	             , C_TEAM_MEMBER=#{teamMember}
+	             , C_WORK_FINISH_INFO=#{workFinishInfo}
+	             , C_PROBLEM_MEASURES=#{problemMeasures}
+	             , C_BEFORE_MEET=#{beforeMeet}
+	             , C_AFTER_MEET=#{afterMeet}
+	             , C_FILE_ID=#{fileId}
+	             , C_DUTY_PERSON=#{dutyPerson}
+	             , C_STATUS=#{status}
+	             , C_END_DATE=#{endDate}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="OverhaulLogDetailEntity">
+			<![CDATA[
+				DELETE FROM TB_OVERHAUL_LOG_DETAIL_HIS WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="OverhaulLogDetailHis_temp">
+			<![CDATA[ 
+				SELECT D.*,U.C_NAME AS C_DUTY_PERSON_NAME FROM TB_OVERHAUL_LOG_DETAIL_HIS D
+				LEFT JOIN TP_SYS_USER U ON D.C_DUTY_PERSON = U.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

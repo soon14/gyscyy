@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.annualMaintenancePlan">
+		<resultMap type="AnnualMaintenancePlanEntity" id="AnnualMaintenancePlan_temp">
+			<result property="id" column="C_ID" />
+			<result property="annualSubject" column="C_ANNUAL_SUBJECT" />
+			<result property="annualContent" column="C_ANNUAL_CONTENT" />
+			<result property="annualCharge" column="C_ANNUAL_CHARGE" />
+			<result property="planDate" column="C_PLAN_DATE" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="uploadPerson" column="C_UPLOAD_PERSON" />
+			<result property="uploadTime" column="C_UPLOAD_TIME" />
+			<result property="status" column="C_STATUS" />
+			<result property="remark" column="C_REMARK" />
+			<result property="fileId" column="C_FILE_ID" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="uploadPersonName" column="C_UPLOAD_PERSON_NAME" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="AnnualMaintenancePlan_temp">
+			<![CDATA[
+				SELECT * FROM TB_ANNUAL_MAINTENANCE_PLAN 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_ANNUAL_MAINTENANCE_PLAN 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="AnnualMaintenancePlan_temp">
+			<![CDATA[
+				SELECT * FROM TB_ANNUAL_MAINTENANCE_PLAN  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="AnnualMaintenancePlanEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_ANNUAL_MAINTENANCE_PLAN 
+				(
+		          C_ANNUAL_SUBJECT
+		        , C_ANNUAL_CONTENT
+		        , C_ANNUAL_CHARGE
+		        , C_PLAN_DATE
+		        , C_UNIT_ID
+		        , C_UPLOAD_PERSON
+		        , C_UPLOAD_TIME
+		        , C_STATUS
+		        , C_REMARK
+		        , C_FILE_ID
+				)
+				VALUES
+				(
+		         #{annualSubject}
+	           , #{annualContent}
+	           , #{annualCharge}
+	           , #{planDate}
+	           , #{unitId}
+	           , #{uploadPerson}
+	           , #{uploadTime}
+	           , #{status}
+	           , #{remark}
+	           , #{fileId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="AnnualMaintenancePlanEntity">
+			<![CDATA[
+				UPDATE TB_ANNUAL_MAINTENANCE_PLAN SET
+                   C_ANNUAL_SUBJECT=#{annualSubject}
+	             , C_ANNUAL_CONTENT=#{annualContent}
+	             , C_ANNUAL_CHARGE=#{annualCharge}
+	             , C_PLAN_DATE=#{planDate}
+	             , C_UNIT_ID=#{unitId}
+	             , C_UPLOAD_PERSON=#{uploadPerson}
+	             , C_UPLOAD_TIME=#{uploadTime}
+	             , C_STATUS=#{status}
+	             , C_REMARK=#{remark}
+	             , C_FILE_ID=#{fileId}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="AnnualMaintenancePlanEntity">
+			<![CDATA[
+				DELETE FROM TB_ANNUAL_MAINTENANCE_PLAN WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="AnnualMaintenancePlan_temp">
+			<![CDATA[ 
+				SELECT t.*,a.C_NAME AS C_UNIT_NAME,b.C_NAME AS C_UPLOAD_PERSON_NAME FROM TB_ANNUAL_MAINTENANCE_PLAN t LEFT JOIN TP_SYS_UNIT a ON t.C_UNIT_ID = a.C_ID LEFT JOIN TP_SYS_USER b ON t.C_UPLOAD_PERSON = b.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

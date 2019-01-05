@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.protect">
+		<resultMap type="protectEntity" id="Protect_temp">
+			<result property="executeEndtime" column="C_EXECUTE_ENDTIME" />
+			<result property="applyTime" column="C_APPLY_TIME" />
+			<result property="code" column="C_CODE" />
+			<result property="protectWay" column="C_PROTECT_WAY" />
+			<result property="wardPersonId" column="C_WARD_PERSON_ID" />
+			<result property="protectContent" column="C_PROTECT_CONTENT" />
+			<result property="id" column="C_ID" />
+			<result property="protectReason" column="C_PROTECT_REASON" />
+			<result property="applyPersonId" column="C_APPLY_PERSON_ID" />
+			<result property="finishSituation" column="C_FINISH_SITUATION" />
+			<result property="deviceId" column="C_DEVICE_ID" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="executePersonId" column="C_EXECUTE_PERSON_ID" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="applyPersonName" column="C_APPLY_PERSON_NAME" />
+			<result property="checkState" column="C_CHECK_STATE" />
+ 			<result property="protectWayName" column="C_PROTECTWAY_NAME" /> 	
+			<result property="processStatusName" column="C_PROCESS_STATUS_NAME" /> 	
+			<result property="executePersonName" column="C_EXECUTE_PERSON_NAME" />
+			<result property="equipName" column="C_EQUIP_NAME" />
+			<result property="applyType" column="C_APPLY_TYPE" />								
+			<result property="dispatchCommandId" column="C_DISPATCH_COMMAND_ID" />	
+			<result property="equipVoltage" column="C_EQUIP_VOLTAGE" />	
+			<result property="remarks" column="C_REMARKS" />	
+			<result property="fileId" column="C_FILE_ID" />	
+			<result property="executeRemarks" column="C_EXECUTE_REMARKS" />	
+			<result property="executeFileId" column="C_EXECUTE_FILE_ID" />
+			<result property="flag" column="C_FLAG" />	
+			<result property="equipCode" column="C_EQUIP_CODE" />	
+			<result property="dispatchTitle" column="C_DISPATCH_TITLE" />	
+			<result property="dispatchNumber" column="C_DISPATCH_NUMBER" />	
+			<result property="dispatchId" column="C_DISPATCH_ID" />	
+			<result property="copyUserIds" column="C_COPY_USER_IDS" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="Protect_temp">
+			<![CDATA[
+				SELECT * FROM TB_PROTECT 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_PROTECT 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="Protect_temp">
+			<![CDATA[
+				SELECT a.*, b.C_NAME as C_UNIT_NAME,c.C_NAME as C_APPLY_PERSON_NAME ,d.C_NAME as C_PROTECTWAY_NAME,
+				e.C_NAME as C_EXECUTE_PERSON_NAME FROM TB_PROTECT a 
+				LEFT JOIN TP_SYS_UNIT b ON a.C_UNIT_ID = b.C_ID
+				LEFT JOIN TP_SYS_USER c on a. C_APPLY_PERSON_ID=c.C_ID 
+				LEFT JOIN TP_SYS_USER e on a. C_EXECUTE_PERSON_ID=e.C_ID 				
+				LEFT JOIN TP_SYS_DICTIONARY d on d.C_CODE = a.C_PROTECT_WAY
+				LEFT JOIN tb_equip_ledger  f ON  a.C_DEVICE_ID=f.C_ID	
+				WHERE a.C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="protectEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_PROTECT 
+				(
+		        
+	           C_EXECUTE_ENDTIME ,
+	           C_APPLY_TIME 
+		        ,
+	           C_CODE 
+		        ,
+	           C_PROTECT_WAY 
+		        ,
+	           C_WARD_PERSON_ID 
+		        ,
+	           C_PROTECT_CONTENT 
+		        ,
+	           C_PROTECT_REASON 
+		        ,
+	           C_APPLY_PERSON_ID 
+		        ,
+	           C_FINISH_SITUATION 
+		        ,
+	           C_DEVICE_ID 
+		        ,
+	           C_UNIT_ID 
+		        ,
+	           C_EXECUTE_PERSON_ID 
+	            ,
+	           C_APPLY_TYPE 
+	            ,
+	           C_DISPATCH_COMMAND_ID 
+	            ,
+	           C_EQUIP_VOLTAGE 
+	            ,
+	           C_REMARKS 
+	            ,
+	           C_FILE_ID 
+	            ,
+	           C_EXECUTE_REMARKS 
+	            ,
+	           C_EXECUTE_FILE_ID 
+	           ,
+	           C_CHECK_STATE
+	           ,
+	           C_FLAG
+	           ,
+	           C_EQUIP_NAME
+	           ,
+	           C_EQUIP_CODE
+	           ,
+	           C_DISPATCH_TITLE
+	           ,
+	           C_DISPATCH_NUMBER
+	           ,
+	           C_DISPATCH_ID
+	           ,
+	           C_COPY_USER_IDS
+				)
+				VALUES
+				(
+	           
+		       #{executeEndtime},
+		       #{applyTime}
+	           ,
+		       #{code}
+	           ,
+		       #{protectWay}
+	           ,
+		       #{wardPersonId}
+	           ,
+		       #{protectContent}
+	           ,
+		       #{protectReason}
+	           ,
+		       #{applyPersonId}
+	           ,
+		       #{finishSituation}
+	           ,
+		       #{deviceId}
+	           ,
+		       #{unitId}
+	           ,
+		       #{executePersonId}
+		       ,
+		       #{applyType}
+		       ,
+		       #{dispatchCommandId}
+		       ,
+		       #{equipVoltage}
+		       ,
+		       #{remarks}
+		       ,
+		       #{fileId}
+		        ,
+		       #{executeRemarks}
+		       ,
+		       #{executeFileId}
+		       ,
+		        #{checkState} 
+		       ,
+		       #{flag}
+		       ,
+		       #{equipName}
+		       ,
+		       #{equipCode}
+		       ,
+		       #{dispatchTitle}
+		       ,
+		       #{dispatchNumber}
+		       ,
+		       #{dispatchId}
+		       ,
+		       #{copyUserIds}
+				)
+			
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="protectEntity">
+			<![CDATA[
+				UPDATE TB_PROTECT SET
+	             
+                 C_EXECUTE_ENDTIME=#{executeEndtime},
+                 C_APPLY_TIME=#{applyTime}
+	             ,
+                 C_CODE=#{code}
+	             ,
+                 C_PROTECT_WAY=#{protectWay}
+	             ,
+                 C_WARD_PERSON_ID=#{wardPersonId}
+	             ,
+                 C_PROTECT_CONTENT=#{protectContent}
+	             ,
+                 C_PROTECT_REASON=#{protectReason}
+	             ,
+                 C_APPLY_PERSON_ID=#{applyPersonId}
+	             ,
+                 C_FINISH_SITUATION=#{finishSituation}
+	             ,
+                 C_DEVICE_ID=#{deviceId}
+	             ,
+                 C_UNIT_ID=#{unitId}
+	             ,
+                 C_EXECUTE_PERSON_ID=#{executePersonId}
+                 ,
+                 C_CHECK_STATE=#{checkState} 
+                 ,
+                 C_APPLY_TYPE=#{applyType}  
+                 ,
+                 C_DISPATCH_COMMAND_ID=#{dispatchCommandId}  
+                 ,
+                 C_EQUIP_VOLTAGE=#{equipVoltage}  
+                 ,
+                 C_REMARKS=#{remarks}  
+                 ,
+                 C_EXECUTE_FILE_ID=#{executeFileId}  
+                  ,
+                 C_EXECUTE_REMARKS=#{executeRemarks}  
+                 ,
+                 C_FILE_ID=#{fileId}
+                 ,
+                 C_FLAG=#{flag}                  
+                 ,
+                 C_EQUIP_NAME=#{equipName}                  
+                 ,
+                 C_EQUIP_CODE=#{equipCode}                  
+                 ,
+                 C_DISPATCH_TITLE=#{dispatchTitle}                  
+                 ,
+                 C_DISPATCH_NUMBER=#{dispatchNumber}                  
+                 ,
+                 C_DISPATCH_ID=#{dispatchId}                  
+                 ,
+                 C_COPY_USER_IDS=#{copyUserIds}                  
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="protectEntity">
+			<![CDATA[
+				DELETE FROM TB_PROTECT WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="Protect_temp">
+			<![CDATA[ 
+				SELECT a.*, b.C_NAME as C_UNIT_NAME,c.C_NAME as C_APPLY_PERSON_NAME ,d.C_NAME as C_PROTECTWAY_NAME,
+				e.C_NAME as C_EXECUTE_PERSON_NAME FROM TB_PROTECT a 
+				LEFT JOIN TP_SYS_UNIT b ON a.C_UNIT_ID = b.C_ID
+				LEFT JOIN TP_SYS_USER c on a. C_APPLY_PERSON_ID=c.C_ID 
+				LEFT JOIN TP_SYS_USER e on a. C_EXECUTE_PERSON_ID=e.C_ID 				
+				LEFT JOIN TP_SYS_DICTIONARY d on d.C_CODE = a.C_PROTECT_WAY
+				LEFT JOIN tb_equip_ledger  f ON  a.C_DEVICE_ID=f.C_ID				
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

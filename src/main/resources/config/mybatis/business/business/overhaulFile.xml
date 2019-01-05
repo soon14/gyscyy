@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.overhaulFile">
+		<resultMap type="OverhaulFileEntity" id="OverhaulFile_temp">
+			<result property="id" column="C_ID" />
+			<result property="fileName" column="C_FILE_NAME" />
+			<result property="uploadUserId" column="C_UPLOAD_USER_ID" />
+			<result property="uploadUserName" column="C_UPLOAD_USER_NAME" />
+			<result property="uploadDate" column="C_UPLOAD_DATE" />
+			<result property="attchmentId" column="C_ATTCHMENT_ID" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="status" column="C_STATUS" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="OverhaulFile_temp">
+			<![CDATA[
+				SELECT * FROM TB_FILE 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_FILE 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="OverhaulFile_temp">
+			<![CDATA[
+				SELECT * FROM TB_FILE  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="OverhaulFileEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_FILE 
+				(
+		          C_FILE_NAME
+		        , C_UPLOAD_USER_ID
+		        , C_UPLOAD_USER_NAME
+		        , C_UPLOAD_DATE
+		        , C_ATTCHMENT_ID
+		        , C_STATUS
+		        , C_UNIT_ID
+				)
+				VALUES
+				(
+		         #{fileName}
+	           , #{uploadUserId}
+	           , #{uploadUserName}
+	           , #{uploadDate}
+	           , #{attchmentId}
+	           , #{status}
+	           , #{unitId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="OverhaulFileEntity">
+			<![CDATA[
+				UPDATE TB_FILE SET
+                   C_FILE_NAME=#{fileName}
+	             , C_UPLOAD_USER_ID=#{uploadUserId}
+	             , C_UPLOAD_USER_NAME=#{uploadUserName}
+	             , C_UPLOAD_DATE=#{uploadDate}
+	             , C_ATTCHMENT_ID=#{attchmentId}
+	             , C_STATUS=#{status}
+	             , C_UNIT_ID=#{unitId}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="OverhaulFileEntity">
+			<![CDATA[
+				DELETE FROM TB_FILE WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="OverhaulFile_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_FILE 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

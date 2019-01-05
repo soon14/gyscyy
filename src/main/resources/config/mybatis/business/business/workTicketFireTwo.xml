@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.workTicketFireTwo">
+		<resultMap type="workTicketFireTwoEntity" id="WorkTicketFireTwo_temp">
+			<result property="appendid" column="C_APPENDID" />
+			<result property="guarderId" column="C_GUARDER_ID" />
+			<result property="endPicId" column="C_END_PIC_ID" />
+			<result property="unitNameId" column="C_UNIT_NAME_ID" />
+			<result property="type" column="C_TYPE" />
+			<result property="endTime" column="C_END_TIME" />
+			<result property="id" column="C_ID" />
+			<result property="changeAllowDate" column="C_CHANGE_ALLOW_DATE" />
+			<result property="plandateStart" column="C_PLANDATE_START" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="guarderName" column="C_GUARDER_NAME" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="workClassPeople" column="C_WORK_CLASS_PEOPLE" />
+			<result property="workClassMember" column="C_WORK_CLASS_MEMBER" />
+			<result property="isSet" column="C_IS_SET" />
+			<result property="status" column="C_STATUS" />
+			<result property="flawCode" column="C_FLAW_CODE" />
+			<result property="endAllowName" column="C_END_ALLOW_NAME" />
+			<result property="code" column="C_CODE" />
+			<result property="istypical" column="C_ISTYPICAL" />
+			<result property="updateDate" column="C_UPDATE_DATE" />
+			<result property="content" column="C_CONTENT" />
+			<result property="groupId" column="C_GROUP_ID" />
+			<result property="equipmentName" column="C_EQUIPMENT_NAME" />
+			<result property="annexId" column="C_ANNEX_ID" />
+			<result property="address" column="C_ADDRESS" />
+			<result property="endAllowId" column="C_END_ALLOW_ID" />
+			<result property="endPicName" column="C_END_PIC_NAME" />
+			<result property="equipmentCode" column="C_EQUIPMENT_CODE" />
+			<result property="changeAllowId" column="C_CHANGE_ALLOW_ID" />
+			<result property="changeAllowName" column="C_CHANGE_ALLOW_NAME" />
+			<result property="workStatus" column="C_WORK_STATUS" />
+			<result property="plandateEnd" column="C_PLANDATE_END" />
+			<result property="invalidDate" column="C_INVALID_DATE" />
+			<result property="invalidId" column="C_INVALID_ID" />
+			<result property="invalidContent" column="C_INVALID_CONTENT" />
+			<result property="unitName" column="unitName" />
+			<result property="groupName" column="groupName" />
+			<result property="identify" column="C_IDENTIFY" />
+			<result property="safeFlag" column="C_SAFE_FLAG" />
+			<result property="safeNum" column="C_SAFE_NUM" />
+			<result property="changeAllowIdea" column="C_CHANGE_ALLOW_IDEA" />
+			<result property="createTime" column="C_CREATE_TIME" />
+			
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="WorkTicketFireTwo_temp">
+			<![CDATA[
+				SELECT * FROM TB_WORKTICKET 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_WORKTICKET 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="WorkTicketFireTwo_temp">
+			<![CDATA[
+				SELECT * FROM TB_WORKTICKET  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="workTicketFireEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_WORKTICKET 
+				(
+				C_APPENDID
+		       ,
+		        C_GUARDER_ID
+	           ,
+		       C_END_PIC_ID
+	           ,
+		       C_UNIT_NAME_ID
+	           ,
+		       C_TYPE
+	           ,
+		       C_END_TIME
+	           ,
+		       C_CHANGE_ALLOW_DATE
+	           ,
+		       C_PLANDATE_START
+	           ,
+		       C_CREATE_DATE
+	           ,
+		       C_GUARDER_NAME
+	           ,
+		       C_CREATE_USER_ID
+	           ,
+		       C_WORK_CLASS_PEOPLE
+	           ,
+		       C_WORK_CLASS_MEMBER
+	           ,
+		       C_IS_SET
+	           ,
+		       C_STATUS
+	           ,
+		       C_FLAW_CODE
+	           ,
+		       C_END_ALLOW_NAME
+	           ,
+		       C_CODE
+	           ,
+		       C_ISTYPICAL
+	           ,
+		       C_UPDATE_DATE
+	           ,
+		       C_CONTENT
+	           ,
+		       C_GROUP_ID
+	           ,
+		       C_EQUIPMENT_NAME
+	           ,
+		       C_ANNEX_ID
+	           ,
+		       C_ADDRESS
+	           ,
+		       C_END_ALLOW_ID
+	           ,
+		       C_END_PIC_NAME
+	           ,
+		       C_EQUIPMENT_CODE
+	           ,
+		       C_CHANGE_ALLOW_ID
+	           ,
+		       C_CHANGE_ALLOW_NAME
+	           ,
+		       C_WORK_STATUS
+	           ,
+		       C_PLANDATE_END
+		       ,C_IDENTIFY
+		       
+		       ,C_SAFE_FLAG
+		       
+		       ,C_SAFE_NUM
+		       
+		       ,C_CHANGE_ALLOW_IDEA
+		       
+				)
+				VALUES
+				(
+				#{appendid},#{guarderId},#{endPicId},#{unitNameId},#{type},
+	            #{endTime},#{changeAllowDate},
+	            #{plandateStart}
+		        ,
+	            #{createDate}
+		        ,
+	            #{guarderName}
+		        ,
+	            #{createUserId}
+		        ,
+	            #{workClassPeople}
+		        ,
+	            #{workClassMember}
+		        ,
+	            #{isSet}
+		        ,
+	            #{status}
+		        ,
+	            #{flawCode}
+		        ,
+	            #{endAllowName}
+		        ,
+	            #{code}
+		        ,
+	            #{istypical}
+		        ,
+	           #{updateDate}
+		        ,
+	            #{content}
+		        ,
+	            #{groupId}
+		        ,
+	            #{equipmentName}
+		        ,
+	            #{annexId}
+		        ,
+	            #{address}
+		        ,
+	            #{endAllowId}
+		        ,
+	            #{endPicName}
+		        ,
+	            #{equipmentCode}
+		        ,
+	            #{changeAllowId}
+		        ,
+	            #{changeAllowName}
+		        ,
+	            #{workStatus}
+		        ,
+	           #{plandateEnd},#{identify}
+	           ,#{safeFlag}
+	           ,#{safeNum}
+	           ,#{changeAllowIdea}
+	           
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="workTicketFireEntity">
+			<![CDATA[
+				UPDATE TB_WORKTICKET SET
+	             
+                 C_APPENDID=#{appendid}
+                 ,
+                 C_GUARDER_ID=#{guarderId}
+	             ,
+                 C_END_PIC_ID=#{endPicId}
+	             ,
+                 C_UNIT_NAME_ID=#{unitNameId}
+	             ,
+                 C_TYPE=#{type}
+	             ,
+                 C_END_TIME=#{endTime}
+	             ,
+                 C_CHANGE_ALLOW_DATE=#{changeAllowDate}
+	             ,
+                 C_PLANDATE_START=#{plandateStart}
+	             ,
+                 C_CREATE_DATE=#{createDate}
+	             ,
+                 C_GUARDER_NAME=#{guarderName}
+	             ,
+                 C_CREATE_USER_ID=#{createUserId}
+	             ,
+                 C_WORK_CLASS_PEOPLE=#{workClassPeople}
+	             ,
+                 C_WORK_CLASS_MEMBER=#{workClassMember}
+	             ,
+                 C_IS_SET=#{isSet}
+	             ,
+                 C_STATUS=#{status}
+	             ,
+                 C_FLAW_CODE=#{flawCode}
+	             ,
+                 C_END_ALLOW_NAME=#{endAllowName}
+	             ,
+                 C_CODE=#{code}
+	             ,
+                 C_ISTYPICAL=#{istypical}
+	             ,
+                 C_UPDATE_DATE=#{updateDate}
+	             ,
+                 C_CONTENT=#{content}
+	             ,
+                 C_GROUP_ID=#{groupId}
+	             ,
+                 C_EQUIPMENT_NAME=#{equipmentName}
+	             ,
+                 C_ANNEX_ID=#{annexId}
+	             ,
+                 C_ADDRESS=#{address}
+	             ,
+                 C_END_ALLOW_ID=#{endAllowId}
+	             ,
+                 C_END_PIC_NAME=#{endPicName}
+	             ,
+                 C_EQUIPMENT_CODE=#{equipmentCode}
+	             ,
+                 C_CHANGE_ALLOW_ID=#{changeAllowId}
+	             ,
+                 C_CHANGE_ALLOW_NAME=#{changeAllowName}
+	             ,
+                 C_WORK_STATUS=#{workStatus}
+	             ,
+                 C_PLANDATE_END=#{plandateEnd}
+                  ,
+                 C_INVALID_DATE=#{invalidDate}
+                  ,
+                 C_INVALID_ID=#{invalidId}
+                  ,
+                 C_INVALID_CONTENT=#{invalidContent}
+                  ,
+                 C_IDENTIFY=#{identify}
+                 ,
+                 C_SAFE_FLAG=#{safeFlag}
+                 ,
+                 C_SAFE_NUM=#{safeNum}
+                 ,
+                 C_CHANGE_ALLOW_IDEA=#{changeAllowIdea}
+                 
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="workTicketFireEntity">
+			<![CDATA[
+				DELETE FROM TB_WORKTICKET WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="WorkTicketFireTwo_temp">
+			<![CDATA[ 
+				SELECT t.*,a.C_NAME as unitName ,b.C_NAME as groupName  FROM TB_WORKTICKET t LEFT JOIN tp_sys_unit a on t.C_UNIT_NAME_ID=a.C_ID  LEFT JOIN  tb_team_group b on t.C_GROUP_ID=b.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

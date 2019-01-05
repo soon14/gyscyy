@@ -1,0 +1,154 @@
+/**登录样式表**/
+html{
+	height:100%;
+}
+.login-layout {
+	background-size:100%;
+    justify-content: center;
+    align-items: center;
+    position:relative;
+    display: flex;
+    align-items: center;
+}
+#loginBox{
+  	background: rgba(0,0,0,0.28);
+    border: 1px solid rgba(255,255,255,0.6);
+    height: 330px;
+    border-radius: 10px;
+    width: 460px;
+    padding: 30px 40px;
+    text-align: center;
+}
+#loginBox .title span{
+    font-size: 24px;
+    color: rgba(255,255,255,.9);
+}
+#loginBox .boxTwoInput{
+    width: 90%;
+    background: rgba(255,255,255,0.15);
+    text-align: left;
+    text-indent: 48px;
+    border: 1px solid rgba(255,255,255,0.3);
+    height: 50px;
+    line-height:50px;
+    border-radius: 4px !important;
+    margin-top: 20px;
+    font-size: 15px;
+    color:#fff;
+    margin:10px auto;
+}
+#loginBox .boxTwoInput:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #fff; opacity:0.9; 
+}
+
+#loginBox .boxTwoInput::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #fff;opacity:0.9;
+}
+
+#loginBox .boxTwoInput:-ms-input-placeholder{
+    color: #fff;opacity:.9;
+}
+
+#loginBox .boxTwoInput::-webkit-input-placeholder{
+    color: #fff;opacity:.9;
+}
+#loginBox .boxTwoInput:focus{
+	border: 1px solid rgba(255,255,255,0.5);
+	outline: none;
+}
+#loginBox #userNameTwo{
+    background-image: url(../../../images/userImg.png);
+    background-repeat: no-repeat;
+    background-size: 25px;
+    background-position: 12px 11px;
+}
+#loginBox #passWordTwo{
+	background-image: url(../../../images/lockImg.png);
+	background-repeat: no-repeat;
+	background-size: 25px;
+    background-position: 12px 11px;
+}
+#loginBox .title{
+    font-size: 24px;
+    color: #999;
+}
+#loginBox .title .titleRight{
+	font-size: 20px;
+	margin-left: 20px;
+}
+#loginBox #btnLogin{
+	font-size:16px;
+	font-family:'微软雅黑';
+}
+#loginBox .ckeckBox{
+	height: 0;
+    text-align: left;
+    padding-left: 20px;
+    margin: 6px 0 16px 0;
+    color: #999;
+    font-size: 14px;
+}
+#loginBox .ckeckBox .input_check {
+	position: absolute;
+	width: 16px;height:16px;
+	visibility: hidden;
+	background: #E92333;
+}
+#loginBox .ckeckBox span{
+	color: rgba(255,255,255,.9);
+}
+#loginBox .ckeckBox span{position: relative;}
+#loginBox .ckeckBox .input_check+label {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    background: url(../../../images/check.png) no-repeat;
+    background-position: -30px;
+    border: 1px solid #ddd;
+    position: relative;
+    top: 3px;
+    margin-right: 10px;
+}
+#loginBox .ckeckBox .remberPassword{
+	position: relative;
+    top: -10px;
+}
+.headDiv{
+    padding-left: 50px;
+    height: 84px;
+    line-height: 110px;
+    width: 100%;
+    background: rgba(0,0,0,.2);
+    position: absolute;
+    top: 20px;
+}
+.login-logo{
+    background: rgba(0, 0, 0, 0) url("../../../images/top_center_logo.png") no-repeat scroll 0 0 / 100% auto;
+  	display:inline-block;
+    height: 40px;
+    width: 40px;
+}
+
+.login-text{  
+	display:inline-block;
+	 top: -12px;
+    margin-left: 10px;
+	font-size: 26px;
+	position: relative;
+	color:#fff;
+	font-family: '黑体';
+	font-weight: 400;
+}
+.footerDiv{
+	height:20px;
+	width:100%;
+	position:absolute;
+	bottom:0;
+	 background: rgba(0,0,0,.2);
+}
+#loginBox  #passWordTwo-error,#loginBox #userNameTwo-error {
+	position: absolute;
+    right: -30px;
+    top: 7px;
+}

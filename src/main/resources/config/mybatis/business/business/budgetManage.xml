@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.budgetManage">
+		<resultMap type="BudgetManageEntity" id="BudgetManage_temp">
+			<result property="id" column="C_ID" />
+			<result property="year" column="C_YEAR" />
+			<result property="code" column="C_CODE" />
+			<result property="projectName" column="C_PROJECT_NAME" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="occurNum" column="C_OCCUR_NUM" />
+			<result property="budgetNum" column="C_BUDGET_NUM" />
+			<result property="differentNum" column="C_DIFFERENT_NUM" />
+			<result property="implementRate" column="C_IMPLEMENT_RATE" />
+			<result property="unitId" column="C_UNIT_ID" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="BudgetManage_temp">
+			<![CDATA[
+				SELECT * FROM TB_BUDGET_MANAGE 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_BUDGET_MANAGE 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="BudgetManage_temp">
+			<![CDATA[
+				SELECT * FROM TB_BUDGET_MANAGE  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="BudgetManageEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_BUDGET_MANAGE 
+				(
+		          C_YEAR
+		        , C_CODE
+		        , C_PROJECT_NAME
+		        , C_CREATE_USER_ID
+		        , C_CREATE_DATE
+		        , C_OCCUR_NUM
+		        , C_BUDGET_NUM
+		        , C_DIFFERENT_NUM
+		        , C_IMPLEMENT_RATE
+		        , C_UNIT_ID
+				)
+				VALUES
+				(
+		         #{year}
+	           , #{code}
+	           , #{projectName}
+	           , #{createUserId}
+	           , #{createDate}
+	           , #{occurNum}
+	           , #{budgetNum}
+	           , #{differentNum}
+	           , #{implementRate}
+	           , #{unitId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="BudgetManageEntity">
+			<![CDATA[
+				UPDATE TB_BUDGET_MANAGE SET
+                   C_YEAR=#{year}
+	             , C_CODE=#{code}
+	             , C_PROJECT_NAME=#{projectName}
+	             , C_CREATE_USER_ID=#{createUserId}
+	             , C_CREATE_DATE=#{createDate}
+	             , C_OCCUR_NUM=#{occurNum}
+	             , C_BUDGET_NUM=#{budgetNum}
+	             , C_DIFFERENT_NUM=#{differentNum}
+	             , C_IMPLEMENT_RATE=#{implementRate}
+	             , C_UNIT_ID=#{unitId}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="BudgetManageEntity">
+			<![CDATA[
+				DELETE FROM TB_BUDGET_MANAGE WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="BudgetManage_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_BUDGET_MANAGE 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

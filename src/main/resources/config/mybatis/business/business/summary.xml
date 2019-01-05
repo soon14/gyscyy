@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.technical.summary">
+		<resultMap type="SummaryEntity" id="Summary_temp">
+			<result property="id" column="C_ID" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="tbrId" column="C_TBR_ID" />
+			<result property="tbrName" column="C_TBR_NAME" />
+			<result property="sjmc" column="C_SJMC" />
+			<result property="fileid" column="C_FILEID" />
+			<result property="time" column="C_TIME" />
+			<result property="status" column="C_STATUS" />
+			<result property="nextshr" column="C_NEXTSHR" />
+			<result property="zjnr" column="C_ZJNR" />
+			<result property="workStatus" column="C_WORK_STATUS" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="Summary_temp">
+			<![CDATA[
+				SELECT * FROM TB_SUMMARY 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_SUMMARY 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="Summary_temp">
+			<![CDATA[
+				SELECT * FROM TB_SUMMARY  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="SummaryEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_SUMMARY 
+				(
+		          C_CREATE_USER_ID
+		        , C_CREATE_DATE
+		        , C_UNIT_ID
+		        , C_TBR_ID
+		        , C_TBR_NAME
+		        , C_SJMC
+		        , C_FILEID
+		        , C_TIME
+		        , C_STATUS
+		        , C_NEXTSHR
+		        , C_ZJNR
+		        ,C_WORK_STATUS
+				)
+				VALUES
+				(
+		         #{createUserId}
+	           , #{createDate}
+	           , #{unitId}
+	           , #{tbrId}
+	           , #{tbrName}
+	           , #{sjmc}
+	           , #{fileid}
+	           , #{time}
+	           , #{status}
+	           , #{nextshr}
+	           , #{zjnr}
+	           , #{workStatus}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="SummaryEntity">
+			<![CDATA[
+				UPDATE TB_SUMMARY SET
+                   C_CREATE_USER_ID=#{createUserId}
+	             , C_CREATE_DATE=#{createDate}
+	             , C_UNIT_ID=#{unitId}
+	             , C_TBR_ID=#{tbrId}
+	             , C_TBR_NAME=#{tbrName}
+	             , C_SJMC=#{sjmc}
+	             , C_FILEID=#{fileid}
+	             , C_TIME=#{time}
+	             , C_STATUS=#{status}
+	             , C_NEXTSHR=#{nextshr}
+	             , C_ZJNR=#{zjnr}
+	             , C_WORK_STATUS=#{workStatus}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="SummaryEntity">
+			<![CDATA[
+				DELETE FROM TB_SUMMARY WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="Summary_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_SUMMARY 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

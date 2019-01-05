@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.workFireTwo">
+		<resultMap type="workFireTwoEntity" id="WorkFireTwo_temp">
+			<result property="id" column="C_ID" /> 
+			<result property="workticketId" column="C_WORKTICKET_ID" /> 
+			<result property="otherExecutorId" column="C_OTHER_EXECUTOR_ID" /> 
+			<result property="otherExecutor" column="C_OTHER_EXECUTOR" /> 
+			<result property="otherCode" column="C_OTHER_CODE" /> 
+			<result property="otherExecutorTwo" column="C_OTHER_EXECUTOR_TWO" /> 
+			<result property="otherCodeTwo" column="C_OTHER_CODE_TWO" /> 
+			<result property="otherExecutorThree" column="C_OTHER_EXECUTOR_THREE" /> 
+			<result property="otherCodeThree" column="C_OTHER_CODE_THREE" /> 
+			<result property="otherStyle" column="C_OTHER_STYLE" /> 
+			<result property="otherStyleOther" column="C_OTHER_STYLE_OTHER" /> 
+			<result property="otherApproveFireId" column="C_OTHER_APPROVE_FIRE_ID" /> 
+			<result property="otherApproveFire" column="C_OTHER_APPROVE_FIRE" /> 
+			<result property="otherApproveSafeId" column="C_OTHER_APPROVE_SAFE_ID" /> 
+			<result property="otherApproveSafe" column="C_OTHER_APPROVE_SAFE" /> 
+			<result property="signerId" column="C_SIGNER_ID" /> 
+			<result property="signerName" column="C_SIGNER_NAME" /> 
+			<result property="signerDate" column="C_SIGNER_DATE" /> 
+			<result property="approveStarttime" column="C_APPROVE_STARTTIME" /> 
+			<result property="approveEndtime" column="C_APPROVE_ENDTIME" /> 
+			<result property="dutyMonitorId" column="C_DUTY_MONITOR_ID" /> 
+			<result property="dutyMonitorName" column="C_DUTY_MONITOR_NAME" />
+			<result property="dutyMonitorDate" column="C_DUTY_MONTITOR_DATE" />
+			<result property="otherInstrument" column="C_OTHER_INSTRUMENT" /> 
+			<result property="otherExecutorSignId" column="C_OTHER_EXECUTOR_SIGN_ID" /> 
+			<result property="otherExecutorSign" column="C_OTHER_EXECUTOR_SIGN" /> 
+			<result property="otherFireSignId" column="C_OTHER_FIRE_SIGN_ID" /> 
+			<result property="otherFireSign" column="C_OTHER_FIRE_SIGN" /> 
+			<result property="otherPicSignId" column="C_OTHER_PIC_SIGN_ID" /> 
+			<result property="otherPicSign" column="C_OTHER_PIC_SIGN" /> 
+			<result property="otherGroupSignId" column="C_OTHER_GROUP_SIGN_ID" /> 
+			<result property="otherGroupSign" column="C_OTHER_GROUP_SIGN" /> 
+			<result property="otherSafeSignId" column="C_OTHER_SAFE_SIGN_ID" /> 
+			<result property="otherSafeSign" column="C_OTHER_SAFE_SIGN" /> 
+			<result property="otherLederSignId" column="C_OTHER_LEDER_SIGN_ID" /> 
+			<result property="otherLederSign" column="C_OTHER_LEDER_SIGN" /> 
+			<result property="otherendExecutorSignId" column="C_OTHEREND_EXECUTOR_SIGN_ID" /> 
+			<result property="otherendExecutorSign" column="C_OTHEREND_EXECUTOR_SIGN" /> 
+			<result property="otherendFireSignId" column="C_OTHEREND_FIRE_SIGN_ID" /> 
+			<result property="otherendFireSign" column="C_OTHEREND_FIRE_SIGN" /> 
+			<result property="remark" column="C_REMARK" /> 
+			<result property="other" column="C_OTHER" /> 
+			<result property="otherStyleName" column="C_OTHER_STYLE_NAME" /> 
+			
+			<result property="fireUserId" column="C_FIRE_USER_NAME_ID" /> 
+			<result property="fireUserName" column="C_FIRE_USER_NAME" /> 
+			<result property="meetSignId" column="C_MEET_SIGN_ID" /> 
+			<result property="meetSignName" column="C_MEET_SIGN_NAME" /> 
+			<result property="meetSignDate" column="C_MEET_SIGN_DATE" /> 
+			<result property="otherFireSignDate" column="C_OTHER_FIRE_SIGN_DATE" /> <!-- 许可*消防监护时间 -->
+			<result property="otherApproveFireDate" column="C_OTHER_APPROVE_FIRE_DATE" /> <!-- 审批*消防监护时间 -->
+			<result property="otherApproveSafeDate" column="C_OTHER_APPROVE_SAFE_DATE" /> 
+			<result property="runFireSignId" column="C_RUN_FIRE_SIGN_ID" /> 
+			<result property="runFireSignName" column="C_RUN_FIRE_SIGN_NAME" /> 
+			<result property="endStand" column="C_END_STAND" /> 
+			<result property="endStandIndex" column="C_END_STAND_INDEX" /> 
+			<result property="endHand" column="C_END_HAND" /> 
+			<result property="workDisclosure" column="C_WORK_DISCLOSURE" /> 
+			
+			
+			
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="WorkFireTwo_temp">
+			<![CDATA[
+				SELECT * FROM TB_WORKTICKET_FIRE 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_WORKTICKET_FIRE 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="WorkFireTwo_temp">
+			<![CDATA[
+				SELECT * FROM TB_WORKTICKET_FIRE  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="workFireEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_WORKTICKET_FIRE 
+		(
+	    C_WORKTICKET_ID      ,
+   C_OTHER_EXECUTOR_ID  ,
+   C_OTHER_EXECUTOR     ,
+   C_OTHER_CODE         ,
+   C_OTHER_EXECUTOR_TWO ,
+   C_OTHER_CODE_TWO     ,
+   C_OTHER_EXECUTOR_THREE ,
+   C_OTHER_CODE_THREE   ,
+   C_OTHER_STYLE        ,
+   C_OTHER_STYLE_OTHER  ,
+   C_OTHER_APPROVE_FIRE_ID ,
+   C_OTHER_APPROVE_FIRE ,
+   C_OTHER_APPROVE_SAFE_ID ,
+   C_OTHER_APPROVE_SAFE ,
+   C_SIGNER_ID          ,
+   C_SIGNER_NAME        ,
+   C_SIGNER_DATE        ,
+   C_APPROVE_STARTTIME  ,
+   C_APPROVE_ENDTIME    ,
+   C_DUTY_MONITOR_ID    ,
+   C_DUTY_MONITOR_NAME  ,
+   C_DUTY_MONTITOR_DATE ,
+   C_OTHER_INSTRUMENT   ,
+   C_OTHER_EXECUTOR_SIGN_ID ,
+   C_OTHER_EXECUTOR_SIGN ,
+   C_OTHER_FIRE_SIGN_ID ,
+   C_OTHER_FIRE_SIGN    ,
+   C_OTHER_PIC_SIGN_ID  ,
+   C_OTHER_PIC_SIGN     ,
+   C_OTHER_GROUP_SIGN_ID ,
+   C_OTHER_GROUP_SIGN   ,
+   C_OTHER_SAFE_SIGN_ID ,
+   C_OTHER_SAFE_SIGN    ,
+   C_OTHER_LEDER_SIGN_ID ,
+   C_OTHER_LEDER_SIGN   ,
+   C_OTHEREND_EXECUTOR_SIGN_ID ,
+   C_OTHEREND_EXECUTOR_SIGN ,
+   C_OTHEREND_FIRE_SIGN_ID ,
+   C_OTHEREND_FIRE_SIGN ,
+   C_REMARK ,
+   C_OTHER  ,
+    C_FIRE_USER_NAME_ID,
+	C_FIRE_USER_NAME,
+	C_MEET_SIGN_ID,
+	C_MEET_SIGN_NAME,
+	C_MEET_SIGN_DATE,
+	C_OTHER_FIRE_SIGN_DATE,
+	C_OTHER_APPROVE_FIRE_DATE,
+	C_OTHER_APPROVE_SAFE_DATE,
+	C_RUN_FIRE_SIGN_ID,
+	C_RUN_FIRE_SIGN_NAME,
+	C_END_STAND,
+	C_END_STAND_INDEX,
+    C_WORK_DISCLOSURE, 
+	C_END_HAND            
+	)
+	VALUES		
+	(
+			#{workticketId}
+		    ,
+		    #{otherExecutorId}
+		    ,
+		    #{otherExecutor}
+		    ,
+		    #{otherCode}
+		    ,
+		    #{otherExecutorTwo}
+		    ,
+		    #{otherCodeTwo}
+		    ,
+		    #{otherExecutorThree}
+		    ,
+		    #{otherCodeThree}
+		    ,
+		    #{otherStyle}
+		    ,
+		    #{otherStyleOther}
+		    ,
+		    #{otherApproveFireId}
+		    ,
+		    #{otherApproveFire}
+		    ,
+		    #{otherApproveSafeId}
+		    ,
+		    #{otherApproveSafe}
+		    ,
+		    #{signerId}
+		    ,
+		    #{signerName}
+		    ,
+		    #{signerDate}
+		    ,
+		    #{approveStarttime}
+		    ,
+		    #{approveEndtime}
+		    ,
+		    #{dutyMonitorId}
+		    ,
+		    #{dutyMonitorName}
+		    ,
+		    #{dutyMonitorDate}
+		    ,
+		    #{otherInstrument}
+		    ,
+		    #{otherExecutorSignId}
+		    ,
+		    #{otherExecutorSign}
+		    ,
+		    #{otherFireSignId}
+		    ,
+		    #{otherFireSign}
+		    ,
+		    #{otherPicSignId}
+		    ,
+		    #{otherPicSign}
+		    ,
+		    #{otherGroupSignId}
+		    ,
+		    #{otherGroupSign}
+		    ,
+	    	#{otherSafeSignId}
+		    ,
+		    #{otherSafeSign}
+		    ,
+		    #{otherLederSignId}
+		    ,
+		    #{otherLederSign}
+		    ,
+		    #{otherendExecutorSignId}
+		    ,
+		    #{otherendExecutorSign}
+		    ,
+		    #{otherendFireSignId}
+		    ,
+		      #{otherendFireSign}
+		    ,
+		    #{remark}
+		    ,
+		    #{other}
+		    ,
+		    #{fireUserId}
+		    ,
+		    #{fireUserName}
+		    ,
+		    #{meetSignId}
+		    ,
+		    #{meetSignName}
+		    ,
+		    #{meetSignDate}
+		    ,
+		    #{otherFireSignDate}
+		    ,
+		    #{otherApproveFireDate}
+		    ,
+		    #{otherApproveSafeDate}
+		    ,
+		    #{runFireSignId}
+		    ,
+		    #{runFireSignName}
+		    ,
+		    #{endStand}
+		    ,
+		    #{endStandIndex}
+		    ,
+		    #{workDisclosure} 
+		    ,
+		    #{endHand} 
+		    
+			)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="workFireEntity">
+			<![CDATA[
+				UPDATE TB_WORKTICKET_FIRE SET
+	             
+                 C_WORKTICKET_ID=#{workticketId}
+                 ,
+                 C_OTHER_EXECUTOR_ID=#{otherExecutorId}
+	             ,
+                 C_OTHER_EXECUTOR=#{otherExecutor}
+	             ,
+                 C_OTHER_CODE=#{otherCode}
+	             ,
+                 C_OTHER_EXECUTOR_TWO=#{otherExecutorTwo}
+	             ,
+                 C_OTHER_CODE_TWO=#{otherCodeTwo}
+	             ,
+                 C_OTHER_EXECUTOR_THREE=#{otherExecutorThree}
+	             ,
+                 C_OTHER_CODE_THREE=#{otherCodeThree}
+	             ,
+                 C_OTHER_STYLE=#{otherStyle}
+	             ,
+                 C_OTHER_STYLE_OTHER=#{otherStyleOther}
+	             ,
+                 C_OTHER_APPROVE_FIRE_ID=#{otherApproveFireId}
+	             ,
+                 C_OTHER_APPROVE_FIRE=#{otherApproveFire}
+	             ,
+                 C_OTHER_APPROVE_SAFE_ID=#{otherApproveSafeId}
+	             ,
+                 C_OTHER_APPROVE_SAFE=#{otherApproveSafe}
+	             ,
+                 C_SIGNER_ID=#{signerId}
+	             ,
+                 C_SIGNER_NAME=#{signerName}
+	             ,
+                 C_SIGNER_DATE=#{signerDate}
+	             ,
+                 C_APPROVE_STARTTIME=#{approveStarttime}
+	             ,
+                 C_APPROVE_ENDTIME=#{approveEndtime}
+	             ,
+                 C_DUTY_MONITOR_ID=#{dutyMonitorId}
+	             ,
+                 C_DUTY_MONITOR_NAME=#{dutyMonitorName}
+                 ,
+                 C_DUTY_MONTITOR_DATE=#{dutyMonitorDate}
+	             ,
+                 C_OTHER_INSTRUMENT=#{otherInstrument}
+	             ,
+                 C_OTHER_EXECUTOR_SIGN_ID=#{otherExecutorSignId}
+	             ,
+                 C_OTHER_EXECUTOR_SIGN=#{otherExecutorSign}
+	             ,
+                 C_OTHER_FIRE_SIGN_ID=#{otherFireSignId}
+	             ,
+                 C_OTHER_FIRE_SIGN=#{otherFireSign}
+	             ,
+                 C_OTHER_PIC_SIGN_ID=#{otherPicSignId}
+	             ,
+                 C_OTHER_PIC_SIGN=#{otherPicSign}
+	             ,
+                 C_OTHER_GROUP_SIGN_ID=#{otherGroupSignId}
+	             ,
+                 C_OTHER_GROUP_SIGN=#{otherGroupSign}
+	             ,
+                 C_OTHER_SAFE_SIGN_ID=#{otherSafeSignId}
+	             ,
+                 C_OTHER_SAFE_SIGN=#{otherSafeSign}
+	             ,
+                 C_OTHER_LEDER_SIGN_ID=#{otherLederSignId}
+	             ,
+                 C_OTHER_LEDER_SIGN=#{otherLederSign}
+	             ,
+                 C_OTHEREND_EXECUTOR_SIGN_ID=#{otherendExecutorSignId}
+	             ,
+                 C_OTHEREND_EXECUTOR_SIGN=#{otherendExecutorSign}
+	             ,
+                 C_OTHEREND_FIRE_SIGN_ID=#{otherendFireSignId}
+	             ,
+                 C_OTHEREND_FIRE_SIGN=#{otherendFireSign}
+	             ,
+                 C_REMARK=#{remark}
+	             ,
+                 C_OTHER=#{other}
+                 ,
+               C_FIRE_USER_NAME_ID=#{fireUserId}
+		    ,
+		    C_FIRE_USER_NAME=#{fireUserName}
+		    ,
+		    C_MEET_SIGN_ID=#{meetSignId}
+		    ,
+		    C_MEET_SIGN_NAME=#{meetSignName}
+		    ,
+		    C_MEET_SIGN_DATE=#{meetSignDate}
+		    ,
+		    C_OTHER_FIRE_SIGN_DATE=#{otherFireSignDate}
+		    ,
+		    C_OTHER_APPROVE_FIRE_DATE=#{otherApproveFireDate}
+		    ,
+		    C_OTHER_APPROVE_SAFE_DATE=#{otherApproveSafeDate}
+		    ,
+		    C_RUN_FIRE_SIGN_ID=#{runFireSignId}
+		    ,
+		    C_RUN_FIRE_SIGN_NAME=#{runFireSignName}
+		    ,
+		    C_END_STAND=#{endStand}
+		    ,
+		    C_END_STAND_INDEX=#{endStandIndex}
+		    ,
+		    C_END_HAND=#{endHand}  
+		    ,
+		    C_WORK_DISCLOSURE=#{workDisclosure}  
+		    
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="workFireEntity">
+			<![CDATA[
+				DELETE FROM TB_WORKTICKET_FIRE WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="WorkFireTwo_temp">
+			<![CDATA[ 
+				SELECT T.*,T7.C_NAME as C_OTHER_STYLE_NAME FROM TB_WORKTICKET_FIRE T LEFT JOIN tp_sys_dictionary T7  ON   T7.C_CATEGORY_CODE='FIRE_STYLE' AND   T.C_OTHER_STYLE=T7.C_CODE 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

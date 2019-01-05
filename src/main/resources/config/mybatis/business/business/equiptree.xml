@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.equiptree">
+		<resultMap type="EquipTreeEntity" id="EquipTree_temp">
+			<result property="id" column="C_ID" />
+			<result property="name" column="C_NAME" />
+			<result property="parentId" column="C_PARENT_ID" />
+			<result property="treeType" column="C_TREE_TYPE" />
+			<result property="equipId" column="C_EQUIP_ID" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="updateUserId" column="C_UPDATE_USER_ID" />
+			<result property="updateDate" column="C_UPDATE_DATE" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="code" column="C_CODE" />
+			<result property="remark" column="C_REMARK" />
+			<result property="pathCode" column="C_PATH_CODE" />
+			<result property="status" column="C_STATUS" />
+			<result property="level" column="C_LEVEL" />
+			<result property="topId" column="C_TOP_ID" />
+			<result property="topName" column="C_TOP_NAME" />
+			
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="EquipTree_temp">
+			<![CDATA[
+				SELECT * FROM TB_EQUIP_TREE 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_EQUIP_TREE 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="EquipTree_temp">
+			<![CDATA[
+				SELECT * FROM TB_EQUIP_TREE  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="EquipTreeEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_EQUIP_TREE 
+				(
+		          C_NAME
+		        , C_PARENT_ID
+		        , C_TREE_TYPE
+		        , C_EQUIP_ID
+		        , C_CREATE_USER_ID
+		        , C_CREATE_DATE
+		        , C_UPDATE_USER_ID
+		        , C_UPDATE_DATE
+		        , C_UNIT_ID
+		        , C_CODE
+		        , C_REMARK
+		        , C_PATH_CODE
+		        , C_STATUS
+				)
+				VALUES
+				(
+		         #{name}
+	           , #{parentId}
+	           , #{treeType}
+	           , #{equipId}
+	           , #{createUserId}
+	           , #{createDate}
+	           , #{updateUserId}
+	           , #{updateDate}
+	           , #{unitId}
+	           , #{code}
+	           , #{remark}
+	           , #{pathCode}
+	           , #{status}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="EquipTreeEntity">
+			<![CDATA[
+				UPDATE TB_EQUIP_TREE SET
+                   C_NAME=#{name}
+	             , C_PARENT_ID=#{parentId}
+	             , C_TREE_TYPE=#{treeType}
+	             , C_EQUIP_ID=#{equipId}
+	             , C_CREATE_USER_ID=#{createUserId}
+	             , C_CREATE_DATE=#{createDate}
+	             , C_UPDATE_USER_ID=#{updateUserId}
+	             , C_UPDATE_DATE=#{updateDate}
+	             , C_UNIT_ID=#{unitId}
+	             , C_CODE=#{code}
+	             , C_REMARK=#{remark}
+	             , C_PATH_CODE=#{pathCode}
+	             , C_STATUS=#{status}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="EquipTreeEntity">
+			<![CDATA[
+				DELETE FROM TB_EQUIP_TREE WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="EquipTree_temp">
+			<![CDATA[ 
+				SELECT T.C_ID,T.C_CODE,T.C_NAME,T.C_PARENT_ID,T.C_TREE_TYPE,T.C_EQUIP_ID,
+				T.C_CREATE_USER_ID,T.C_CREATE_DATE,T.C_UPDATE_USER_ID,T.C_UPDATE_DATE,
+				T.C_UNIT_ID,T.C_REMARK,T.C_PATH_CODE,T.C_STATUS,U.C_LEVEL C_LEVEL
+				FROM TB_EQUIP_TREE T LEFT JOIN TP_SYS_UNIT U ON T.C_UNIT_ID = U.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<!-- 删除数据 -->
+		<update id="delByEquipId"  parameterType="EquipTreeEntity" >
+			<![CDATA[
+				DELETE FROM TB_EQUIP_TREE  WHERE C_EQUIP_ID=#{equipId}
+			]]>
+		</update>
+    </mapper>

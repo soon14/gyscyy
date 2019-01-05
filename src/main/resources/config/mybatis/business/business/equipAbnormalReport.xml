@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.equip.equipAbnormalReport">
+		<resultMap type="EquipAbnormalReportEntity" id="EquipAbnormalReport_temp">
+			<result property="id" column="C_ID" />
+			<result property="code" column="C_CODE" />
+			<result property="name" column="C_NAME" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="updateUserId" column="C_UPDATE_USER_ID" />
+			<result property="updateDate" column="C_UPDATE_DATE" />
+			<result property="reportCode" column="C_REPORT_CODE" />
+			<result property="reportName" column="C_REPORT_NAME" />
+			<result property="equipCode" column="C_EQUIP_CODE" />
+			<result property="equipName" column="C_EQUIP_NAME" />
+			<result property="submitPersionId" column="C_SUBMIE_PERSION_ID" />
+			<result property="submitDate" column="C_SUBMIT_DATE" />
+			<result property="excuteInfoExplain" column="C_EXCUTE_INFO_EXPLAIN" />
+			<result property="remark" column="C_REMARK" />
+			<result property="fileId" column="C_FILE_ID" />
+			<result property="processStatus" column="C_PROCESS_STATUS" />
+			<result property="submitPersionName" column="C_SUBMIT_PERSION_NAME" />
+			<result property="status" column="C_STATUS" />
+			<result property="executeUserId" column="C_EXECUTE_USER_ID" />
+			<result property="executeUserName" column="C_EXECUTE_USER_NAME" />
+			<result property="startDate" column="C_START_DATE" />
+			<result property="endDate" column="C_END_DATE" />
+			<result property="finishInfo" column="C_FINISH_INFO" />
+			<result property="submitPersionName" column="C_SUBMIE_PERSION_NAME" />
+			<result property="equipBelong" column="C_EQUIP_BELONG" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="EquipAbnormalReport_temp">
+			<![CDATA[
+				SELECT * FROM TB_EQUIP_ABNORMA_REPORT 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_EQUIP_ABNORMA_REPORT 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="EquipAbnormalReport_temp">
+			<![CDATA[
+				SELECT T.*,U.C_NAME  C_SUBMIT_PERSION_NAME FROM TB_EQUIP_ABNORMA_REPORT T
+				LEFT JOIN TP_SYS_USER U ON  T.C_SUBMIE_PERSION_ID = U.C_ID
+				  WHERE T.C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="EquipAbnormalReportEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_EQUIP_ABNORMA_REPORT 
+				(
+		          C_CODE
+		        , C_NAME
+		        , C_CREATE_USER_ID
+		        , C_CREATE_DATE
+		        , C_UPDATE_USER_ID
+		        , C_UPDATE_DATE
+		        , C_REPORT_CODE
+		        , C_REPORT_NAME
+		        , C_EQUIP_CODE
+		        , C_EQUIP_NAME
+		        , C_SUBMIE_PERSION_ID
+		        , C_SUBMIT_DATE
+		        , C_EXCUTE_INFO_EXPLAIN
+		        , C_REMARK
+		        , C_FILE_ID
+		        , C_PROCESS_STATUS
+		        , C_STATUS
+		        , C_EXECUTE_USER_ID
+		        , C_EXECUTE_USER_NAME
+		        , C_START_DATE
+		        , C_END_DATE
+		        , C_FINISH_INFO
+		        , C_SUBMIE_PERSION_NAME
+		        , C_EQUIP_BELONG
+				)
+				VALUES
+				(
+		         #{code}
+	           , #{name}
+	           , #{createUserId}
+	           , #{createDate}
+	           , #{updateUserId}
+	           , #{updateDate}
+	           , #{reportCode}
+	           , #{reportName}
+	           , #{equipCode}
+	           , #{equipName}
+	           , #{submitPersionId}
+	           , #{submitDate}
+	           , #{excuteInfoExplain}
+	           , #{remark}
+	           , #{fileId}
+	           , #{processStatus}
+	           , #{status}
+	           , #{executeUserId}
+	           , #{executeUserName}
+	           , #{startDate}
+	           , #{endDate}
+	           , #{finishInfo}
+	           , #{submitPersionName}
+	           , #{equipBelong}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="EquipAbnormalReportEntity">
+			<![CDATA[
+				UPDATE TB_EQUIP_ABNORMA_REPORT SET
+                   C_CODE=#{code}
+	             , C_NAME=#{name}
+	             , C_CREATE_USER_ID=#{createUserId}
+	             , C_CREATE_DATE=#{createDate}
+	             , C_UPDATE_USER_ID=#{updateUserId}
+	             , C_UPDATE_DATE=#{updateDate}
+	             , C_REPORT_CODE=#{reportCode}
+	             , C_REPORT_NAME=#{reportName}
+	             , C_EQUIP_CODE=#{equipCode}
+	             , C_EQUIP_NAME=#{equipName}
+	             , C_SUBMIE_PERSION_ID=#{submitPersionId}
+	             , C_SUBMIT_DATE=#{submitDate}
+	             , C_EXCUTE_INFO_EXPLAIN=#{excuteInfoExplain}
+	             , C_REMARK=#{remark}
+	             , C_FILE_ID=#{fileId}
+	             , C_PROCESS_STATUS=#{processStatus}
+	             , C_STATUS=#{status}
+                 , C_EXECUTE_USER_ID=#{executeUserId}
+	             , C_EXECUTE_USER_NAME=#{executeUserName}
+	             , C_START_DATE=#{startDate}
+	             , C_END_DATE=#{endDate}
+	             , C_FINISH_INFO=#{finishInfo}
+	             , C_SUBMIE_PERSION_NAME=#{submitPersionName}
+	             , C_EQUIP_BELONG=#{equipBelong}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="EquipAbnormalReportEntity">
+			<![CDATA[
+				DELETE FROM TB_EQUIP_ABNORMA_REPORT WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="EquipAbnormalReport_temp">
+			<![CDATA[ 
+				SELECT T.*,U.C_NAME AS C_SUBMIT_PERSION_NAME FROM TB_EQUIP_ABNORMA_REPORT  T
+				LEFT JOIN TP_SYS_USER U ON T.C_SUBMIE_PERSION_ID = U.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

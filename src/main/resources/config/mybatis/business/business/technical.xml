@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.technical.technical">
+		<resultMap type="TechnicalEntity" id="Technical_temp">
+			<result property="id" column="C_ID" />
+			<result property="jdzyId" column="C_JDZY_ID" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="seq" column="C_SEQ" />
+			<result property="time" column="C_TIME" />
+			<result property="gzzj" column="C_GZZJ" />
+			<result property="wczt" column="C_WCZT" />
+			<result property="status" column="C_STATUS" />
+			<result property="remark" column="C_REMARK" />
+			<result property="fileid" column="C_FILEID" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="fillId" column="C_FILL_ID" />
+			<result property="fillName" column="C_FILL_NAME" />
+			<result property="jxzgId" column="C_JXZG_ID" />
+			<result property="jxzgName" column="C_JXZG_NAME" />
+			<result property="jxzgDate" column="C_JXZG_DATE" />
+			<result property="jxzrId" column="C_JXZR_ID" />
+			<result property="jxzrName" column="C_JXZR_NAME" />
+			<result property="jxzrDate" column="C_JXZR_DATE" />
+			<result property="sjbzrId" column="C_SJBZR_ID" />
+			<result property="sjbzrName" column="C_SJBZR_NAME" />
+			<result property="sjbzrDate" column="C_SJBZR_DATE" />
+			<result property="zgId" column="C_ZG_ID" />
+			<result property="zgName" column="C_ZG_NAME" />
+			<result property="zgDate" column="C_ZG_DATE" />
+			<result property="spStatus" column="C_SPSTATUS" />
+			
+			<result property="unitName" column="unitName" />
+			<result property="jdzyName" column="jdzyName" />
+			<result property="gzfzrtxWcqk" column="C_GZFZRTX_WCQK" />
+			<result property="planName" column="C_PLAN_NAME" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="Technical_temp">
+			<![CDATA[
+				SELECT * FROM TB_TECHNICAL 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_TECHNICAL 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="Technical_temp">
+			<![CDATA[
+				SELECT * FROM TB_TECHNICAL  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="TechnicalEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_TECHNICAL 
+				(
+		          C_JDZY_ID
+		        , C_CREATE_USER_ID
+		        , C_CREATE_DATE
+		        , C_SEQ
+		        , C_TIME
+		        , C_GZZJ
+		        , C_WCZT
+		        , C_STATUS
+		        , C_REMARK
+		        , C_FILEID
+		        , C_UNIT_ID
+		        , C_FILL_ID
+		        , C_FILL_NAME
+		        , C_JXZG_ID
+		        , C_JXZG_NAME
+		        , C_JXZG_DATE
+		        , C_JXZR_ID
+		        , C_JXZR_NAME
+		        , C_JXZR_DATE
+		        , C_SJBZR_ID
+		        , C_SJBZR_NAME
+		        , C_SJBZR_DATE
+		        , C_ZG_ID
+		        , C_ZG_NAME
+		        , C_ZG_DATE
+		        , C_SPSTATUS
+		        , C_GZFZRTX_WCQK
+		        , C_PLAN_NAME
+				)
+				VALUES
+				(
+		         #{jdzyId}
+	           , #{createUserId}
+	           , #{createDate}
+	           , #{seq}
+	           , #{time}
+	           , #{gzzj}
+	           , #{wczt}
+	           , #{status}
+	           , #{remark}
+	           , #{fileid}
+	           , #{unitId}
+	           , #{fillId}
+	           , #{fillName}
+	           , #{jxzgId}
+	           , #{jxzgName}
+	           , #{jxzgDate}
+	           , #{jxzrId}
+	           , #{jxzrName}
+	           , #{jxzrDate}
+	           , #{sjbzrId}
+	           , #{sjbzrName}
+	           , #{sjbzrDate}
+	           , #{zgId}
+	           , #{zgName}
+	           , #{zgDate}
+	           , #{spStatus}
+	           , #{gzfzrtxWcqk}
+	           , #{planName}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="TechnicalEntity">
+			<![CDATA[
+				UPDATE TB_TECHNICAL SET
+                   C_JDZY_ID=#{jdzyId}
+	             , C_CREATE_USER_ID=#{createUserId}
+	             , C_CREATE_DATE=#{createDate}
+	             , C_SEQ=#{seq}
+	             , C_TIME=#{time}
+	             , C_GZZJ=#{gzzj}
+	             , C_WCZT=#{wczt}
+	             , C_STATUS=#{status}
+	             , C_REMARK=#{remark}
+	             , C_FILEID=#{fileid}
+	             , C_UNIT_ID=#{unitId}
+	             , C_FILL_ID=#{fillId}
+	             , C_FILL_NAME=#{fillName}
+	             , C_JXZG_ID=#{jxzgId}
+	             , C_JXZG_NAME=#{jxzgName}
+	             , C_JXZG_DATE=#{jxzgDate}
+	             , C_JXZR_ID=#{jxzrId}
+	             , C_JXZR_NAME=#{jxzrName}
+	             , C_JXZR_DATE=#{jxzrDate}
+	             , C_SJBZR_ID=#{sjbzrId}
+	             , C_SJBZR_NAME=#{sjbzrName}
+	             , C_SJBZR_DATE=#{sjbzrDate}
+	             , C_ZG_ID=#{zgId}
+	             , C_ZG_NAME=#{zgName}
+	             , C_ZG_DATE=#{zgDate}
+	             , C_SPSTATUS=#{spStatus}
+	             , C_GZFZRTX_WCQK=#{gzfzrtxWcqk}
+	             , C_PLAN_NAME=#{planName}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="TechnicalEntity">
+			<![CDATA[
+				DELETE FROM TB_TECHNICAL WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="Technical_temp">
+			<![CDATA[ 
+				SELECT t.*,a.C_NAME as unitName ,b.C_NAME as jdzyName  FROM TB_TECHNICAL  t  LEFT JOIN tp_sys_unit a on t.C_UNIT_ID=a.C_ID   LEFT JOIN tp_sys_dictionary b on t.C_JDZY_ID=b.C_CODE and b.C_CATEGORY_CODE='TECHNICAL_TYPE'
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

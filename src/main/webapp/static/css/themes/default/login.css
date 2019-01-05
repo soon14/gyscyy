@@ -1,0 +1,19 @@
+/**登录样式表**/
+/* .login-layout { */
+/* 	background : #1D2024 url(../../../images/login_background.jpg) no-repeat */
+/* } */
+
+.login-logo{
+    background: rgba(0, 0, 0, 0) url("../../../images/top_center_logo.png") no-repeat scroll 0 0 / 100% auto;
+    float: left;
+    height: 60px;
+    margin-left: 100px;
+    margin-top: 110px;
+    width: 60px;
+}
+
+.login-text{    
+    font-size: 40px;
+    margin-top: 110px;
+    padding-left: 170px;
+}

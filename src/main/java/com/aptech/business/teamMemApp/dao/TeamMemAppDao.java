@@ -1,0 +1,18 @@
+package com.aptech.business.teamMemApp.dao;
+
+import com.aptech.business.teamMemApp.domain.TeamMemAppEntity;
+import com.aptech.framework.orm.IBaseEntityOperation;
+
+/**
+ * 
+ * 班次应用数据接口
+ *
+ * @author 
+ * @created 2017-09-13 17:15:08
+ * @lastModified 
+ * @history
+ *
+ */
+public interface TeamMemAppDao  extends IBaseEntityOperation<TeamMemAppEntity>{
+	
+}

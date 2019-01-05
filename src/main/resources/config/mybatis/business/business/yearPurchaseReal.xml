@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.yearPurchaseReal">
+		<resultMap type="YearPurchaseRealEntity" id="YearPurchaseReal_temp">
+			<result property="id" column="C_ID" />
+			<result property="yearPurchaseId" column="C_YEAR_PURCHASE_ID" />
+			<result property="name" column="C_NAME" />
+			<result property="type" column="C_TYPE" />
+			<result property="specification" column="C_SPECIFICATION" />
+			<result property="realBuyTime" column="C_REAL_BUY_TIME" />
+			<result property="amount" column="C_AMOUNT" />
+			<result property="budgetPrice" column="C_BUDGET_PRICE" />
+			<result property="totalPrice" column="C_TOTAL_PRICE" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="YearPurchaseReal_temp">
+			<![CDATA[
+				SELECT * FROM TB_YEAR_PURCHASE_REAL 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_YEAR_PURCHASE_REAL 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="YearPurchaseReal_temp">
+			<![CDATA[
+				SELECT * FROM TB_YEAR_PURCHASE_REAL  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="YearPurchaseRealEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_YEAR_PURCHASE_REAL 
+				(
+		          C_YEAR_PURCHASE_ID
+		        , C_NAME
+		        , C_TYPE
+		        , C_SPECIFICATION
+		        , C_REAL_BUY_TIME
+		        , C_AMOUNT
+		        , C_BUDGET_PRICE
+		        , C_TOTAL_PRICE
+				)
+				VALUES
+				(
+		         #{yearPurchaseId}
+	           , #{name}
+	           , #{type}
+	           , #{specification}
+	           , #{realBuyTime}
+	           , #{amount}
+	           , #{budgetPrice}
+	           , #{totalPrice}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="YearPurchaseRealEntity">
+			<![CDATA[
+				UPDATE TB_YEAR_PURCHASE_REAL SET
+                   C_YEAR_PURCHASE_ID=#{yearPurchaseId}
+	             , C_NAME=#{name}
+	             , C_TYPE=#{type}
+	             , C_SPECIFICATION=#{specification}
+	             , C_REAL_BUY_TIME=#{realBuyTime}
+	             , C_AMOUNT=#{amount}
+	             , C_BUDGET_PRICE=#{budgetPrice}
+	             , C_TOTAL_PRICE=#{totalPrice}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="YearPurchaseRealEntity">
+			<![CDATA[
+				DELETE FROM TB_YEAR_PURCHASE_REAL WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="YearPurchaseReal_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_YEAR_PURCHASE_REAL 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

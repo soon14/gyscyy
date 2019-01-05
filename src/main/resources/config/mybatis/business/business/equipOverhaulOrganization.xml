@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.equipOverhaulOrganization">
+		<resultMap type="EquipOverhaulOrganizationEntity" id="EquipOverhaulOrganization_temp">
+			<result property="id" column="C_ID" />
+			<result property="code" column="C_CODE" />
+			<result property="name" column="C_NAME" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="createUserName" column="C_CREATE_USER_NAME" />
+			<result property="unitId" column="C_UNIT_ID" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="EquipOverhaulOrganization_temp">
+			<![CDATA[
+				SELECT * FROM TB_EQUIP_OVERHAUL_ORGANIZATION 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_EQUIP_OVERHAUL_ORGANIZATION 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="EquipOverhaulOrganization_temp">
+			<![CDATA[
+				SELECT T.*,U.C_NAME C_CREATE_USER_NAME FROM TB_EQUIP_OVERHAUL_ORGANIZATION T  
+				LEFT JOIN TP_SYS_USER U ON T.C_CREATE_USER_ID = U.C_ID 
+				WHERE T.C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="EquipOverhaulOrganizationEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_EQUIP_OVERHAUL_ORGANIZATION 
+				(
+		          C_CODE
+		        , C_NAME
+		        , C_CREATE_USER_ID
+		        , C_CREATE_DATE
+		        , C_UNIT_ID
+				)
+				VALUES
+				(
+		         #{code}
+	           , #{name}
+	           , #{createUserId}
+	           , #{createDate}
+	           , #{unitId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="EquipOverhaulOrganizationEntity">
+			<![CDATA[
+				UPDATE TB_EQUIP_OVERHAUL_ORGANIZATION SET
+                   C_CODE=#{code}
+	             , C_NAME=#{name}
+	             , C_CREATE_USER_ID=#{createUserId}
+	             , C_CREATE_DATE=#{createDate}
+	             , C_UNIT_ID=#{unitId}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="EquipOverhaulOrganizationEntity">
+			<![CDATA[
+				DELETE FROM TB_EQUIP_OVERHAUL_ORGANIZATION WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="EquipOverhaulOrganization_temp">
+			<![CDATA[ 
+				SELECT T.*,U.C_NAME AS C_CREATE_USER_NAME FROM TB_EQUIP_OVERHAUL_ORGANIZATION T 
+				LEFT JOIN TP_SYS_USER U ON T.C_CREATE_USER_ID =  U.C_ID 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

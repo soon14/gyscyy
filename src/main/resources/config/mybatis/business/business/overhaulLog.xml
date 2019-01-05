@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.overhaul.overhaulLog">
+		<resultMap type="OverhaulLogEntity" id="OverhaulLog_temp">
+			<result property="id" column="C_ID" />
+			<result property="overhaulNumber" column="C_OVERHAUL_NUMBER" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="updateDate" column="C_UPDATE_DATE" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="updateUserId" column="C_UPDATE_USER_ID" />
+			<result property="logDate" column="C_LOG_DATE" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="dutyUserId" column="C_DUTY_USER_ID" />
+			<result property="dutyUserName" column="C_DUTY_USER_NAME" />
+			<result property="submitUserId" column="C_SUBMIT_USER_ID" />
+			<result property="submitUserName" column="C_SUBMIT_USER_NAME" />
+			<result property="status" column="C_STATUS" />
+			<result property="fileId" column="C_FILE_ID" />
+			<result property="processStatus" column="C_PROCESS_STATUS" />
+			<result property="finishStatus" column="C_FINISH_STATUS" />
+			<!-- 组织机构表字段 -->
+			<result property="companyid" column="C_COMPANY_ID" />
+			<result property="company" column="C_COMPANY" />
+			
+			<result property="overhaulClass" column="C_OVERHAUL_CLASS" />
+			<result property="overhaulClassName" column="C_OVERHAUL_CLASS_NAME" />
+			
+		   <result property="askPersonId" column="C_ASK_PERSON_ID" />
+			<result property="outUnitName" column="outUnitName" />
+			<result property="askPersonName" column="C_ASK_PERSON_NAME" />
+			<result property="outUnitName" column="C_OUT_UNIT_NAME" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="OverhaulLog_temp">
+			<![CDATA[
+				SELECT * FROM TB_OVERHAUL_LOG 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_OVERHAUL_LOG 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="OverhaulLog_temp">
+			<![CDATA[
+				   SELECT a.* ,T2.C_NAME C_OVERHAUL_CLASS_NAME 
+				   FROM TB_OVERHAUL_LOG  a
+				   LEFT JOIN tp_sys_dictionary T2  ON   T2.C_CATEGORY_CODE='OVERHAUL_CLASS' AND   a.C_OVERHAUL_CLASS=T2.C_CODE   
+			        
+			
+				 WHERE a.C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="overhaulLogEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_OVERHAUL_LOG 
+				(
+		          C_OVERHAUL_NUMBER
+		        , C_CREATE_USER_ID
+		        , C_CREATE_DATE
+		        , C_LOG_DATE
+		        , C_UNIT_ID
+		        , C_UNIT_NAME
+		        , C_DUTY_USER_ID
+		        , C_DUTY_USER_NAME
+		        , C_SUBMIT_USER_ID
+		        , C_SUBMIT_USER_NAME
+		        , C_STATUS
+		        , C_FILE_ID
+		        , C_PROCESS_STATUS
+		        , C_FINISH_STATUS
+		        , C_OVERHAUL_CLASS
+		        , C_ASK_PERSON_ID
+		        , C_ASK_PERSON_NAME
+		        , C_OUT_UNIT_NAME
+				)
+				VALUES
+				(
+		         #{overhaulNumber}
+	           , #{createUserId}
+	           , #{createDate}
+	           , #{logDate}
+	           , #{unitId}
+	           , #{unitName}
+	           , #{dutyUserId}
+	           , #{dutyUserName}
+	           , #{submitUserId}
+	           , #{submitUserName}
+	           , #{status}
+	           , #{fileId}
+	           , #{processStatus}
+	           , #{finishStatus}
+	           , #{overhaulClass}
+	           , #{askPersonId}
+	           , #{askPersonName}
+	           , #{outUnitName}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="overhaulLogEntity">
+			<![CDATA[
+				UPDATE TB_OVERHAUL_LOG SET
+                   C_OVERHAUL_NUMBER=#{overhaulNumber}
+	             , C_CREATE_DATE=#{createDate}
+	             , C_CREATE_USER_ID=#{createUserId}
+	             , C_UPDATE_DATE=#{updateDate}
+	             , C_UPDATE_USER_ID=#{updateUserId}
+	             , C_DUTY_USER_ID=#{dutyUserId}
+	             , C_DUTY_USER_NAME=#{dutyUserName}
+	             , C_LOG_DATE=#{logDate}
+	             , C_UNIT_ID=#{unitId}
+	             , C_UNIT_NAME=#{unitName}
+	             , C_SUBMIT_USER_ID=#{submitUserId}
+	             , C_SUBMIT_USER_NAME=#{submitUserName}
+	             , C_STATUS=#{status}
+	             , C_FILE_ID=#{fileId}
+	             , C_PROCESS_STATUS=#{processStatus}
+	             , C_FINISH_STATUS=#{finishStatus}
+	             , C_OVERHAUL_CLASS=#{overhaulClass} 
+	             , C_ASK_PERSON_ID=#{askPersonId} 
+	             , C_ASK_PERSON_NAME=#{askPersonName} 
+	             , C_OUT_UNIT_NAME=#{outUnitName} 
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="overhaulLogEntity">
+			<![CDATA[
+				DELETE FROM TB_OVERHAUL_LOG WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		
+	    <!--根据日期日志查询列表 -->
+		<select id="findByDate" parameterType="map" resultMap="OverhaulLog_temp">
+			<![CDATA[ 
+				
+					SELECT a.*,c.c_name as C_COMPANY ,c.c_id as C_COMPANY_ID
+            FROM TB_OVERHAUL_LOG a LEFT JOIN TP_SYS_UNIT b ON a.C_UNIT_ID = b.C_ID  left join TP_SYS_UNIT c on b.C_PARENT_ID = c.C_ID
+				
+				
+				
+				  ]]>
+				
+					<include refid="com.aptech.dao.base.conditionSql"/>
+				
+				<![CDATA[  group by day(C_LOG_DATE)]]>
+			
+		
+		</select>
+		
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="OverhaulLog_temp">
+			<![CDATA[ 
+			SELECT a.*, c.c_name as C_COMPANY ,c.c_id as C_COMPANY_ID ,T2.C_NAME C_OVERHAUL_CLASS_NAME   
+            FROM TB_OVERHAUL_LOG a  LEFT JOIN TP_SYS_UNIT b ON a.C_UNIT_ID = b.C_ID  left join TP_SYS_UNIT c on b.C_PARENT_ID = c.C_ID   
+             LEFT JOIN tp_sys_dictionary T2  ON   T2.C_CATEGORY_CODE='OVERHAUL_CLASS' AND   a.C_OVERHAUL_CLASS=T2.C_CODE   
+             
+
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

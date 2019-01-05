@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.overhaulSafe">
+		<resultMap type="OverhaulSafeEntity" id="OverhaulSafe_temp">
+			<result property="id" column="C_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="updateDate" column="C_UPDATE_DATE" />
+			<result property="updateUserId" column="C_UPDATE_USER_ID" />
+			<result property="danger" column="C_DANGER" />
+			<result property="wayCheck" column="C_WAY_CHECK" />
+			<result property="status" column="C_STATUS" />
+			<result property="logType" column="C_LOG_TYPE" />
+			<result property="overhaulRecordId" column="C_OVERHAUL_RECORD_ID" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="OverhaulSafe_temp">
+			<![CDATA[
+				SELECT * FROM TB_OVERHAUL_SAFE 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_OVERHAUL_SAFE 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="OverhaulSafe_temp">
+			<![CDATA[
+				SELECT * FROM TB_OVERHAUL_SAFE  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="OverhaulSafeEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+ 			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_OVERHAUL_SAFE 
+				(
+		          C_CREATE_DATE
+		        , C_CREATE_USER_ID
+		        , C_UPDATE_DATE
+		        , C_UPDATE_USER_ID
+		        , C_DANGER
+		        , C_WAY_CHECK
+		        , C_STATUS
+		        , C_LOG_TYPE
+		        , C_OVERHAUL_RECORD_ID
+				)
+				VALUES
+				(
+	             #{createDate}
+	           , #{createUserId}
+	           , #{updateDate}
+	           , #{updateUserId}
+	           , #{danger}
+	           , #{wayCheck}
+	           , #{status}
+	           , #{logType}
+	           , #{overhaulRecordId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="OverhaulSafeEntity">
+			<![CDATA[
+				UPDATE TB_OVERHAUL_SAFE SET
+	               C_CREATE_DATE=#{createDate}
+	             , C_CREATE_USER_ID=#{createUserId}
+	             , C_UPDATE_DATE=#{updateDate}
+	             , C_UPDATE_USER_ID=#{updateUserId}
+	             , C_DANGER=#{danger}
+	             , C_WAY_CHECK=#{wayCheck}
+	             , C_STATUS=#{status}
+	             , C_LOG_TYPE=#{logType}
+	             , C_OVERHAUL_RECORD_ID=#{overhaulRecordId}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="OverhaulSafeEntity">
+			<![CDATA[
+				DELETE FROM TB_OVERHAUL_SAFE WHERE C_ID=#{id}
+			]]>
+		</update>
+		<!-- 删除数据 -->
+		<update id="deleteByoverhaulArrangeId" parameterType="OverhaulSafeEntity">
+			<![CDATA[
+				DELETE FROM TB_OVERHAUL_SAFE WHERE C_OVERHAUL_RECORD_ID=#{overhaulRecordId}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="OverhaulSafe_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_OVERHAUL_SAFE 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

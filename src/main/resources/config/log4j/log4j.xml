@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+	<appender name="Console" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d (%-4r ms) %-5p [%t] %c %x: %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="LogFile" class="org.apache.log4j.RollingFileAppender">
+		<param name="Threshold" value="INFO"/>
+		<param name="File" value="${gyscyy.root}/WEB-INF/logs/aptech-platform.log" />
+		<param name="MaxFileSize" value="1mb" />
+		<param name="maxBackupIndex" value="10" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d (%-4r ms) %-5p [%t] %c %x: %m%n" />
+		</layout>
+	</appender>
+	<!-- 
+	<appender name="BizLogFile" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${PushServer.root}/WEB-INF/logs/pushserver-biz.log" />
+		<param name="MaxFileSize" value="1mb" />
+		<param name="maxBackupIndex" value="10" />
+		<param name="MaxFileSize" value="1mb" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d (%-4r ms) %-5p [%t] %c %x: %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="levelMin" value="biz#com.lenovo.lps.log.log4j.BizLevel" />
+			<param name="levelMax" value="biz#com.lenovo.lps.log.log4j.BizLevel" />
+			<param name="AcceptOnMatch" value="true" />
+		</filter>
+	</appender> -->
+
+	<!-- <appender name="Syslog" class="org.apache.log4j.net.SyslogAppender">
+		<param name="SyslogHost" value="${com.lenovo.lps.log.sysloghost}" />
+		<param name="Facility" value="LOCAL2" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{MMM dd HH:mm:ss} %c{2} %M:%m\n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="levelMin" value="biz#com.lenovo.lps.log.log4j.BizLevel" />
+			<param name="levelMax" value="biz#com.lenovo.lps.log.log4j.BizLevel" />
+			<param name="AcceptOnMatch" value="true" />
+		</filter>
+	</appender> -->
+
+	<logger name="com.aptech" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="Console" />
+		<!-- <appender-ref ref="BizLogFile" /> -->
+		<appender-ref ref="LogFile" />
+		<!-- 
+		<appender-ref ref="Syslog" /> -->  
+	</logger>
+	<logger name="com.wabacus" additivity="false">
+		<level value="info" />
+		<appender-ref ref="Console" />
+		<!-- <appender-ref ref="BizLogFile" /> -->
+		<appender-ref ref="LogFile" />
+		<!-- 
+		<appender-ref ref="Syslog" /> -->  
+	</logger>
+	<logger name="org.springframework" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="Console" />
+		<appender-ref ref="LogFile" />
+	</logger>
+	
+	<logger name="org.apache" additivity="false">
+		<level value="error" />
+		<appender-ref ref="Console" />
+		<appender-ref ref="LogFile" />
+	</logger>
+	
+	<logger name="java.sql">
+	        <level value="debug" />
+	</logger>
+	<logger name="org.apache.ibatis" additivity="true">
+	    <level value="info" />
+	    <appender-ref ref="LogFile" />
+	</logger>
+	<logger name="log4j.logger.org.apache.velocity" additivity="false">
+	    <level value="ERROR" />
+	    <appender-ref ref="LogFile" />
+	</logger>
+	
+	<root>
+	    <level value="error" />
+		<appender-ref ref="Console" />
+		<appender-ref ref="LogFile" />		
+	</root>
+</log4j:configuration> 

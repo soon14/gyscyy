@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.defectManage.defectStatistics">
+		<resultMap type="defectStatisticsEntity" id="DefectStatistics_temp">
+			<result property="id" column="C_ID" />
+			<result property="scaleAll" column="C_SCALE" />
+			<result property="solveScaleAll" column="C_SOLVE_SCALE" />
+			<result property="avoidAll" column="C_AVOID" />
+			<result property="solveNumAll" column="C_SOLVE_NUM" />
+			<result property="hangScaleAll" column="C_HANG_SCALE" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="findNumAll" column="C_FIND_NUM" />
+			<result property="findSumAll" column="C_FIND_SUM" />
+			<result property="statisticsMonth" column="C_STATISTICS_MONTH" />
+			<result property="avoidScaleAll" column="C_AVOID_SCALE" />
+			<result property="type" column="C_TYPE" />
+			<result property="typeName" column="C_TYPE_NAME" />
+			<result property="hangNumAll" column="C_HANG_NUM" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="equiptypeName" column="C_EQUIPTYPE_NAME" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="DefectStatistics_temp">
+			<![CDATA[
+				SELECT * FROM TB_DEFECT_STATISTICS 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_DEFECT_STATISTICS 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="DefectStatistics_temp">
+			<![CDATA[
+				SELECT * FROM TB_DEFECT_STATISTICS  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="defectStatisticsEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_DEFECT_STATISTICS 
+				(
+	            scale
+		        ,
+	            solveScale
+		        ,
+	            avoid
+		        ,
+	            solveNum
+		        ,
+	            hangScale
+		        ,
+	            unitName
+		        ,
+	            findNum
+		        ,
+	            statisticsMonth
+		        ,
+	            avoidScale
+		        ,
+	            type
+		        ,
+	            hangNum
+		        ,
+	            unitId
+				)
+				VALUES
+				(
+		       #{C_SCALE}
+	           ,
+		       #{C_SOLVE_SCALE}
+	           ,
+		       #{C_AVOID}
+	           ,
+		       #{C_SOLVE_NUM}
+	           ,
+		       #{C_HANG_SCALE}
+	           ,
+		       #{C_UNIT_NAME}
+	           ,
+		       #{C_FIND_NUM}
+	           ,
+		       #{C_STATISTICS_MONTH}
+	           ,
+		       #{C_AVOID_SCALE}
+	           ,
+		       #{C_TYPE}
+	           ,
+		       #{C_HANG_NUM}
+	           ,
+		       #{C_UNIT_ID}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="defectStatisticsEntity">
+			<![CDATA[
+				UPDATE TB_DEFECT_STATISTICS SET
+                 C_SCALE=#{scale}
+	             ,
+                 C_SOLVE_SCALE=#{solveScale}
+	             ,
+                 C_AVOID=#{avoid}
+	             ,
+                 C_SOLVE_NUM=#{solveNum}
+	             ,
+                 C_HANG_SCALE=#{hangScale}
+	             ,
+                 C_UNIT_NAME=#{unitName}
+	             ,
+                 C_FIND_NUM=#{findNum}
+	             ,
+                 C_STATISTICS_MONTH=#{statisticsMonth}
+	             ,
+                 C_AVOID_SCALE=#{avoidScale}
+	             ,
+                 C_TYPE=#{type}
+	             ,
+                 C_HANG_NUM=#{hangNum}
+	             ,
+                 C_UNIT_ID=#{unitId}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="defectStatisticsEntity">
+			<![CDATA[
+				DELETE FROM TB_DEFECT_STATISTICS WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="DefectStatistics_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_DEFECT_STATISTICS
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<!-- 本月各单位消缺率 -->
+	    <select id="findScoleByMonth" parameterType="map" resultMap="DefectStatistics_temp">
+	      <![CDATA[ 
+	         SELECT 	T2.C_ID,		  
+	 		   	 IFNULL(t0.sum,0) C_FIND_NUM,
+	 			 IFNULL(t5.sum,0)	 C_FIND_SUM,
+	 			 IFNULL(t6.sum,0)	 C_SOLVE_NUM, 
+	 			 IFNULL(t7.sum,0)	 C_AVOID, 
+	 			 IFNULL(t8.sum,0)   C_HANG_NUM, 
+	 			 T2.C_ID C_UNIT_ID ,
+			     T2.C_NAME	 C_UNIT_NAME,
+			     T2.C_EQUIPTYPE_NAME
+			     FROM  ( select   tp_sys_unit.*,tp_sys_dictionary.C_NAME C_TYPE_NAME,dic.C_NAME C_EQUIPTYPE_NAME  ,tp_sys_dictionary.C_CODE C_TYPE
+				 from  tp_sys_unit   join  tp_sys_dictionary  ON    C_LEVEL=1 AND C_CATEGORY_CODE='DEFECT_TYPE' 
+				 join  tp_sys_dictionary dic  ON    C_LEVEL=1 AND dic.C_CATEGORY_CODE='EQUIPMANAGETYPE' )T2
+				 LEFT JOIN (SELECT T4.* ,C_PARENT_ID FROM tb_defect T4 left join tp_sys_unit s on t4.C_UNIT_ID=s.C_ID  where 1=1 and date_format(T4.C_FIND_TIME,"%Y-%m")='2017-10'   ) T  
+				 ON  ( T2.C_ID=T.C_UNIT_ID OR T2.C_ID=T.C_PARENT_ID   )  and  T2.C_TYPE=t.C_TYPE
+				 LEFT JOIN ( select  C_UNIT_ID ,C_TYPE ,count(1) sum from tb_defect t4  where 1=1 and date_format(T4.C_FIND_TIME,"%Y-%m")='2017-10'   group by  C_UNIT_ID,C_TYPE)  t0 on T.C_UNIT_ID=T0.C_UNIT_ID and  T.C_TYPE=T0.C_TYPE
+				 LEFT JOIN ( select  C_UNIT_ID ,count(1) sum from tb_defect t4  where 1=1 and date_format(T4.C_FIND_TIME,"%Y-%m")='2017-10'   group by  C_UNIT_ID)  t5 on T.C_UNIT_ID=T5.C_UNIT_ID
+				 LEFT JOIN ( select  C_UNIT_ID ,C_TYPE,count(1) sum from tb_defect t4 where C_PROCESS_STATUS= 16 and date_format(T4.C_FIND_TIME,"%Y-%m")='2017-10'   group by  C_UNIT_ID, C_TYPE)  t6 on T.C_UNIT_ID=T6.C_UNIT_ID and  T.C_TYPE=T6.C_TYPE
+			     LEFT JOIN ( select  C_UNIT_ID ,C_TYPE,count(1) sum from tb_defect t4 where C_PROCESS_STATUS<> 16 and date_format(T4.C_FIND_TIME,"%Y-%m")='2017-10'   group by  C_UNIT_ID, C_TYPE)  t7 on T.C_UNIT_ID=T7.C_UNIT_ID and  T.C_TYPE=T7.C_TYPE
+			     LEFT JOIN ( select  C_UNIT_ID ,C_TYPE,count(1) sum from tb_defect t4 where C_PROCESS_STATUS=11 and date_format(T4.C_FIND_TIME,"%Y-%m")='2017-10'   group by  C_UNIT_ID, C_TYPE)  t8 on T.C_UNIT_ID=T8.C_UNIT_ID and  T.C_TYPE=T8.C_TYPE
+	      ]]>
+	      <include refid="com.aptech.dao.base.conditionSql"/>
+			 group by   T2.C_ID 
+	    </select>
+    </mapper>

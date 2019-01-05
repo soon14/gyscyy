@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.workPlan">
+		<resultMap type="workPlanEntity" id="WorkPlan_temp">
+			<result property="id" column="C_ID" />
+			<result property="time" column="C_TIME" />
+			<result property="planPersonId" column="C_PLAN_PERSON_ID" />
+			<result property="remark" column="C_REMARK" />
+			<result property="code" column="C_CODE" />
+			<result property="attachmentUrl" column="C_ATTACHMENT_URL" />
+			<result property="attachmentName" column="C_ATTACHMENT_NAME" />
+			<result property="timeDimension" column="C_TIME_DIMENSION" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="checkState" column="C_CHECK_STATE" />
+ 			<result property="unitName" column="C_UNIT_NAME" />
+ 			<result property="planPersonName" column="C_PLAN_PERSON_NAME" /> 			
+ 			<result property="timeDimensionName" column="C_TIMEDIMENSION_NAME" /> 
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="WorkPlan_temp">
+			<![CDATA[
+				SELECT * FROM TB_WORK_PLAN 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_WORK_PLAN 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="WorkPlan_temp">
+			<![CDATA[
+				SELECT * FROM TB_WORK_PLAN  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="workPlanEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_WORK_PLAN 
+				(
+	            C_TIME
+		        ,
+	            C_PLAN_PERSON_ID
+		        ,
+	            C_REMARK
+		        ,
+	            C_CODE
+		        ,
+	            C_ATTACHMENT_URL
+		        ,
+	            C_ATTACHMENT_NAME
+		        ,
+	            C_TIME_DIMENSION
+		        ,
+	            C_UNIT_ID
+				)
+				VALUES
+				(
+		       #{time}
+	           ,
+		       #{planPersonId}
+	           ,
+		       #{remark}
+	           ,
+		       #{code}
+	           ,
+		       #{attachmentUrl}
+	           ,
+		       #{attachmentName}
+	           ,
+		       #{timeDimension}
+	           ,
+		       #{unitId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="workPlanEntity">
+			<![CDATA[
+				UPDATE TB_WORK_PLAN SET
+                 C_TIME=#{time}
+	             ,
+                 C_PLAN_PERSON_ID=#{planPersonId}
+	             ,
+                 C_REMARK=#{remark}
+	             ,
+                 C_CODE=#{code}
+	             ,
+                 C_ATTACHMENT_URL=#{attachmentUrl}
+	             ,
+                 C_ATTACHMENT_NAME=#{attachmentName}
+	             ,
+                 C_TIME_DIMENSION=#{timeDimension}
+	             ,
+                 C_UNIT_ID=#{unitId}
+                 ,
+                 C_CHECK_STATE=#{checkState}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="workPlanEntity">
+			<![CDATA[
+				DELETE FROM TB_WORK_PLAN WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="WorkPlan_temp">
+			<![CDATA[ 
+				SELECT a.*, b.C_NAME as C_UNIT_NAME,c.C_NAME as C_PLAN_PERSON_NAME,d.C_NAME as C_TIMEDIMENSION_NAME FROM TB_WORK_PLAN a
+				 LEFT JOIN TP_SYS_UNIT b ON a.C_UNIT_ID = b.C_ID
+				LEFT JOIN TP_SYS_USER c on a. C_PLAN_PERSON_ID=c.C_ID
+				 LEFT JOIN TP_SYS_DICTIONARY d ON   d.C_CATEGORY_CODE='TIME_DIMENSION' AND d.C_CODE = a.C_TIME_DIMENSION
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

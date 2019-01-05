@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.defect">
+		<resultMap type="defectEntity" id="Defect_temp">
+			<result property="depict" column="C_DEPICT" />
+			<result property="processStatus" column="C_PROCESS_STATUS" />
+			<result property="remark" column="C_REMARK" />
+			<result property="solveUnitId" column="C_SOLVE_UNIT_ID" />
+			<result property="equipId" column="C_EQUIP_ID" />
+			<result property="code" column="C_CODE" />
+			<result property="findUserId" column="C_FIND_USER_ID" />
+			<result property="type" column="C_TYPE" />
+			<result property="updateDate" column="C_UPDATE_DATE" />
+			<result property="fileId" column="C_FILE_ID" />
+			<result property="id" column="C_ID" />
+			<result property="updateUserId" column="C_UPDATE_USER_ID" />
+			<result property="hangTime" column="C_HANG_TIME" />
+			<result property="findTime" column="C_FIND_TIME" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="hangUserId" column="C_HANG_USER_ID" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			
+			<result property="solveUnitName" column="C_SOLVE_UNIT_NAME" />
+			<result property="findUserName" column="C_FIND_USER_NAME" />
+			<result property="hangUserName" column="C_HANG_USER_NAME" />
+			<result property="appraisalUserId" column="C_APPRAISAL_USER_ID" />
+			<result property="appraisalUserName" column="C_APPRAISAL_USER_NAME" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="processStatusName" column="C_PROCESS_STATUS_NAME" />
+			<result property="typeName" column="C_TYPE_NAME" />
+			<result property="equipName" column="C_EQUIP_NAME" />
+			<result property="equipCode" column="C_EQUIP_CODE" />
+			<result property="equipNumber" column="C_EQUIP_NUMBER" />
+			<result property="solveUserId" column="C_SOLVE_USER_ID" />
+			<result property="solveUserName" column="C_SOLVE_USER_NAME" />
+			<result property="equipType" column="C_EQUIP_TYPE" />
+			<result property="defectTime" column="C_DEFECT_TIME" />
+			<result property="equipManageType" column="C_EQUIPMENT_TYPE" />
+			<result property="equipManageTypeName" column="C_EQUIPMENTTYPE_NAME" /> 
+			<result property="lossElectricity" column="C_LOSS_ELECTRICITY" /> 
+			<result property="handlingSuggestion" column="C_HANDLING_SUGGESTION" /> 
+			<result property="copyUserIds" column="C_COPY_USER_IDS" /> 
+			<result property="sendMessage" column="C_SEND_MESSAGE" /> 
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="Defect_temp">
+			<![CDATA[
+				SELECT * FROM TB_DEFECT 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_DEFECT 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="Defect_temp">
+			<![CDATA[
+				SELECT  T.*,
+					    T3.C_NAME C_UNIT_NAME,
+					    T4.C_NAME C_FIND_USER_NAME,
+					    T5.C_NAME C_HANG_USER_NAME,
+					    T7.C_NAME C_TYPE_NAME,
+					    T8.C_NAME C_SOLVE_UNIT_NAME,
+					    T9.C_CODE C_EQUIP_NUMBER,
+					    T9.C_NAME C_EQUIP_NAME,
+					    T6.C_NAME C_APPRAISAL_USER_NAME,
+					    T10.C_NAME C_SOLVE_USER_NAME
+						FROM TB_DEFECT T 
+						LEFT JOIN TP_SYS_UNIT T3 ON T.C_UNIT_ID=T3.C_ID
+						LEFT JOIN TP_SYS_USER T4 ON T.C_FIND_USER_ID=T4.C_ID
+						LEFT JOIN TP_SYS_USER T5 ON T.C_HANG_USER_ID=T5.C_ID
+						LEFT JOIN TP_SYS_USER T6 ON T.C_APPRAISAL_USER_ID=T6.C_ID
+						LEFT JOIN TP_SYS_USER T10 ON T.C_SOLVE_USER_ID=T10.C_ID
+						LEFT JOIN tp_sys_dictionary T7  ON   T7.C_CATEGORY_CODE='DEFECT_TYPE' AND   T.C_TYPE=T7.C_CODE 
+						LEFT JOIN TP_SYS_UNIT T8 ON T.C_SOLVE_UNIT_ID=T8.C_ID
+						LEFT JOIN tb_equip_ledger  T9 ON  T.C_EQUIP_ID=T9.C_ID
+						WHERE T.C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="defectEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<![CDATA[
+				INSERT INTO TB_DEFECT 
+				(
+	            C_DEPICT 
+		        ,
+	            C_PROCESS_STATUS 
+		        ,
+	            C_REMARK 
+		        ,
+	            C_SOLVE_UNIT_ID 
+		        ,
+	            C_EQUIP_ID
+		        ,
+	            C_CODE 
+		        ,
+	            C_FIND_USER_ID 
+		        ,
+	            C_TYPE 
+		        ,
+	            C_UPDATE_DATE 
+		        ,
+	            C_FILE_ID 
+		        ,
+	            C_UPDATE_USER_ID 
+		        ,
+	            C_HANG_TIME 
+		        ,
+	            C_FIND_TIME 
+		        ,
+	            C_CREATE_DATE 
+		        ,
+	            C_HANG_USER_ID 
+		        ,
+	            C_UNIT_ID 
+		        ,
+	            C_CREATE_USER_ID 
+				,
+				C_APPRAISAL_USER_ID
+				,
+				C_SOLVE_USER_ID
+				,
+				C_EQUIP_TYPE
+				,
+				C_DEFECT_TIME
+				,
+				C_EQUIPMENT_TYPE
+				,
+				C_LOSS_ELECTRICITY
+				,
+				C_HANDLING_SUGGESTION
+				,
+				C_EQUIP_NAME
+				,
+				C_EQUIPMENTTYPE_NAME
+				,
+				C_COPY_USER_IDS
+				,
+				C_SEND_MESSAGE
+				)
+				VALUES
+				(
+		       #{depict}
+	           ,
+		       #{processStatus}
+	           ,
+		       #{remark}
+	           ,
+		       #{solveUnitId}
+	           ,
+		       #{equipId}
+	           ,
+		       #{code}
+	           ,
+		       #{findUserId}
+	           ,
+		       #{type}
+	           ,
+		       #{updateDate}
+	           ,
+		       #{fileId}
+	           ,
+		       #{updateUserId}
+	           ,
+		       #{hangTime}
+	           ,
+		       #{findTime}
+	           ,
+		       #{createDate}
+	           ,
+		       #{hangUserId}
+	           ,
+		       #{unitId}
+	           ,
+		       #{createUserId}
+		       ,
+		       #{appraisalUserId}
+		        ,
+		         #{solveUserId}
+		          ,
+		         #{equipType}
+		         ,
+		         #{defectTime}
+		         ,
+		         #{equipManageType}
+		         ,
+		         #{lossElectricity}
+		         ,
+		         #{handlingSuggestion}
+		         ,
+		         #{equipName}
+		         ,
+		         #{equipManageTypeName}
+		         ,
+		         #{copyUserIds}
+		         ,
+		         #{sendMessage}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="defectEntity">
+			<![CDATA[
+				UPDATE TB_DEFECT SET
+                  C_DEPICT=#{depict}
+	             ,
+                  C_PROCESS_STATUS=#{processStatus}
+	             ,
+                  C_REMARK=#{remark}
+	             ,
+                 C_SOLVE_UNIT_ID=#{solveUnitId}
+	             ,
+                 C_EQUIP_ID=#{equipId}
+	             ,
+                 C_CODE=#{code}
+	             ,
+                 C_FIND_USER_ID=#{findUserId}
+	             ,
+                 C_TYPE=#{type}
+	             ,
+                 C_UPDATE_DATE=#{updateDate}
+	             ,
+                 C_FILE_ID=#{fileId}
+	             ,
+                 C_UPDATE_USER_ID=#{updateUserId}
+	             ,
+                 C_HANG_TIME=#{hangTime}
+	             ,
+                 C_FIND_TIME=#{findTime}
+	             ,
+                 C_CREATE_DATE=#{createDate}
+	             ,
+                 C_HANG_USER_ID=#{hangUserId}
+	             ,
+                 C_UNIT_ID=#{unitId}
+	             ,
+                 C_CREATE_USER_ID=#{createUserId}
+                  ,
+                 C_APPRAISAL_USER_ID =#{appraisalUserId}
+                  ,
+                 C_SOLVE_USER_ID =#{solveUserId}
+                  ,
+                 C_EQUIP_TYPE =#{equipType}
+                 ,
+                 C_DEFECT_TIME =#{defectTime}
+                 ,
+                 C_EQUIPMENT_TYPE =#{equipManageType}
+                 ,
+                 C_LOSS_ELECTRICITY =#{lossElectricity}
+                 ,
+                 C_HANDLING_SUGGESTION =#{handlingSuggestion}
+                 ,
+                 C_EQUIP_NAME =#{equipName}
+                 ,
+                 C_EQUIPMENTTYPE_NAME =#{equipManageTypeName}
+                 ,
+                 C_COPY_USER_IDS =#{copyUserIds}
+                 ,
+                 C_SEND_MESSAGE =#{sendMessage}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="defectEntity">
+			<![CDATA[
+				DELETE FROM TB_DEFECT WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="Defect_temp">
+			<![CDATA[ 
+				SELECT  T.*,
+					    T3.C_NAME C_UNIT_NAME,
+					    T4.C_NAME C_FIND_USER_NAME,
+					    T5.C_NAME C_HANG_USER_NAME,
+					    T7.C_NAME C_TYPE_NAME,
+					    T6.C_NAME C_APPRAISAL_USER_NAME,
+					    T10.C_NAME C_SOLVE_USER_NAME
+						FROM TB_DEFECT T 
+						LEFT JOIN TP_SYS_UNIT T3 ON T.C_UNIT_ID=T3.C_ID
+						LEFT JOIN TP_SYS_USER T4 ON T.C_FIND_USER_ID=T4.C_ID
+						LEFT JOIN TP_SYS_USER T5 ON T.C_HANG_USER_ID=T5.C_ID
+						LEFT JOIN TP_SYS_USER T6 ON T.C_APPRAISAL_USER_ID=T6.C_ID
+						LEFT JOIN TP_SYS_USER T10 ON T.C_SOLVE_USER_ID=T10.C_ID
+						LEFT JOIN tp_sys_dictionary T7  ON   T7.C_CATEGORY_CODE='DEFECT_TYPE' AND   T.C_TYPE=T7.C_CODE 
+			 ]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<select id="findByConditionRun" parameterType="map" resultMap="Defect_temp">
+			<![CDATA[ 
+				SELECT  T.*,
+					    T3.C_NAME C_UNIT_NAME,
+					    T4.C_NAME C_FIND_USER_NAME,
+					    T5.C_NAME C_HANG_USER_NAME,
+					    T7.C_NAME C_TYPE_NAME,
+					    T9.C_NAME C_EQUIP_NAME,
+					    T6.C_NAME C_APPRAISAL_USER_NAME,
+						FROM TB_DEFECT T 
+						LEFT JOIN TP_SYS_UNIT T3 ON T.C_UNIT_ID=T3.C_ID
+						LEFT JOIN TP_SYS_USER T4 ON T.C_FIND_USER_ID=T4.C_ID
+						LEFT JOIN TP_SYS_USER T5 ON T.C_HANG_USER_ID=T5.C_ID
+						LEFT JOIN TP_SYS_USER T6 ON T.C_APPRAISAL_USER_ID=T6.C_ID
+						LEFT JOIN tp_sys_dictionary T7  ON   T7.C_CATEGORY_CODE='DEFECT_TYPE' AND   T.C_TYPE=T7.C_CODE 
+						LEFT JOIN tb_equip_ledger  T9 ON  T.C_EQUIP_ID=T9.C_ID
+			 ]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<select id="defectStatistics" parameterType="map" resultMap="Defect_temp">
+			<![CDATA[ 
+			SELECT * FROM   TB_DEFECT
+			
+			 ]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+		<select id="findDefectProportionByCondition" parameterType="map" resultType="map">
+			<![CDATA[ 
+				SELECT
+					COUNT(*)AS defectCount,
+					d.C_TYPE AS type
+				FROM
+					tb_defect d
+				LEFT JOIN tb_defect_appraisal dd ON d.C_ID = dd.C_DEFECT_ID
+			 ]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+				GROUP BY C_TYPE
+		</select>
+		
+		<select id="findEquipDefectInfo"  parameterType="map" resultMap="Defect_temp">
+			<![CDATA[ 
+				SELECT 
+						T1.C_ID AS C_ID,
+						T1.C_EQUIP_CODE AS C_EQUIP_ID,
+						T2.C_NAME AS C_EQUIP_NAME,
+						T2.C_CODE AS C_EQUIP_CODE,
+						T.C_UNIT_ID AS C_UNIT_ID,
+						T3.C_NAME C_UNIT_NAME,
+						T.C_FIND_USER_ID AS C_FIND_USER_ID,
+						T4.C_NAME C_FIND_USER_NAME,
+						T.C_APPRAISAL_USER_ID AS C_APPRAISAL_USER_ID,
+						T6.C_NAME C_APPRAISAL_USER_NAME,
+						T.C_TYPE AS C_TYPE,
+						T.C_FIND_TIME AS C_FIND_TIME,
+						T.C_PROCESS_STATUS AS C_PROCESS_STATUS, 
+						T.C_DEPICT AS C_DEPICT 
+					FROM 
+						tb_defect_equipment T1 
+					LEFT JOIN TB_DEFECT T ON T.C_ID = T1.C_DEFECT_ID 
+					LEFT JOIN TB_EQUIP_LEDGER T2 ON T1.C_EQUIP_CODE = T2.C_CODE 
+					LEFT JOIN TP_SYS_UNIT T3 ON T.C_UNIT_ID = T3.C_ID 
+					LEFT JOIN TP_SYS_USER T4 ON T.C_FIND_USER_ID = T4.C_ID 
+					LEFT JOIN TP_SYS_USER T6 ON T.C_APPRAISAL_USER_ID = T6.C_ID 
+					LEFT JOIN TP_SYS_USER T10 ON T.C_SOLVE_USER_ID = T10.C_ID 
+				]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

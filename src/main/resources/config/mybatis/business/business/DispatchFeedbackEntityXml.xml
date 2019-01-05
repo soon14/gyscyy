@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.OAManagement.feedBack.DispatchFeedback">
+		<resultMap type="DispatchFeedback" id="DispatchFeedback_temp">
+			<result property="id" column="C_ID" /> 
+			<result property="dispatchId" column="C_DISPATCH_ID" /> 
+			<result property="feedbackResult" column="C_FEEDBACK_RESULT" /> 
+			<result property="feedbackComment" column="C_FEEDBACK_COMMENT" /> 
+			<result property="feedbackPersionId" column="C_FEEDBACK_PERSION_ID" /> 
+			<result property="feedbackPersionName" column="C_FEEDBACK_PERSION_NAME" /> 
+			<result property="feedbackTime" column="C_FEEDBACK_TIME" /> 
+			<result property="feedBackFile" column="C_FEEDBACK_FILE" /> 
+			<result property="feedBackFileName" column="C_FEEDBACK_FILE_NAME" /> 
+		</resultMap>
+		<select id="findAll" resultMap="DispatchFeedback_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_dispatch_feedback 
+			]]>
+		</select>
+		
+		<select id="total" resultType="int">
+			<![CDATA[ 
+				SELECT count(1) FROM tb_dispatch_feedback 
+			]]>
+		</select>
+		
+		<select id="findById" parameterType="long" resultMap="DispatchFeedback_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_dispatch_feedback WHERE C_ID=#{id}
+			]]>
+		</select> 
+		 
+		
+		<!-- ORACLE 数据库需要增加SEQUENCE配置 -->
+		<insert id="insert" parameterType="DispatchFeedback">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<![CDATA[ 
+				insert into tb_dispatch_feedback 
+				(C_ID,C_DISPATCH_ID,C_FEEDBACK_RESULT,C_FEEDBACK_COMMENT,C_FEEDBACK_PERSION_ID,C_FEEDBACK_PERSION_NAME,C_FEEDBACK_TIME,C_FEEDBACK_FILE,C_FEEDBACK_FILE_NAME)
+				values
+				(#{id},#{dispatchId},#{feedbackResult},#{feedbackComment},#{feedbackPersionId},#{feedbackPersionName},#{feedbackTime},#{feedBackFile},#{feedBackFileName})
+			]]>
+		</insert>
+		
+		
+		<update id="update" parameterType="DispatchFeedback">
+			<![CDATA[ 
+				update tb_dispatch_feedback set
+				C_DISPATCH_ID=#{dispatchId},
+				C_FEEDBACK_RESULT=#{feedbackResult},
+				C_FEEDBACK_COMMENT=#{feedbackComment},
+				C_FEEDBACK_PERSION_ID=#{feedbackPersionId},
+				C_FEEDBACK_PERSION_NAME=#{feedbackPersionName},
+				C_FEEDBACK_TIME=#{feedbackTime}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<update id="delete" parameterType="DispatchFeedback">
+			<![CDATA[ 
+				DELETE FROM tb_dispatch_feedback WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<select id="findByCondition" parameterType="map" resultMap="DispatchFeedback_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_dispatch_feedback 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+
+	</mapper>

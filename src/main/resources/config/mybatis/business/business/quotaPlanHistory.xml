@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.quotaPlanHistory">
+		<resultMap type="QuotaPlanHistoryEntity" id="QuotaPlanHistory_temp">
+			<result property="id" column="C_ID" />
+			<result property="apcId" column="C_APC_ID" />
+			<result property="jan" column="C_JAN" />
+			<result property="feb" column="C_FEB" />
+			<result property="mar" column="C_MAR" />
+			<result property="apr" column="C_APR" />
+			<result property="may" column="C_MAY" />
+			<result property="jun" column="C_JUN" />
+			<result property="jul" column="C_JUL" />
+			<result property="aug" column="C_AUG" />
+			<result property="sep" column="C_SEP" />
+			<result property="oct" column="C_OCT" />
+			<result property="nov" column="C_NOV" />
+			<result property="dec" column="C_DEC" />
+			<result property="farmName" column="C_FARM_NAME" />
+			<result property="quotaName" column="C_QUOTA_NAME" />
+			<result property="planCompareName" column="C_PLAN_COMPARE_NAME" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="QuotaPlanHistory_temp">
+			<![CDATA[
+				SELECT * FROM TB_QUOTA_PLAN_HISTORY 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_QUOTA_PLAN_HISTORY 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="QuotaPlanHistory_temp">
+			<![CDATA[
+				SELECT * FROM TB_QUOTA_PLAN_HISTORY  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="QuotaPlanHistoryEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_QUOTA_PLAN_HISTORY 
+				(
+		          C_APC_ID
+		        , C_JAN
+		        , C_FEB
+		        , C_MAR
+		        , C_APR
+		        , C_MAY
+		        , C_JUN
+		        , C_JUL
+		        , C_AUG
+		        , C_SEP
+		        , C_OCT
+		        , C_NOV
+		        , C_DEC
+				)
+				VALUES
+				(
+		         #{apcId}
+	           , #{jan}
+	           , #{feb}
+	           , #{mar}
+	           , #{apr}
+	           , #{may}
+	           , #{jun}
+	           , #{jul}
+	           , #{aug}
+	           , #{sep}
+	           , #{oct}
+	           , #{nov}
+	           , #{dec}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="QuotaPlanHistoryEntity">
+			<![CDATA[
+				UPDATE TB_QUOTA_PLAN_HISTORY SET
+                   C_APC_ID=#{apcId}
+	             , C_JAN=#{jan}
+	             , C_FEB=#{feb}
+	             , C_MAR=#{mar}
+	             , C_APR=#{apr}
+	             , C_MAY=#{may}
+	             , C_JUN=#{jun}
+	             , C_JUL=#{jul}
+	             , C_AUG=#{aug}
+	             , C_SEP=#{sep}
+	             , C_OCT=#{oct}
+	             , C_NOV=#{nov}
+	             , C_DEC=#{dec}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="QuotaPlanHistoryEntity">
+			<![CDATA[
+				DELETE FROM TB_QUOTA_PLAN_HISTORY WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="QuotaPlanHistory_temp">
+			<![CDATA[ 
+				SELECT
+					qp.*, un.C_NAME C_FARM_NAME,
+					dy.C_NAME C_QUOTA_NAME,
+					di.C_NAME C_PLAN_COMPARE_NAME
+				FROM
+					TB_QUOTA_PLAN_HISTORY qp
+				LEFT JOIN tb_annual_production_capacity ac ON ac.C_ID = qp.C_APC_ID 
+				LEFT JOIN tp_sys_dictionary dy ON dy.C_CODE = ac.C_QUOTA_ID
+				AND dy.C_CATEGORY_CODE = 'ANNUAL_PRODUCTION_TYPE'
+				LEFT JOIN tp_sys_dictionary di ON di.C_CODE = ac.C_PLAN_COMPARE_ID
+				AND di.C_CATEGORY_CODE = 'QUOTATYPE'
+				LEFT JOIN tp_sys_unit un ON un.C_ID = ac.C_FARM_ID 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<!-- 根据条件查询(年度生产指标计划) -->
+		<select id="findQuotaByCondition" parameterType="map" resultMap="QuotaPlanHistory_temp">
+			<![CDATA[ 
+				SELECT
+					qp.*, un.C_NAME C_FARM_NAME,
+					dy.C_NAME C_QUOTA_NAME,
+					di.C_NAME C_PLAN_COMPARE_NAME
+				FROM
+					TB_QUOTA_PLAN_HISTORY qp
+				LEFT JOIN tb_annual_production_capacity ac ON ac.C_ID = qp.C_APC_ID 
+				LEFT JOIN tp_sys_dictionary dy ON dy.C_CODE = ac.C_QUOTA_ID
+				AND dy.C_CATEGORY_CODE = 'ANNUALQUOTATYPE'
+				LEFT JOIN tp_sys_dictionary di ON di.C_CODE = ac.C_PLAN_COMPARE_ID
+				AND di.C_CATEGORY_CODE = 'QUOTATYPE'
+				LEFT JOIN tp_sys_unit un ON un.C_ID = ac.C_FARM_ID 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

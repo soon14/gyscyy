@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.safeStep">
+		<resultMap type="SafeStepEntity" id="SafeStep_temp">
+			<result property="id" column="C_ID" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="classify" column="C_CLASSIFY" />
+			<result property="content" column="C_CONTENT" />
+			<result property="money" column="C_MONEY" />
+			<result property="endTime" column="C_END_TIME" />
+			<result property="remark" column="C_REMARK" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="classifyName" column="C_CLASSIFY_NAME" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="SafeStep_temp">
+			<![CDATA[
+				SELECT * FROM TB_SAFE_STEP 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_SAFE_STEP 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="SafeStep_temp">
+			<![CDATA[
+				SELECT 
+					s.*,
+					dy.C_NAME AS C_CLASSIFY_NAME,
+					un.C_NAME AS C_UNIT_NAME
+				FROM 
+					TB_SAFE_STEP s
+				LEFT JOIN tp_sys_dictionary dy ON dy.C_CODE = s.C_CLASSIFY
+				AND dy.C_CATEGORY_CODE = 'SAFE_CLASSIFY'
+				LEFT JOIN tp_sys_unit un ON un.C_ID = s.C_UNIT_ID
+				WHERE s.C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="SafeStepEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_SAFE_STEP 
+				(
+		          C_UNIT_ID
+		        , C_CLASSIFY
+		        , C_CONTENT
+		        , C_MONEY
+		        , C_END_TIME
+		        , C_REMARK
+				)
+				VALUES
+				(
+		         #{unitId}
+	           , #{classify}
+	           , #{content}
+	           , #{money}
+	           , #{endTime}
+	           , #{remark}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="SafeStepEntity">
+			<![CDATA[
+				UPDATE TB_SAFE_STEP SET
+                   C_UNIT_ID=#{unitId}
+	             , C_CLASSIFY=#{classify}
+	             , C_CONTENT=#{content}
+	             , C_MONEY=#{money}
+	             , C_END_TIME=#{endTime}
+	             , C_REMARK=#{remark}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="SafeStepEntity">
+			<![CDATA[
+				DELETE FROM TB_SAFE_STEP WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="SafeStep_temp">
+			<![CDATA[ 
+				SELECT 
+					s.*,
+					dy.C_NAME AS C_CLASSIFY_NAME,
+					un.C_NAME AS C_UNIT_NAME
+				FROM 
+					TB_SAFE_STEP s
+				LEFT JOIN tp_sys_dictionary dy ON dy.C_CODE = s.C_CLASSIFY
+				AND dy.C_CATEGORY_CODE = 'SAFE_CLASSIFY'
+				LEFT JOIN tp_sys_unit un ON un.C_ID = s.C_UNIT_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/context 
+            http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+            http://www.springframework.org/schema/beans 
+            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+            ">
+
+        <!-- 
+        #################################################################################
+        #    <property name="cronExpression">
+        #        <value>00 10 00 * * ?</value>
+        #        <value>00 49 09 * * ?</value>
+        #    </property>
+        #    常用定时提醒的时间格式说明：
+        #       00 10 01 * * ?     每日1点10分启动定时任务
+        #       0/1 * * * * ?      每秒启动一次定时任务
+        #       0 0/1 * * * ?      每分启动一次定时任务
+        #       0 0 0/1 * * ?      每小时启动一次定时任务
+        ##################################################################################
+         -->
+	<!-- 业务对象 -->
+<!-- 	<bean id="quartzStoreJob" class="com.aptech.business.quartz.QuartzStoreJob"></bean>
+	
+	定义调用对象和调用对象的方法
+	<bean id="quartzStoreTask"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		调用的类
+		<property name="targetObject">
+			<ref bean="quartzStoreJob" />
+		</property>
+		调用类中的方法
+		<property name="targetMethod">
+			<value>startJob</value>
+		</property>
+	</bean> -->
+
+	<!-- 业务对象 -->
+	<bean id="sendPlanMessage" class="com.aptech.business.timeTask.SendPlanMessage"></bean>
+	<bean id="checkTrainStatus" class="com.aptech.business.train.trainPlan.quartz.CheckTrainStatus"></bean>
+	<bean id="checkCompanyTrends" class="com.aptech.business.companyTrends.quartz.CheckCompanyTrends"></bean>
+	<bean id="defectRemindeQuartz" class="com.aptech.business.defectManage.quartz.DefectRemindeQuartz"></bean>
+	<bean id="sealAnnualProductionJobQuartz" class="com.aptech.business.annualProductionJob.quartz.SealAnnualProductionQuartz"></bean>
+	<bean id="dispatchReminded" class="com.aptech.business.OAManagement.quartz.DispatchReminedQuartz"></bean>
+	<!-- 定义调用对象和调用对象的方法 -->
+	<bean id="quartzStoreTask"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 调用的类 -->
+		<property name="targetObject">
+			<ref bean="sendPlanMessage" />
+		</property>
+		<!-- 调用类中的方法 -->
+		<property name="targetMethod">
+			<value>startSend</value>
+		</property>
+	</bean>
+<!-- 	培训计划培训状态判断 -->
+	<bean id="quartzCheckTrainStatus"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 调用的类 -->
+		<property name="targetObject">
+			<ref bean="checkTrainStatus" />
+		</property>
+		<!-- 调用类中的方法 -->
+		<property name="targetMethod">
+			<value>checkStatus</value>
+		</property>
+	</bean>
+<!-- 	公司动态首页发布判断 -->
+	<bean id="quartzCheckCompanyTrends" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 调用的类 -->
+		<property name="targetObject">
+			<ref bean="checkCompanyTrends" />
+		</property>
+		<!-- 调用类中的方法 -->
+		<property name="targetMethod">
+			<value>checkCompanyTrendsTime</value>
+		</property>
+	</bean>
+<!-- 	缺陷管理发送信息 -->
+	<bean id="quartzCheckDefect" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 调用的类 -->
+		<property name="targetObject">
+			<ref bean="defectRemindeQuartz" />
+		</property>
+		<!-- 调用类中的方法 -->
+		<property name="targetMethod">
+			<value>sendMessageDefect</value>
+		</property>
+	</bean>
+<!-- 	封存月度生产计划 -->
+	<bean id="quartzSealManualProductionJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 调用的类 -->
+		<property name="targetObject">
+			<ref bean="sealAnnualProductionJobQuartz" />
+		</property>
+		<!-- 调用类中的方法 -->
+		<property name="targetMethod">
+			<value>sealManualProductionJob</value>
+		</property>
+	</bean>
+	
+	<!-- 自动备份定时任务 -->
+	<bean id="quartzStoreTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="quartzStoreTask" />
+		</property>
+		<!-- cron表达式 -->
+		<property name="cronExpression">
+<!-- 			<value>0 0 08 * * ?</value> -->
+<!-- 			<value>0 0 0 * * ?</value> -->
+<!-- 			<value>0 0 0 * * ?</value>每天零点执行 -->
+			    <value>0 0 0 * * ?</value>
+		</property>
+	</bean>
+<!-- 	培训计划状态判定 -->
+	<bean id="quartzCheckTrainStatusTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="quartzCheckTrainStatus" />
+		</property>
+		<!-- cron表达式 -->
+		<property name="cronExpression">
+<!-- 			<value>0 0 08 * * ?</value> -->
+<!-- 			<value>0 0 0 * * ?</value> -->
+<!-- 			<value>0 0 0 * * ?</value>每天零点执行 -->
+			    <value>0 1 * * * ?</value>
+		</property>
+	</bean>
+<!-- 	公司动态上首页时间判定 -->
+	<bean id="quartzCheckCompanyTrendsTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="quartzCheckCompanyTrends" />
+		</property>
+		<!-- cron表达式 -->
+		<property name="cronExpression">
+<!-- 			<value>0 0 08 * * ?</value> -->
+<!-- 			<value>0 0 0 * * ?</value> -->
+<!-- 			<value>0 0 0 * * ?</value>每天零点执行 -->
+			    <value>0 0/1 * * * ?</value>
+		</property>
+	</bean>
+<!-- 	缺陷管理发送信息 -->
+	<bean id="quartzCheckDefectTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="quartzCheckDefect" />
+		</property>
+		<!-- cron表达式 -->
+		<property name="cronExpression">
+<!-- 			<value>0 0 08 * * ?</value> -->
+<!-- 			<value>0 0 0 * * ?</value> -->
+<!-- 			<value>0 0 0 * * ?</value>每天零点执行 -->
+			    <value>0 0/1 * * * ?</value>
+		</property>
+	</bean>
+<!-- 	封存月度生产计划 -->
+	<bean id="quartzSealAnnualProductionTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="quartzSealManualProductionJob" />
+		</property>
+		<!-- cron表达式 -->
+		<property name="cronExpression">
+<!-- 			<value>0 0 08 * * ?</value> -->
+<!-- 			<value>0 0 0 * * ?</value> -->
+<!-- 			<value>0 0 0 * * ?</value>每天零点执行 -->
+			    <value>0 0/1 * * * ?</value>
+		</property>
+	</bean>
+	
+
+	
+	<!-- 总管理类 -->
+	<bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="quartzStoreTrigger" />
+			</list>
+		</property>
+	</bean>
+<!-- 	培训计划状态判断总管理类 -->
+	<bean id="startCheckTrainStatus" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="quartzCheckTrainStatusTrigger" />
+			</list>
+		</property>
+	</bean>
+<!-- 	公司动态上首页判断总管理类 -->
+	<bean id="startCheckCompanyTrends" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="quartzCheckCompanyTrendsTrigger" />
+			</list>
+		</property>
+	</bean>
+<!-- 	缺陷管理发送信息总管理类 -->
+	<bean id="startCheckDefect" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="quartzCheckDefectTrigger" />
+			</list>
+		</property>
+	</bean>
+<!-- 	缺陷管理发送信息总管理类 -->
+	<bean id="startSealAnnualProduction" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="quartzSealAnnualProductionTrigger" />
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 	发文管理提醒 -->
+	<bean id="dispatchReminedQuartz" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 调用的类 -->
+		<property name="targetObject">
+			<ref bean="dispatchReminded" />
+		</property>
+		<!-- 调用类中的方法 -->
+		<property name="targetMethod">
+			<value>getDispatchReminded</value>
+		</property>
+	</bean>
+	<!-- 	发文提醒定时任务执行时间 -->
+	<bean id="dispatchReminedQuartzTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail"> 
+			<ref bean="dispatchReminedQuartz" />
+		</property>
+		<!-- cron表达式 -->
+		<property name="cronExpression">
+			<value>0 0/1 * * * ?</value><!--从0点开始每5分钟执行一次 -->
+		</property>
+	</bean>
+	<!-- 	发文管理提醒定时任务启动 -->
+	<bean id="startDispatchReminedQuartz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="dispatchReminedQuartzTrigger" />
+			</list>
+		</property>
+	</bean>
+
+</beans>

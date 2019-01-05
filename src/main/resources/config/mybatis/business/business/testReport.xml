@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.testReport">
+		<resultMap type="TestReportEntity" id="TestReport_temp">
+			<result property="id" column="C_ID" />
+			<result property="name" column="C_NAME" />
+			<result property="testMember" column="C_TEST_MEMBER" />
+			<result property="userId" column="C_USER_ID" />
+			<result property="time" column="C_TIME" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="fileId" column="C_FILE_ID" />
+			<result property="status" column="C_STATUS" />
+			<result property="userName" column="C_USER_NAME" />
+			<result property="unitName" column="C_UNIT_NAME" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="TestReport_temp">
+			<![CDATA[
+				SELECT * FROM TB_TEST_REPORT 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_TEST_REPORT 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="TestReport_temp">
+			<![CDATA[
+				SELECT * FROM TB_TEST_REPORT  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="TestReportEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_TEST_REPORT 
+				(
+		          C_NAME
+		        , C_TEST_MEMBER
+		        , C_USER_ID
+		        , C_TIME
+		        , C_UNIT_ID
+		        , C_FILE_ID
+		        , C_STATUS
+				)
+				VALUES
+				(
+		         #{name}
+	           , #{testMember}
+	           , #{userId}
+	           , #{time}
+	           , #{unitId}
+	           , #{fileId}
+	           , #{status}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="TestReportEntity">
+			<![CDATA[
+				UPDATE TB_TEST_REPORT SET
+                   C_NAME=#{name}
+	             , C_TEST_MEMBER=#{testMember}
+	             , C_USER_ID=#{userId}
+	             , C_TIME=#{time}
+	             , C_UNIT_ID=#{unitId}
+	             , C_FILE_ID=#{fileId}
+	             , C_STATUS=#{status}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="TestReportEntity">
+			<![CDATA[
+				DELETE FROM TB_TEST_REPORT WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="TestReport_temp">
+			<![CDATA[ 
+				SELECT t.*,a.C_NAME AS C_USER_NAME,b.C_NAME AS C_UNIT_NAME FROM TB_TEST_REPORT t LEFT JOIN TP_SYS_USER a ON t.C_USER_ID = a.C_ID LEFT JOIN TP_SYS_UNIT b ON T.C_UNIT_ID = b.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

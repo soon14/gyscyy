@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.equipAbnormal">
+		<resultMap type="EquipAbnormalEntity" id="EquipAbnormal_temp">
+			<result property="id" column="C_ID" />
+			<result property="equipmentId" column="C_EQUIPMENT_ID" />
+			<result property="equipAbnormalBill" column="C_EQUIP_ABNORMAL_BILL" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="equipName" column="C_EQUIP_NAME" />
+			<result property="planBeginDate" column="C_PLAN_BEGIN_DATE" />
+			<result property="planEndDate" column="C_PLAN_END_DATE" />
+			<result property="applyUserId" column="C_APPLY_USER_ID" />
+			<result property="applyDate" column="C_APPLY_DATE" />
+			<result property="abnormalDesc" column="C_ABNORMAL_DESC" />
+			<result property="abnormalCause" column="C_ABNORMAL_CAUSE" />
+			<result property="remark" column="C_REMARK" />
+			<result property="status" column="C_STATUS" />
+			<result property="executeUserId" column="C_EXECUTE_USER_ID" />
+			<result property="executeUserName" column="C_EXECUTE_USER_NAME" />
+			<result property="startDate" column="C_START_DATE" />
+			<result property="endDate" column="C_END_DATE" />
+			<result property="finishInfo" column="C_FINISH_INFO" />
+			<result property="defectId" column="C_DEFECT_ID" />
+			<result property="fileId" column="C_FILE_ID" />
+			<result property="executeFileId" column="C_EXECUTE_FILE_ID" />
+			<result property="processStatus" column="C_PROCESS_STATUS" />
+			<!-- 	关联外表属性		 -->
+			<result property="applyUserName" column="APPLYUSERNAME" />
+			<result property="unitName" column="UNITNAME" />
+			<result property="equipmentCode" column="C_EQUIPMENT_CODE" />
+			<result property="equipmentName" column="C_EQUIPMENT_MAME" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="EquipAbnormal_temp">
+			<![CDATA[
+				SELECT * FROM TB_EQUIP_ABNORMAL 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_EQUIP_ABNORMAL 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="EquipAbnormal_temp">
+			<![CDATA[
+				SELECT T.C_ID,T.C_STATUS,E.C_CODE C_EQUIPMENT_CODE,
+				       T.C_EQUIP_ABNORMAL_BILL,T.C_EQUIP_NAME,T.C_PLAN_BEGIN_DATE,
+				       T.C_PLAN_END_DATE,T.C_APPLY_DATE,T.C_ABNORMAL_DESC,T.C_UNIT_ID,
+				       T.C_REMARK,T.C_START_DATE,T.C_END_DATE,T.C_EQUIPMENT_ID,
+				       T.C_FINISH_INFO,T.C_FILE_ID,T.C_PROCESS_STATUS,C_APPLY_USER_ID,
+				       T.C_ABNORMAL_CAUSE,S.C_NAME APPLYUSERNAME,U.C_NAME UNITNAME, C_EXECUTE_USER_ID,
+				       T.C_EXECUTE_FILE_ID,T.C_EXECUTE_USER_NAME
+				 	   FROM TB_EQUIP_ABNORMAL T LEFT JOIN TP_SYS_USER S ON T.C_APPLY_USER_ID = S.C_ID
+				 	   LEFT JOIN TP_SYS_UNIT U ON T.C_UNIT_ID = U.C_ID  
+				 	   LEFT JOIN TB_EQUIP_LEDGER E ON T.C_EQUIPMENT_ID = E.C_ID WHERE T.C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="EquipAbnormalEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_EQUIP_ABNORMAL 
+				(
+		          C_EQUIPMENT_ID
+		        , C_EQUIP_ABNORMAL_BILL
+		        , C_UNIT_ID
+		        , C_EQUIP_NAME
+		        , C_PLAN_BEGIN_DATE
+		        , C_PLAN_END_DATE
+		        , C_APPLY_USER_ID
+		        , C_APPLY_DATE
+		        , C_ABNORMAL_DESC
+		        , C_ABNORMAL_CAUSE
+		        , C_REMARK
+		        , C_STATUS
+		        , C_EXECUTE_USER_ID
+		        , C_EXECUTE_USER_NAME
+		        , C_START_DATE
+		        , C_END_DATE
+		        , C_FINISH_INFO
+		        , C_DEFECT_ID
+		        , C_FILE_ID
+		        , C_EXECUTE_FILE_ID
+		        , C_PROCESS_STATUS
+				)
+				VALUES
+				(
+		         #{equipmentId}
+	           , #{equipAbnormalBill}
+	           , #{unitId}
+	           , #{equipName}
+	           , #{planBeginDate}
+	           , #{planEndDate}
+	           , #{applyUserId}
+	           , #{applyDate}
+	           , #{abnormalDesc}
+	           , #{abnormalCause}
+	           , #{remark}
+	           , #{status}
+	           , #{executeUserId}
+	           , #{executeUserName}
+	           , #{startDate}
+	           , #{endDate}
+	           , #{finishInfo}
+	           , #{defectId}
+	           , #{fileId}
+	           , #{executeFileId}
+	           , #{processStatus}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="EquipAbnormalEntity">
+			<![CDATA[
+				UPDATE TB_EQUIP_ABNORMAL SET
+                   C_EQUIPMENT_ID=#{equipmentId}
+	             , C_EQUIP_ABNORMAL_BILL=#{equipAbnormalBill}
+	             , C_UNIT_ID=#{unitId}
+	             , C_EQUIP_NAME=#{equipName}
+	             , C_PLAN_BEGIN_DATE=#{planBeginDate}
+	             , C_PLAN_END_DATE=#{planEndDate}
+	             , C_APPLY_USER_ID=#{applyUserId}
+	             , C_APPLY_DATE=#{applyDate}
+	             , C_ABNORMAL_DESC=#{abnormalDesc}
+	             , C_ABNORMAL_CAUSE=#{abnormalCause}
+	             , C_REMARK=#{remark}
+	             , C_STATUS=#{status}
+	             , C_EXECUTE_USER_ID=#{executeUserId}
+	             , C_EXECUTE_USER_NAME=#{executeUserName}
+	             , C_START_DATE=#{startDate}
+	             , C_END_DATE=#{endDate}
+	             , C_FINISH_INFO=#{finishInfo}
+	             , C_DEFECT_ID=#{defectId}
+	             , C_FILE_ID=#{fileId}
+	             , C_EXECUTE_FILE_ID=#{executeFileId}
+	             , C_PROCESS_STATUS=#{processStatus}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="EquipAbnormalEntity">
+			<![CDATA[
+				DELETE FROM TB_EQUIP_ABNORMAL WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="EquipAbnormal_temp">
+			<![CDATA[ 
+				SELECT T.C_ID,C_EQUIPMENT_ID, C_EQUIP_ABNORMAL_BILL,T.C_UNIT_ID,C_EQUIP_NAME,C_PLAN_BEGIN_DATE,C_PLAN_END_DATE,E.C_CODE C_EQUIPMENT_CODE,
+				C_APPLY_USER_ID,C_APPLY_DATE,C_ABNORMAL_DESC,C_ABNORMAL_CAUSE,T.C_REMARK,T.C_STATUS,C_EXECUTE_USER_ID,U.C_NAME UNITNAME,
+				C_START_DATE,C_END_DATE,C_FINISH_INFO,C_DEFECT_ID,T.C_FILE_ID,T.C_EXECUTE_FILE_ID,C_PROCESS_STATUS,U.C_NAME,S.C_NAME AS "APPLYUSERNAME"
+				FROM TB_EQUIP_ABNORMAL T LEFT JOIN TP_SYS_UNIT U ON T.C_UNIT_ID = U.C_ID LEFT JOIN TP_SYS_USER  S ON T.C_APPLY_USER_ID = S.C_ID
+				LEFT JOIN TB_EQUIP_LEDGER E ON T.C_EQUIPMENT_ID = E.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+		<!-- 根据条件查询 -->
+		<select id="findEquipAbnormalListWithEquip" parameterType="map" resultMap="EquipAbnormal_temp">
+			<![CDATA[ 
+				SELECT
+					T.C_ID,
+					R.C_EQUIP_CODE AS C_EQUIPMENT_ID,
+					C_EQUIP_ABNORMAL_BILL,
+					T.C_UNIT_ID,
+					R.C_EQUIP_NAME AS C_EQUIPMENT_MAME,
+					C_PLAN_BEGIN_DATE,
+					C_PLAN_END_DATE,
+					E.C_CODE C_EQUIPMENT_CODE,
+					C_APPLY_USER_ID,
+					C_APPLY_DATE,
+					C_ABNORMAL_DESC,
+					C_ABNORMAL_CAUSE,
+					T.C_REMARK,
+					T.C_STATUS,
+					C_EXECUTE_USER_ID,
+					U.C_NAME UNITNAME,
+					C_START_DATE,
+					C_END_DATE,
+					C_FINISH_INFO,
+					C_DEFECT_ID,
+					T.C_FILE_ID,
+					T.C_EXECUTE_FILE_ID,
+					C_PROCESS_STATUS,
+					U.C_NAME,
+					S.C_NAME AS "APPLYUSERNAME" 
+				FROM 
+					TB_EQUIP_ABNORMAL T 
+				LEFT JOIN tb_equip_abnormal_equip_rel R ON T.C_ID = R.C_EQUIP_ABNORMAL_ID 
+				LEFT JOIN TP_SYS_UNIT U ON T.C_UNIT_ID = U.C_ID 
+				LEFT JOIN TP_SYS_USER S ON T.C_APPLY_USER_ID = S.C_ID 
+				LEFT JOIN TB_EQUIP_LEDGER E ON R.C_EQUIP_CODE = E.C_CODE 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+         maxBytesLocalHeap="200M" updateCheck="false" monitoring="autodetect" dynamicConfig="true">
+    <diskStore path="java.io.tmpdir"/>
+
+    <!--
+        Default Cache configuration. These will applied to caches programmatically created
+        through the CacheManager.
+        The following attributes are required for defaultCache:
+        maxInMemory       - Sets the maximum number of objects that will be created in memory
+        eternal           - Sets whether elements are eternal. If eternal, timeouts are
+                            ignored and the element is never expired.
+        timeToIdleSeconds - Sets the time to idle for an element before it expires. Is only
+                            used if the element is not eternal. Idle time is now - last accessed time
+        timeToLiveSeconds - Sets the time to live for an element before it expires. Is only
+                            used if the element is not eternal. TTL is now - creation time
+        overflowToDisk    - Sets whether elements can overflow to disk when the in-memory cache
+                            has reached the maxInMemory limit.
+    -->
+    <defaultCache eternal="true" overflowToDisk="false"/>
+    
+    <!-- 测点缓存 -->
+    <cache name="QuotaCache" copyOnRead="true" copyOnWrite="true" overflowToDisk="false"  />  
+    
+    <!-- 通用缓存 -->
+    <cache name="CommonCache" copyOnRead="true" copyOnWrite="true" overflowToDisk="false"  />   
+    
+    <!-- 数据字典码缓存 -->
+    <cache name="CodeCache" copyOnRead="true" copyOnWrite="true" overflowToDisk="false"  /> 
+</ehcache>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.quotaPlanApprove">
+		<resultMap type="QuotaPlanApproveEntity" id="QuotaPlanApprove_temp">
+			<result property="id" column="C_ID" />
+			<result property="farmId" column="C_FARM_ID" />
+			<result property="year" column="C_YEAR" />
+			<result property="type" column="C_TYPE" />
+			<result property="productionSkillId" column="C_PRODUCTION_SKILL_ID" />
+			<result property="planRunningId" column="C_PLAN_RUNNING_ID" />
+			<result property="leaderId" column="C_LEADER_ID" />
+			<result property="status" column="C_STATUS" />
+			<result property="productionRunningId" column="C_PRODUCTION_RUNNING_ID" />
+			<result property="farmName" column="C_FARM_NAME" />
+			<result property="productionSkillName" column="C_PRODUCTION_SKILL_NAME" />
+			<result property="planRunningName" column="C_PLAN_RUNNING_NAME" />
+			<result property="leaderName" column="C_LEADER_NAME" />
+			<result property="productionRunningName" column="C_PRODUCTION_RUNNING_NAME" />
+			<result property="planRunningDown" column="C_PLAN_RUNNING_DOWN" />
+			<result property="planRunningDownName" column="C_PLAN_RUNNING_DOWN_NAME" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="QuotaPlanApprove_temp">
+			<![CDATA[
+				SELECT * FROM TB_QUOTA_PLAN_APPROVE 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_QUOTA_PLAN_APPROVE 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="QuotaPlanApprove_temp">
+			<![CDATA[
+				SELECT 
+					q.*,
+					un.C_NAME AS C_FARM_NAME,
+					ps.C_NAME AS C_PRODUCTION_SKILL_NAME,
+					pr.C_NAME AS C_PLAN_RUNNING_NAME,
+					l.C_NAME AS C_LEADER_NAME,
+					pn.C_NAME AS C_PRODUCTION_RUNNING_NAME,
+					pd.C_NAME AS C_PLAN_RUNNING_DOWN_NAME
+				FROM 
+					TB_QUOTA_PLAN_APPROVE q
+				LEFT JOIN tp_sys_unit un ON un.C_ID = q.C_FARM_ID
+				LEFT JOIN tp_sys_user ps ON ps.C_ID = q.C_PRODUCTION_SKILL_ID 
+				LEFT JOIN tp_sys_user pr ON pr.C_ID = q.C_PLAN_RUNNING_ID 
+				LEFT JOIN tp_sys_user l ON l.C_ID = q.C_LEADER_ID 
+				LEFT JOIN tp_sys_user pn ON pn.C_ID = q.C_PRODUCTION_RUNNING_ID
+				LEFT JOIN tp_sys_user pd ON pd.C_ID = q.C_PLAN_RUNNING_DOWN
+				WHERE q.C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="QuotaPlanApproveEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_QUOTA_PLAN_APPROVE 
+				(
+		          C_FARM_ID
+		        , C_YEAR
+		        , C_TYPE
+		        , C_PRODUCTION_SKILL_ID
+		        , C_PLAN_RUNNING_ID
+		        , C_LEADER_ID
+		        , C_STATUS
+		        , C_PRODUCTION_RUNNING_ID
+		        , C_PLAN_RUNNING_DOWN
+				)
+				VALUES
+				(
+		         #{farmId}
+	           , #{year}
+	           , #{type}
+	           , #{productionSkillId}
+	           , #{planRunningId}
+	           , #{leaderId}
+	           , #{status}
+	           , #{productionRunningId}
+	           , #{planRunningDown}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="QuotaPlanApproveEntity">
+			<![CDATA[
+				UPDATE TB_QUOTA_PLAN_APPROVE SET
+                   C_FARM_ID=#{farmId}
+	             , C_YEAR=#{year}
+	             , C_TYPE=#{type}
+	             , C_PRODUCTION_SKILL_ID=#{productionSkillId}
+	             , C_PLAN_RUNNING_ID=#{planRunningId}
+	             , C_LEADER_ID=#{leaderId}
+	             , C_STATUS=#{status}
+	             , C_PRODUCTION_RUNNING_ID=#{productionRunningId}
+	             , C_PLAN_RUNNING_DOWN=#{planRunningDown}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="QuotaPlanApproveEntity">
+			<![CDATA[
+				DELETE FROM TB_QUOTA_PLAN_APPROVE WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="QuotaPlanApprove_temp">
+			<![CDATA[ 
+				SELECT 
+					q.*,
+					un.C_NAME AS C_FARM_NAME,
+					ps.C_NAME AS C_PRODUCTION_SKILL_NAME,
+					pr.C_NAME AS C_PLAN_RUNNING_NAME,
+					l.C_NAME AS C_LEADER_NAME,
+					pn.C_NAME AS C_PRODUCTION_RUNNING_NAME,
+					pd.C_NAME AS C_PLAN_RUNNING_DOWN_NAME
+				FROM 
+					TB_QUOTA_PLAN_APPROVE q
+				LEFT JOIN tp_sys_unit un ON un.C_ID = q.C_FARM_ID
+				LEFT JOIN tp_sys_user ps ON ps.C_ID = q.C_PRODUCTION_SKILL_ID 
+				LEFT JOIN tp_sys_user pr ON pr.C_ID = q.C_PLAN_RUNNING_ID 
+				LEFT JOIN tp_sys_user l ON l.C_ID = q.C_LEADER_ID 
+				LEFT JOIN tp_sys_user pn ON pn.C_ID = q.C_PRODUCTION_RUNNING_ID
+				LEFT JOIN tp_sys_user pd ON pd.C_ID = q.C_PLAN_RUNNING_DOWN 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

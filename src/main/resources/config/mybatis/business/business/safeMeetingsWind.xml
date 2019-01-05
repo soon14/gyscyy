@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.safeMeetingsWind">
+		<resultMap type="safeMeetingEntity" id="SafeMeetingsWind_temp">
+			<result property="id" column="C_ID" />
+			<result property="rlId" column="C_RL_ID" />
+			<result property="meetingContent" column="C_MEETING_CONTENT" />
+			<result property="checkState" column="C_CHECK_STATE" />
+			<result property="meetingFlag" column="C_MEETING_FLAG" />
+			<result property="checkStateName" column="C_CHECK_STATE_NAME" />
+			<result property="meetingFlagName" column="C_MEETING_FLAG_NAME" />
+			<result property="fZR" column="C_FZR" />			
+			<result property="workTime" column="C_WORK_TIME" />			
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="SafeMeetingsWind_temp">
+			<![CDATA[
+				SELECT * FROM TB_SAFE_MEETING_WIND 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_SAFE_MEETING_WIND 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="SafeMeetingsWind_temp">
+			<![CDATA[
+				SELECT * FROM TB_SAFE_MEETING_WIND  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="safeMeetingEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_SAFE_MEETING_WIND 
+				(
+	           C_RL_ID 
+		        ,
+	           C_MEETING_CONTENT 
+		        ,
+	           C_CHECK_STATE 
+		        ,
+	           C_MEETING_FLAG 
+	            ,
+	           C_FZR 
+	           ,
+	           C_WORK_TIME 
+				)
+				VALUES
+				(
+		       #{rlId}
+	           ,
+		       #{meetingContent}
+	           ,
+		       #{checkState}
+	           ,
+		       #{meetingFlag}
+		       ,
+		       #{fZR}
+		       ,
+		       #{workTime}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="safeMeetingEntity">
+			<![CDATA[
+				UPDATE TB_SAFE_MEETING_WIND SET
+                 C_RL_ID=#{rlId}
+	             ,
+                 C_MEETING_CONTENT=#{meetingContent}
+	             ,
+                 C_CHECK_STATE=#{checkState}
+	             ,
+                 C_MEETING_FLAG=#{meetingFlag}
+                 ,
+                 C_FZR=#{fZR}
+                 ,
+                 C_WORK_TIME=#{workTime}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="safeMeetingEntity">
+			<![CDATA[
+				DELETE FROM TB_SAFE_MEETING_WIND WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="SafeMeetingsWind_temp">
+			<![CDATA[ 
+				SELECT a.*,d.C_NAME as C_CHECK_STATE_NAME FROM TB_SAFE_MEETING_WIND a 
+				LEFT JOIN TP_SYS_DICTIONARY d on d.C_CODE = a.C_CHECK_STATE 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

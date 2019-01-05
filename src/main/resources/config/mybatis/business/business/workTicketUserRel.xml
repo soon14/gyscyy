@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.workTicketUserRel">
+		<resultMap type="WorkTicketUserRelEntity" id="WorkTicketUserRel_temp">
+			<result property="id" column="C_ID" />
+			<result property="workTicketId" column="C_WORKTICKET_ID" />
+			<result property="userId" column="C_USER_ID" />
+			<result property="type" column="C_TYPE" />
+			
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="WorkTicketUserRel_temp">
+			<![CDATA[
+				SELECT * FROM TB_WORKTICKET_USER_REL_USER_REL 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_WORKTICKET_USER_REL 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="WorkTicketUserRel_temp">
+			<![CDATA[
+				SELECT * FROM TB_WORKTICKET_USER_REL  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="WorkTicketUserRelEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_WORKTICKET_USER_REL 
+				(
+				C_WORKTICKET_ID
+		       ,
+		        C_USER_ID
+	           ,
+		       C_TYPE
+		       )
+				VALUES
+				(
+				#{workTicketId},
+				#{userId},
+				#{type})
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="WorkTicketUserRelEntity">
+			<![CDATA[
+				UPDATE TB_WORKTICKET_USER_REL SET
+	             
+                 C_WORKTICKET_ID=#{workTicketId}
+                 ,
+                 C_USER_ID=#{userId}
+	             ,
+                 C_TYPE=#{type}
+	            
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		<!-- 修改数据 -->
+		<update id="updateInfoByMap" parameterType="WorkTicketUserRelEntity">
+			<![CDATA[
+				UPDATE TB_WORKTICKET_USER_REL SET
+                 C_USER_ID=#{userId}
+				WHERE C_TYPE=#{type} AND   C_WORKTICKET_ID=#{workTicketId}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="WorkTicketUserRelEntity">
+			<![CDATA[
+				DELETE FROM TB_WORKTICKET_USER_REL WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="WorkTicketUserRel_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_WORKTICKET_USER_REL
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

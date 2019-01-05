@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.OAManagement.review.DispatchReview">
+		<resultMap type="DispatchReview" id="DispatchReview_temp">
+			<result property="id" column="C_ID" /> 
+			<result property="dispatchId" column="C_DISPATCH_ID" /> 
+			<result property="reviewResult" column="C_REVIEW_RESULT" /> 
+			<result property="reviewComment" column="C_REVIEW_COMMENT" /> 
+			<result property="reviewPersionId" column="C_REVIEW_PERSION_ID" /> 
+			<result property="reviewPersionName" column="C_REVIEW_PERSION_NAME" /> 
+			<result property="reviewTime" column="C_REVIEW_TIME" /> 
+		</resultMap>
+		<select id="findAll" resultMap="DispatchReview_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_dispatch_review 
+			]]>
+		</select>
+		
+		<select id="total" resultType="int">
+			<![CDATA[ 
+				SELECT count(1) FROM tb_dispatch_review 
+			]]>
+		</select>
+		
+		<select id="findById" parameterType="long" resultMap="DispatchReview_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_dispatch_review WHERE C_ID=#{id}
+			]]>
+		</select> 
+		 
+		
+		<!-- ORACLE 数据库需要增加SEQUENCE配置 -->
+		<insert id="insert" parameterType="DispatchReview">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<![CDATA[ 
+				insert into tb_dispatch_review 
+				(C_ID,C_DISPATCH_ID,C_REVIEW_RESULT,C_REVIEW_COMMENT,C_REVIEW_PERSION_ID,C_REVIEW_PERSION_NAME,C_REVIEW_TIME)
+				values
+				(#{id},#{dispatchId},#{reviewResult},#{reviewComment},#{reviewPersionId},#{reviewPersionName},#{reviewTime})
+			]]>
+		</insert>
+		
+		
+		<update id="update" parameterType="DispatchReview">
+			<![CDATA[ 
+				update tb_dispatch_review set
+				C_DISPATCH_ID=#{dispatchId},
+				C_REVIEW_RESULT=#{reviewResult},
+				C_REVIEW_COMMENT=#{reviewComment},
+				C_REVIEW_PERSION_ID=#{reviewPersionId},
+				C_REVIEW_PERSION_NAME=#{reviewPersionName},
+				C_REVIEW_TIME=#{reviewTime}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 不完全修改 -->
+		<update id="updateDynamic" parameterType="DispatchReview">
+			update tb_dispatch_review
+				<set>
+				<if test="C_DISPATCH_ID !=null">
+				C_DISPATCH_ID=#{dispatchId},
+				</if>
+				<if test="C_REVIEW_RESULT !=null">
+				C_REVIEW_RESULT=#{reviewResult},
+				</if>
+				<if test="C_REVIEW_COMMENT !=null">
+				C_REVIEW_COMMENT=#{reviewComment},
+				</if>
+				<if test="C_REVIEW_PERSION_ID !=null">
+				C_REVIEW_PERSION_ID=#{reviewPersionId},
+				</if>
+				<if test="C_REVIEW_PERSION_NAME !=null">
+				C_REVIEW_PERSION_NAME=#{reviewPersionName},
+				</if>
+				<if test="C_REVIEW_TIME !=null">
+				C_REVIEW_TIME=#{reviewTime}
+				</if>
+				</set>
+				WHERE C_ID=#{id}
+		</update>
+		
+		<update id="delete" parameterType="DispatchReview">
+			<![CDATA[ 
+				DELETE FROM tb_dispatch_review WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<select id="findByCondition" parameterType="map" resultMap="DispatchReview_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_dispatch_review 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+
+	</mapper>

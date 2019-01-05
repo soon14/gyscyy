@@ -1,0 +1,54 @@
+/*µ¼º½Æ¤·ô*/
+.no-skin .sidebar{
+	background:url('../../../images/sidebarBack.png'),#054b77 !important;;
+}
+.no-skin .nav-list > li > a {
+    background-color: transparent!important;
+    color: #FFF!important;
+}
+.no-skin .nav-list > li:hover > a {
+    background-color: #024162!important;
+    color: #FFF!important;
+}
+.no-skin .nav-list > li {
+    border-color: #1d6389!important;
+}
+.no-skin .nav-list > li > a:hover {
+
+    background-color: #024162!important;
+    color: #FFF!important;
+
+}
+.no-skin .nav-list .open > a, .no-skin .nav-list .open > a:focus, .no-skin .nav-list .open > a:hover {
+    background-color: transparent!important;
+    color:#FFF!important;
+}
+.no-skin .nav-list > li.open > a {
+    background-color: transparent!important;
+    color: #FFF!important;
+}
+.no-skin .nav-list > li .submenu {
+    background-color: transparent!important;
+    border-color: #999!important;
+}
+.no-skin .nav-list > li .submenu > li > a {
+    background-color: transparent!important;
+    color: #fff!important;
+    border-top-color: #1d658b!important;
+}
+.no-skin .nav-list > li .submenu > li > a:hover {
+    color: #fff!important;
+    background-color: #024162!important;
+}
+.no-skin .sidebar-toggle > .ace-icon {
+    border-color: #ccc!important;
+    color: #ccc!important;
+    background-color: #013f5b!important;
+}
+.no-skin .sidebar-toggle {
+    background-color: #054b77!important;
+    border-color: #ccc!important;
+}
+.navbar {
+    background: url('../../../images/sidebarBack.png') no-repeat,#006088 !important;
+}

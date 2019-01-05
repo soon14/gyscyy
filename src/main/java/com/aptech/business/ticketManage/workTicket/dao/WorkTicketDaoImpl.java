@@ -1,0 +1,26 @@
+package com.aptech.business.ticketManage.workTicket.dao;
+
+import org.springframework.stereotype.Repository;
+
+import com.aptech.business.ticketManage.workTicket.domain.WorkTicketEntity;
+import com.aptech.framework.orm.AncestorDao;
+
+/**
+ * 
+ * 工作票应用应用数据类
+ *
+ * @author 
+ * @created 2017-06-02 11:50:39
+ * @lastModified 
+ * @history
+ *
+ */
+@Repository("workTicketDao")
+public class WorkTicketDaoImpl extends AncestorDao<WorkTicketEntity> implements WorkTicketDao{
+	
+	@Override
+	public String getNameSpace() {
+		// TODO Auto-generated method stub
+		return "com.aptech.business.workTicket";
+	}
+}

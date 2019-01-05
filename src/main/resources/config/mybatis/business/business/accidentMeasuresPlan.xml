@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.accidentMeasuresPlan">
+		<resultMap type="AccidentMeasuresPlanEntity" id="AccidentMeasuresPlan_temp">
+			<result property="id" column="C_ID" />
+			<result property="subject" column="C_SUBJECT" />
+			<result property="content" column="C_CONTENT" />
+			<result property="charge" column="C_CHARGE" />
+			<result property="planDate" column="C_PLAN_DATE" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="uploadTime" column="C_UPLOAD_TIME" />
+			<result property="uploadPerson" column="C_UPLOAD_PERSON" />
+			<result property="status" column="C_STATUS" />
+			<result property="remark" column="C_REMARK" />
+			<result property="uploadPersonName" column="C_UPLOAD_PERSON_NAME" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="fileId" column="C_FILE_ID" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="AccidentMeasuresPlan_temp">
+			<![CDATA[
+				SELECT * FROM TB_ACCIDENT_MEASURES_PLAN 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_ACCIDENT_MEASURES_PLAN 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="AccidentMeasuresPlan_temp">
+			<![CDATA[
+				SELECT * FROM TB_ACCIDENT_MEASURES_PLAN  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="AccidentMeasuresPlanEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_ACCIDENT_MEASURES_PLAN 
+				(
+		          C_SUBJECT
+		        , C_CONTENT
+		        , C_CHARGE
+		        , C_PLAN_DATE
+		        , C_UNIT_ID
+		        , C_UPLOAD_TIME
+		        , C_UPLOAD_PERSON
+		        , C_STATUS
+		        , C_REMARK
+		        , C_FILE_ID
+				)
+				VALUES
+				(
+		         #{subject}
+	           , #{content}
+	           , #{charge}
+	           , #{planDate}
+	           , #{unitId}
+	           , #{uploadTime}
+	           , #{uploadPerson}
+	           , #{status}
+	           , #{remark}
+	           , #{fileId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="AccidentMeasuresPlanEntity">
+			<![CDATA[
+				UPDATE TB_ACCIDENT_MEASURES_PLAN SET
+                   C_SUBJECT=#{subject}
+	             , C_CONTENT=#{content}
+	             , C_CHARGE=#{charge}
+	             , C_PLAN_DATE=#{planDate}
+	             , C_UNIT_ID=#{unitId}
+	             , C_UPLOAD_TIME=#{uploadTime}
+	             , C_UPLOAD_PERSON=#{uploadPerson}
+	             , C_STATUS=#{status}
+	             , C_REMARK=#{remark}
+	             , C_FILE_ID=#{fileId}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="AccidentMeasuresPlanEntity">
+			<![CDATA[
+				DELETE FROM TB_ACCIDENT_MEASURES_PLAN WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="AccidentMeasuresPlan_temp">
+			<![CDATA[ 
+				SELECT t.*,a.C_NAME AS C_UPLOAD_PERSON_NAME,b.C_NAME AS C_UNIT_NAME FROM TB_ACCIDENT_MEASURES_PLAN t LEFT JOIN TP_SYS_UNIT b ON t.C_UNIT_ID = b.C_ID LEFT JOIN TP_SYS_USER a ON t.C_UPLOAD_PERSON = a.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

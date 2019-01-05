@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.contractManage">
+		<resultMap type="ContractManageEntity" id="ContractManage_temp">
+			<result property="id" column="C_ID" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="updateUserId" column="C_UPDATE_USER_ID" />
+			<result property="updateDate" column="C_UPDATE_DATE" />
+			
+			<result property="attachment" column="C_ATTACHMENT" />
+			<result property="contractCode" column="C_CONTRACT_CODE" />
+			<result property="contractName" column="C_CONTRACT_NAME" />
+			<result property="contractXdname" column="C_CONTRACT_XDNAME" />
+			<result property="zbfs" column="C_ZBFS" />
+			<result property="qdrq" column="C_QDRQ" />
+			<result property="contractMoney" column="C_CONTRACT_MONEY" />
+			
+			<result property="yjsmoney" column="C_YJSMONEY" />
+			<result property="endDate" column="C_END_DATE" />
+			<result property="remark" column="C_REMARK" />
+			<result property="status" column="C_STATUS" />
+			<result property="contractLife" column="C_CONTRACT_LIFE" />
+			<result property="contractStartDate" column="C_CONTRACT_START_DATE" />
+			<result property="contractEndDate" column="C_CONTRACT_END_DATE" />
+			<result property="isnotReject" column="C_ISNOT_REJECT" />
+			
+			
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="ContractManage_temp">
+			<![CDATA[
+				SELECT * FROM TB_CONTRACT_MANAGE 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_CONTRACT_MANAGE 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="ContractManage_temp">
+			<![CDATA[
+				SELECT * FROM TB_CONTRACT_MANAGE  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="ContractManageEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_CONTRACT_MANAGE 
+				(
+		          C_CREATE_USER_ID
+		        , C_CREATE_DATE
+		        , C_UPDATE_USER_ID
+		        , C_UPDATE_DATE
+		        
+				,C_ATTACHMENT
+				,C_CONTRACT_CODE
+				,C_CONTRACT_NAME
+				,C_CONTRACT_XDNAME
+				,C_ZBFS
+				,C_QDRQ
+				,C_CONTRACT_MONEY
+				,C_YJSMONEY
+				,C_END_DATE
+				,C_REMARK
+				,C_STATUS
+				,C_CONTRACT_LIFE
+				,C_CONTRACT_START_DATE
+				,C_CONTRACT_END_DATE
+				,C_ISNOT_REJECT
+				)
+				VALUES
+				(
+		         #{createUserId}
+	           , #{createDate}
+	           , #{updateUserId}
+	           , #{updateDate}
+	           
+	           , #{attachment}
+	           , #{contractCode}
+	           , #{contractName}
+	           , #{contractXdname}
+	           , #{zbfs}
+	           , #{qdrq}
+	           , #{contractMoney}
+	           , #{yjsmoney}
+	           , #{endDate}
+	           , #{remark}
+	           , #{status}
+	           , #{contractLife}
+	           , #{contractStartDate}
+	           , #{contractEndDate}
+	           , #{isnotReject}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="ContractManageEntity">
+			<![CDATA[
+				UPDATE TB_CONTRACT_MANAGE SET 
+	             C_CREATE_USER_ID=#{createUserId}
+		        , C_CREATE_DATE=#{createDate}
+		        , C_UPDATE_USER_ID=#{updateUserId}
+		        , C_UPDATE_DATE=#{updateDate}
+		        
+		        , C_ATTACHMENT=#{attachment}
+		        , C_CONTRACT_CODE=#{contractCode}
+		        , C_CONTRACT_NAME=#{contractName}
+		        , C_CONTRACT_XDNAME=#{contractXdname}
+		        , C_ZBFS=#{zbfs}
+		        , C_QDRQ=#{qdrq}
+		        , C_CONTRACT_MONEY=#{contractMoney}
+		        , C_YJSMONEY=#{yjsmoney}
+		        , C_END_DATE=#{endDate}
+		        , C_REMARK=#{remark}
+		        ,C_STATUS=#{status}
+		        ,C_CONTRACT_LIFE=#{contractLife}
+		        ,C_CONTRACT_START_DATE=#{contractStartDate}
+		        ,C_CONTRACT_END_DATE=#{contractEndDate}
+		        ,C_ISNOT_REJECT=#{isnotReject}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="ContractManageEntity">
+			<![CDATA[
+				DELETE FROM TB_CONTRACT_MANAGE WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="ContractManage_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_CONTRACT_MANAGE 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+		<update id="updateZxzt" parameterType="ContractManageEntity">
+			<![CDATA[ 
+				update TB_CONTRACT_MANAGE set
+				
+				C_YJSMONEY=#{yjsmoney}
+				
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+    </mapper>

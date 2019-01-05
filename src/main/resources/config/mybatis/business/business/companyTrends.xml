@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.OAManagement.companyTrends">
+		<resultMap type="CompanyTrendsEntity" id="CompanyTrends_temp">
+			<result property="id" column="C_ID" />
+			<result property="title" column="C_TITLE" />
+			<result property="subTitle" column="C_SUB_TITLE" />
+			<result property="publishTime" column="C_PUBLISH_TIME" />
+			<result property="endTime" column="C_END_TIME" />
+			<result property="uploadPerson" column="C_UPLOAD_PERSON" />
+			<result property="uploadTime" column="C_UPLOAD_TIME" />
+			<result property="status" column="C_STATUS" />
+			<result property="commendStatus" column="C_COMMEND_STATUS" />
+			<result property="commendPicture" column="C_COMMEND_PICTURE" />
+			<result property="homePagePicture" column="C_HOME_PAGE_PICTURE" />
+			<result property="content" column="C_CONTENT" />
+			<result property="preview" column="C_PREVIEW" />
+			<result property="fileAddress" column="C_FILE_ADDRESS" />
+			<result property="createPeopleId" column="C_CREATE_PEOPLE_ID" />
+			<result property="setTop" column="C_SET_TOP" />
+			<result property="setTopDate" column="C_SET_TOP_TIME" />
+		</resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="CompanyTrends_temp">
+			<![CDATA[
+				SELECT * FROM TB_COMPANY_TRENDS 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_COMPANY_TRENDS 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="CompanyTrends_temp">
+			<![CDATA[
+				SELECT * FROM TB_COMPANY_TRENDS  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="CompanyTrendsEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_COMPANY_TRENDS 
+				(
+		          C_TITLE
+		        , C_SUB_TITLE
+		        , C_PUBLISH_TIME
+		        , C_END_TIME
+		        , C_UPLOAD_PERSON
+		        , C_UPLOAD_TIME
+		        , C_STATUS
+		        , C_COMMEND_STATUS
+		        , C_COMMEND_PICTURE
+		        , C_HOME_PAGE_PICTURE
+		        , C_CONTENT
+		        , C_PREVIEW
+		        , C_FILE_ADDRESS
+		        , C_CREATE_PEOPLE_ID
+		        , C_SET_TOP
+		        , C_SET_TOP_TIME
+				)
+				VALUES
+				(
+		         #{title}
+	           , #{subTitle}
+	           , #{publishTime}
+	           , #{endTime}
+	           , #{uploadPerson}
+	           , #{uploadTime}
+	           , #{status}
+	           , #{commendStatus}
+	           , #{commendPicture}
+	           , #{homePagePicture}
+	           , #{content}
+	           , #{preview}
+	           , #{fileAddress}
+	           , #{createPeopleId}
+	           , #{setTop}
+	           , #{setTopDate}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="CompanyTrendsEntity">
+			<![CDATA[
+				UPDATE TB_COMPANY_TRENDS SET
+                   C_TITLE=#{title}
+	             , C_SUB_TITLE=#{subTitle}
+	             , C_PUBLISH_TIME=#{publishTime}
+	             , C_END_TIME=#{endTime}
+	             , C_UPLOAD_PERSON=#{uploadPerson}
+	             , C_UPLOAD_TIME=#{uploadTime}
+	             , C_STATUS=#{status}
+	             , C_COMMEND_STATUS=#{commendStatus}
+	             , C_COMMEND_PICTURE=#{commendPicture}
+	             , C_HOME_PAGE_PICTURE=#{homePagePicture}
+	             , C_CONTENT=#{content}
+	             , C_PREVIEW=#{preview}
+	             , C_FILE_ADDRESS=#{fileAddress}
+	             , C_CREATE_PEOPLE_ID=#{createPeopleId}
+	             , C_SET_TOP=#{setTop}
+	             , C_SET_TOP_TIME=#{setTopDate}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="CompanyTrendsEntity">
+			<![CDATA[
+				DELETE FROM TB_COMPANY_TRENDS WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="CompanyTrends_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_COMPANY_TRENDS 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<!-- 根据条件查询首页消息 -->
+		<select id="findFirstMassageByCondition" parameterType="map" resultMap="CompanyTrends_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_COMPANY_TRENDS 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+			ORDER BY C_PUBLISH_TIME DESC
+		</select>
+    </mapper>

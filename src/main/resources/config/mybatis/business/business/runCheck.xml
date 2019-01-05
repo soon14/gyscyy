@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.runCheck">
+		<resultMap type="RunCheckEntity" id="RunCheck_temp">
+			<result property="id" column="C_ID" />
+			<result property="status" column="C_STATUS" />
+			<result property="code" column="C_CODE" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="updateDate" column="C_UPDATE_DATE" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="updateUserId" column="C_UPDATE_USER_ID" />
+			<result property="checkResult" column="C_CHECK_RESULT" />
+			<result property="checkDate" column="C_CHECK_DATE" />
+			<result property="checkPerson" column="C_CHECK_PERSON" />
+			<result property="suggest" column="C_SUGGEST" />
+			<result property="type" column="C_TYPE" />
+			<result property="typeName" column="C_TYPE_NAME" />
+			<result property="rlId" column="C_RL_ID" />
+			<!-- 统计查询专用 -->
+			<result property="checkPersonName" column="C_CHECK_PERSON_NAME" />
+			<result property="checkCount" column="C_CHECK_COUNT" />
+			<result property="typeName" column="C_TYPE_NAME" />
+			<result property="duties" column="C_DUTIES" />
+			<result property="runTypeCode" column="RUN_TYPE_CODE" />
+			<result property="userUnit" column="USER_UNIT" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="RunCheck_temp">
+			<![CDATA[
+				SELECT * FROM TB_RUN_CHECK 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_RUN_CHECK 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="RunCheck_temp">
+			<![CDATA[
+				SELECT * FROM TB_RUN_CHECK  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="RunCheckEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_RUN_CHECK 
+				(
+		         C_STATUS
+		        , C_CREATE_DATE
+		        , C_UPDATE_DATE
+		        , C_CREATE_USER_ID
+		        , C_UPDATE_USER_ID
+		        , C_CHECK_RESULT
+		        , C_CHECK_DATE
+		        , C_CHECK_PERSON
+		        , C_SUGGEST
+		        , C_TYPE
+		        , C_RL_ID
+				)
+				VALUES
+				(
+	            #{status}
+	           , #{createDate}
+	           , #{updateDate}
+	           , #{createUserId}
+	           , #{updateUserId}
+	           , #{checkResult}
+	           , #{checkDate}
+	           , #{checkPerson}
+	           , #{suggest}
+	           , #{type}
+	           , #{rlId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="RunCheckEntity">
+			<![CDATA[
+				UPDATE TB_RUN_CHECK SET
+	              C_STATUS=#{status}
+	             , C_CREATE_DATE=#{createDate}
+	             , C_UPDATE_DATE=#{updateDate}
+	             , C_CREATE_USER_ID=#{createUserId}
+	             , C_UPDATE_USER_ID=#{updateUserId}
+	             , C_CHECK_RESULT=#{checkResult}
+	             , C_CHECK_DATE=#{checkDate}
+	             , C_CHECK_PERSON=#{checkPerson}
+	             , C_SUGGEST=#{suggest}
+	             , C_TYPE=#{type}
+	             , C_RL_ID=#{rlId}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="RunCheckEntity">
+			<![CDATA[
+				DELETE FROM TB_RUN_CHECK WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="RunCheck_temp">
+			<![CDATA[ 
+				SELECT T.*,T1.C_NAME as C_TYPE_NAME,T2.C_NAME as C_CHECK_PERSON_NAME FROM TB_RUN_CHECK T
+				 LEFT JOIN tp_sys_dictionary T1  ON   T1.C_CATEGORY_CODE='WORK_RECORD_TYPE' AND   T.C_TYPE=T1.C_CODE 
+				LEFT JOIN TP_SYS_USER T2 on T.C_CHECK_PERSON=T2.C_ID 				
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<!-- 查询检查记录数量 -->
+		<select id="findCountWithRunCheck" parameterType="map" resultMap="RunCheck_temp">
+			<![CDATA[ 
+				SELECT RC.* FROM TB_RUN_CHECK RC LEFT JOIN TB_RUN_LOG L ON RC.C_RL_ID = L.C_ID				
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<!-- 按业务类型查询 (检查统计专用)-->
+		<select id="findSearchType" parameterType="map" resultMap="RunCheck_temp">
+			<![CDATA[ 
+					SELECT SD.C_CODE RUN_TYPE_CODE, SD.C_NAME C_TYPE_NAME,RC.* FROM TP_SYS_DICTIONARY SD 
+					LEFT JOIN TB_RUN_CHECK RC ON RC.C_TYPE = SD.C_CODE
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+			GROUP BY SD.C_CODE
+		</select>
+		<!-- 根据条件统计查询 (检查统计专用) -->
+		<select id="findByConditionStatistics" parameterType="map" resultMap="RunCheck_temp">
+			<![CDATA[ 
+					SELECT SD.C_CODE RUN_TYPE_CODE, COUNT(*) C_CHECK_COUNT,
+					SUM(RC.C_CHECK_RESULT) C_CHECK_RESULT,C_CHECK_PERSON,U.C_UNIT_ID AS USER_UNIT 
+					FROM TB_RUN_CHECK RC 
+					LEFT JOIN TB_RUN_LOG L ON L.C_ID = RC.C_RL_ID
+					LEFT JOIN TP_SYS_USER U ON RC.C_CHECK_PERSON = U.C_ID
+					LEFT JOIN TP_USER_UNIT_REL USER_UR ON RC.C_CHECK_PERSON = USER_UR.C_USER_ID AND U.C_UNIT_ID = USER_UR.C_UNIT_ID 
+					LEFT JOIN TP_SYS_DICTIONARY SD ON SD.C_CODE = RC.C_TYPE
+					AND SD.C_CATEGORY_CODE = 'WORK_RECORD_TYPE' AND SD.C_NAME != '全部' 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+			GROUP BY RC.C_CHECK_PERSON, RC.C_TYPE
+		</select>
+    </mapper>

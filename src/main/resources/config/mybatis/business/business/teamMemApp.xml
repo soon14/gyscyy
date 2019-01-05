@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.bussiness.teamMemApp">
+		<resultMap type="TeamMemAppEntity" id="TeamMemApp_temp">
+			<result property="id" column="C_ID" />
+			<result property="name" column="C_NAME" />
+			<result property="code" column="C_CODE" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="teamLeaderId" column="C_TEAM_LEADER_ID" />
+			<result property="teamMemberIds" column="C_TEAM_MEMBER_IDS" />
+			<result property="remark" column="C_REMARK" />
+			<result property="deleteFlag" column="C_DELETE_FLAG" />
+			<result property="teamLeaderName" column="C_TEAM_LEADER_NAME" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="TeamMemApp_temp">
+			<![CDATA[
+				SELECT * FROM TB_TEAM_CLASSES 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_TEAM_CLASSES 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="TeamMemApp_temp">
+			<![CDATA[
+				SELECT * FROM TB_TEAM_CLASSES  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="TeamMemAppEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_TEAM_CLASSES 
+				(
+		          C_NAME
+		        , C_CODE
+		        , C_CREATE_DATE
+		        , C_TEAM_LEADER_ID
+		        , C_TEAM_MEMBER_IDS
+		        , C_REMARK
+		        , C_DELETE_FLAG
+				)
+				VALUES
+				(
+		         #{name}
+	           , #{code}
+	           , #{createDate}
+	           , #{teamLeaderId}
+	           , #{teamMemberIds}
+	           , #{remark}
+	           , #{deleteFlag}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="TeamMemAppEntity">
+			<![CDATA[
+				UPDATE TB_TEAM_CLASSES SET
+                   C_NAME=#{name}
+	             , C_CODE=#{code}
+	             , C_CREATE_DATE=#{createDate}
+	             , C_TEAM_LEADER_ID=#{teamLeaderId}
+	             , C_TEAM_MEMBER_IDS=#{teamMemberIds}
+	             , C_REMARK=#{remark}
+	             , C_DELETE_FLAG=#{deleteFlag}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="TeamMemAppEntity">
+			<![CDATA[
+				DELETE FROM TB_TEAM_CLASSES WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="TeamMemApp_temp">
+			<![CDATA[ 
+				SELECT a.* ,t.C_NAME AS C_TEAM_LEADER_NAME 
+ 				FROM TB_TEAM_CLASSES a  left join TP_SYS_USER t on a.C_TEAM_LEADER_ID = t.C_ID			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

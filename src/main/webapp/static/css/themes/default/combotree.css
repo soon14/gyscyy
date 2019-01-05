@@ -1,0 +1,70 @@
+.aptech-combotree {
+    position: relative;
+    width: 100%;
+    overflow:visible;
+    -moz-user-select: none;
+    display: inline-block;
+    font-size: 12px;
+    vertical-align: middle;
+}
+.aptech-combotree a {
+    background-clip: padding-box;
+    border-radius: 0px;
+    border: 1px solid #d5d5d5;
+    color: #444;
+    height: 30px;
+    display:block;
+    overflow: visible;
+    line-height: 29px;
+    padding: 0 0 0 8px;
+    position: relative;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    background: #fff;
+}
+.aptech-combotree a div{
+	color:#888;
+}
+.aptech-combotree a span {
+    overflow: hidden;
+    display:block;
+    margin-right:25px;
+}
+
+.aptech-combotree a span.info {
+    color:#c0c0c0;
+}
+
+.aptech-combotree a span i.select-close{
+    color: #888;
+    display: inline-block;
+    font-size: 13px;
+    position: absolute;
+    right: 20px;
+    top: 8px
+}
+
+.aptech-combotree a div i {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 8px;;
+    width: 18px;
+}
+
+.aptech-combotree-dropdown{
+    min-height:10px;
+    border-radius: 0px;
+    background-color: #f8f8f8;
+    border: 1px solid #d5d5d5;
+    position: absolute;
+    margin-top:2px;
+    min-width: 150px;
+    z-index: 999;
+}
+.aptech-combotree label.error{
+    height: 30px;
+    line-height: 20px;
+    top:0;
+}

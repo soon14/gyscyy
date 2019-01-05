@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.OAManagement.receiptManagement.ReceiptManagement">
+		<resultMap type="ReceiptManagement" id="ReceiptManagement_temp">
+			<result property="id" column="C_ID" />
+			<result property="title" column="C_TITLE" /> 
+			<result property="type" column="C_TYPE" /> 
+			<result property="unitId" column="C_UNIT_ID" /> 
+			<result property="unitName" column="C_UNIT_NAME" /> 
+			<result property="emergencyLevel" column="C_EMERGENCY_LEVEL" /> 
+			<result property="securityLevel" column="C_SECURITY_LEVEL" /> 
+			<result property="publisherId" column="C_PUBLISHER_ID" /> 
+			<result property="publisherName" column="C_PUBLISHER_NAME" /> 
+			<result property="draftTime" column="C_DRAFT_TIME" /> 
+			<result property="documents" column="C_DOCUMENTS" /> 
+			<result property="appendix" column="C_APPENDIX" /> 
+			<result property="remarks" column="C_REMARKS" />
+			<result property="receiptNumber" column="C_RECEIPT_NAME" /> 
+			<result property="receiptNameSymbolId" column="C_RECEIPT_NAME_SYMBOL_ID" /> 
+			<result property="receiptNameSymbolName" column="C_RECEIPT_NAME_SYMBOL_NAME" /> 
+			<result property="receiptNameYear" column="C_RECEIPT_NAME_YEAR" /> 
+			<result property="receiptNameNum" column="C_RECEIPT_NAME_NUM" /> 
+			<result property="review" column="C_REVIEW" /> 
+			<result property="reviewComment" column="C_REVIEW_COMMENT" /> 
+			<result property="reviewPersion" column="C_REVIEW_PERSION" /> 
+			<result property="reviewPersionName" column="C_REVIEW_PERSION_NAME" /> 
+			<result property="reviewTime" column="C_REVIEW_TIME" /> 
+			<result property="receivingUnit" column="C_RECEIVING_UNIT" /> 
+			<result property="receivingUnitPersion" column="C_RECEIVING_UNIT_PERSION" /> 
+			<result property="receivingUnitPersionName" column="C_RECEIVING_UNIT_PERSION_NAME" /> 
+			<result property="receivingUnitComment" column="C_RECEIVING_UNIT_COMMENT" /> 
+			<result property="receivingUnitTime" column="C_RECEIVING_UNIT_TIME" /> 
+			<result property="jointlySign" column="C_JOINTLY_SIGN" /> 
+			<result property="jointlySignComment" column="C_JOINTLY_SIGN_COMMENT" /> 
+			<result property="jointlySignPersion" column="C_JOINTLY_SIGN_PERSION" /> 
+			<result property="jointlySignPersionName" column="C_JOINTLY_SIGN_PERSION_NAME" /> 
+			<result property="jointlySignTime" column="C_JOINTLY_SIGN_TIME" /> 
+			<result property="leaderApproval" column="C_LEADER_APPROVAL" /> 
+			<result property="leaderComment" column="C_LEADER_COMMENT" /> 
+			<result property="leaderPersion" column="C_LEADER_PERSION" /> 
+			<result property="leaderPersionName" column="C_LEADER_PERSION_NAME" /> 
+			<result property="leaderTime" column="C_LEADER_TIME" /> 
+			<result property="createDate" column="C_CREATE_DATE" /> 
+			<result property="updateDate" column="C_UPDATE_DATE" /> 
+			<result property="approvalStatus" column="C_APPROVAL_STATUS" /> 
+			<result property="jointlySelectedPersion" column="C_JOINTLY_SELECTED_PERSION" /> 
+			<result property="jointlySelectedPersionName" column="C_JOINTLY_SELECTED_PERSION_NAME" /> 
+			<result property="jointlySignedPersion" column="C_JOINTLY_SIGNED_PERSION" /> 
+			<result property="leaderSelectedPersion" column="C_LEADER_SELECTED_PERSION" /> 
+			<result property="leaderSelectedPersionName" column="C_LEADER_SELECTED_PERSION_NAME" /> 
+			<result property="operateType" column="C_OPERATE_TYPE" /> 
+			<result property="reviewSelectedPersion" column="C_REVIEW_SELECTED_PERSION" /> 
+			<result property="reviewSelectedPersionName" column="C_REVIEW_SELECTED_PERSION_NAME" /> 
+			<result property="recevingSelectedPersion" column="C_RECEVING_SELECTED_PERSION" /> 
+			<result property="recevingSelectedPersionName" column="C_RECEVING_SELECTED_PERSION_NAME" />
+			<result property="currentStepUserList" column="C_DISPLAY_APPROVER_NAME" />
+			<result property="receiptNo" column="C_RECEIPT_NO" />
+			
+			<result property="outJointlySign" column="C_OUT_JOINTLY_SIGN" /> 
+			<result property="outJointlySignComment" column="C_OUT_JOINTLY_SIGN_COMMENT" /> 
+			<result property="outJointlySignPersion" column="C_OUT_JOINTLY_SIGN_PERSION" /> 
+			<result property="outJointlySignPersionName" column="C_OUT_JOINTLY_SIGN_PERSION_NAME" /> 
+			<result property="outJointlySignTime" column="C_OUT_JOINTLY_SIGN_TIME" /> 
+			<result property="outSelectedPersion" column="C_OUT_SELECTED_PERSION" /> 
+			<result property="outSelectedPersionName" column="C_OUT_SELECTED_PERSION_NAME" /> 
+			<result property="outSignedPersion" column="C_OUT_SIGNED_PERSION" /> 
+			
+			<result property="productionUntijointlySign" column="C_PRODUCTION_UNIT_JOINTLY_SIGN" /> 
+			<result property="productionUntijointlySignComment" column="C_PRODUCTION_UNIT_JOINTLY_SIGN_COMMENT" /> 
+			<result property="productionUntijointlySignPersion" column="C_PRODUCTION_UNIT_JOINTLY_SIGN_PERSION" /> 
+			<result property="productionUntijointlySignPersionName" column="C_PRODUCTION_UNIT_JOINTLY_SIGN_PERSION_NAME" /> 
+			<result property="productionUntijointlySignTime" column="C_PRODUCTION_UNIT_JOINTLY_SIGN_TIME" /> 
+			<result property="productionUntijointlySelectedPersion" column="C_PRODUCTION_UNIT_JOINTLY_SELECTED_PERSION" /> 
+			<result property="productionUntijointlySelectedPersionName" column="C_PRODUCTION_UNIT_JOINTLY_SELECTED_PERSION_NAME" /> 
+			<result property="productionUntijointlySignedPersion" column="C_PRODUCTION_UNIT_JOINTLY_SIGNED_PERSION" /> 
+			
+			<result property="departMentInsidejointlySign" column="C_DEPARTMENT_INSIDE_JOINTLY_SIGN" /> 
+			<result property="departMentInsidejointlySignComment" column="C_DEPARTMENT_INSIDE_JOINTLY_SIGN_COMMENT" /> 
+			<result property="departMentInsidejointlySignPersion" column="C_DEPARTMENT_INSIDE_JOINTLY_SIGN_PERSION" /> 
+			<result property="departMentInsidejointlySignPersionName" column="C_DEPARTMENT_INSIDE_JOINTLY_SIGN_PERSION_NAME" /> 
+			<result property="departMentInsidejointlySignTime" column="C_DEPARTMENT_INSIDE_JOINTLY_SIGN_TIME" /> 
+			<result property="departMentInsidejointlySelectedPersion" column="C_DEPARTMENT_INSIDE_JOINTLY_SELECTED_PERSION" /> 
+			<result property="departMentInsidejointlySelectedPersionName" column="C_DEPARTMENT_INSIDE_JOINTLY_SELECTED_PERSION_NAME" /> 
+			<result property="departMentInsidejointlySignedPersion" column="C_DEPARTMENT_INSIDE_JOINTLY_SIGNED_PERSION" /> 
+			
+		</resultMap>
+		<select id="findAll" resultMap="ReceiptManagement_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_receipt_management 
+			]]>
+		</select>
+		
+		<select id="total" resultType="int">
+			<![CDATA[ 
+				SELECT count(1) FROM tb_receipt_management 
+			]]>
+		</select>
+		
+		<select id="findById" parameterType="long" resultMap="ReceiptManagement_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_receipt_management WHERE C_ID=#{id}
+			]]>
+		</select> 
+		 
+		
+		<!-- ORACLE 数据库需要增加SEQUENCE配置 -->
+		<insert id="insert" parameterType="ReceiptManagement">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<![CDATA[ 
+				insert into tb_receipt_management 
+				(C_ID,C_TITLE,C_TYPE,C_UNIT_ID,C_UNIT_NAME,C_EMERGENCY_LEVEL,C_SECURITY_LEVEL,C_PUBLISHER_ID,C_PUBLISHER_NAME,C_DRAFT_TIME,C_DOCUMENTS,C_APPENDIX,C_REMARKS,C_RECEIPT_NAME,
+				C_RECEIPT_NAME_SYMBOL_ID,C_RECEIPT_NAME_SYMBOL_NAME,C_RECEIPT_NAME_YEAR,C_RECEIPT_NAME_NUM,C_REVIEW,C_REVIEW_COMMENT,C_REVIEW_PERSION,C_REVIEW_TIME,C_RECEIVING_UNIT,
+				C_RECEIVING_UNIT_PERSION,C_RECEIVING_UNIT_PERSION_NAME,C_RECEIVING_UNIT_COMMENT,C_JOINTLY_SIGN,C_JOINTLY_SIGN_COMMENT,C_JOINTLY_SIGN_PERSION,C_JOINTLY_SIGN_TIME,C_LEADER_APPROVAL,
+				C_LEADER_COMMENT,C_LEADER_PERSION,C_LEADER_TIME,C_CREATE_DATE,C_UPDATE_DATE,C_APPROVAL_STATUS,C_JOINTLY_SELECTED_PERSION,C_JOINTLY_SIGNED_PERSION,C_OPERATE_TYPE,
+				C_REVIEW_PERSION_NAME,C_JOINTLY_SIGN_PERSION_NAME,C_LEADER_PERSION_NAME,C_JOINTLY_SELECTED_PERSION_NAME,C_LEADER_SELECTED_PERSION_NAME,C_REVIEW_SELECTED_PERSION,C_REVIEW_SELECTED_PERSION_NAME,C_RECEVING_SELECTED_PERSION,C_RECEVING_SELECTED_PERSION_NAME, C_DISPLAY_APPROVER_NAME, C_RECEIPT_NO,
+				C_PRODUCTION_UNIT_JOINTLY_SIGN,C_PRODUCTION_UNIT_JOINTLY_SIGN_COMMENT,C_PRODUCTION_UNIT_JOINTLY_SIGN_PERSION,C_PRODUCTION_UNIT_JOINTLY_SIGN_PERSION_NAME,C_PRODUCTION_UNIT_JOINTLY_SIGN_TIME,C_PRODUCTION_UNIT_JOINTLY_SELECTED_PERSION,C_PRODUCTION_UNIT_JOINTLY_SELECTED_PERSION_NAME,C_PRODUCTION_UNIT_JOINTLY_SIGNED_PERSION,
+				C_DEPARTMENT_INSIDE_JOINTLY_SIGN,C_DEPARTMENT_INSIDE_JOINTLY_SIGN_COMMENT,C_DEPARTMENT_INSIDE_JOINTLY_SIGN_PERSION,C_DEPARTMENT_INSIDE_JOINTLY_SIGN_PERSION_NAME,C_DEPARTMENT_INSIDE_JOINTLY_SIGN_TIME,C_DEPARTMENT_INSIDE_JOINTLY_SELECTED_PERSION,C_DEPARTMENT_INSIDE_JOINTLY_SELECTED_PERSION_NAME,C_DEPARTMENT_INSIDE_JOINTLY_SIGNED_PERSION)
+				values
+				(#{id},#{title},#{type},#{unitId},#{unitName},#{emergencyLevel},#{securityLevel},#{publisherId},#{publisherName},#{draftTime},#{documents},#{appendix},#{remarks},#{receiptNumber},
+				#{receiptNameSymbolId},#{receiptNameSymbolName},#{receiptNameYear},#{receiptNameNum},#{review},#{reviewComment},#{reviewPersion},#{reviewTime},#{receivingUnit},#{receivingUnitPersion},#{receivingUnitPersionName},#{receivingUnitComment},#{jointlySign},#{jointlySignComment},#{jointlySignPersion},#{jointlySignTime},#{leaderApproval},
+				#{leaderComment},#{leaderPersion},#{leaderTime},#{createDate},#{updateDate},#{approvalStatus},#{jointlySelectedPersion},#{jointlySignedPersion},#{operateType} ,#{reviewPersionName},#{jointlySignPersionName},#{leaderPersionName},#{jointlySelectedPersionName},#{leaderSelectedPersionName},#{reviewSelectedPersion},#{reviewSelectedPersionName},#{recevingSelectedPersion},#{recevingSelectedPersionName},#{currentStepUserList} ,#{receiptNo},
+				#{productionUntijointlySign},#{productionUntijointlySignComment},#{productionUntijointlySignPersion},#{productionUntijointlySignPersionName},#{productionUntijointlySignTime},#{productionUntijointlySelectedPersion},#{productionUntijointlySelectedPersionName},#{productionUntijointlySignedPersion},
+				#{departMentInsidejointlySign},#{departMentInsidejointlySignComment},#{departMentInsidejointlySignPersion},#{departMentInsidejointlySignPersionName},#{departMentInsidejointlySignTime},#{departMentInsidejointlySelectedPersion},#{departMentInsidejointlySelectedPersionName},#{departMentInsidejointlySignedPersion})
+			]]>
+		</insert>
+		
+		
+		<update id="update" parameterType="ReceiptManagement">
+			<![CDATA[ 
+				update tb_receipt_management set
+				C_TITLE=#{title},
+				C_TYPE=#{type},
+				C_UNIT_ID=#{unitId},
+				C_UNIT_NAME=#{unitName},
+				C_EMERGENCY_LEVEL=#{emergencyLevel},
+				C_SECURITY_LEVEL=#{securityLevel},
+				C_PUBLISHER_ID=#{publisherId},
+				C_PUBLISHER_NAME=#{publisherName},
+				C_DRAFT_TIME=#{draftTime},
+				C_DOCUMENTS=#{documents},
+				C_APPENDIX=#{appendix},
+				C_REMARKS=#{remarks},
+				C_RECEIPT_NAME=#{receiptNumber},
+				C_RECEIPT_NAME_SYMBOL_ID=#{receiptNameSymbolId},
+				C_RECEIPT_NAME_SYMBOL_NAME=#{receiptNameSymbolName},
+				C_RECEIPT_NAME_YEAR=#{receiptNameYear},
+				C_RECEIPT_NAME_NUM=#{receiptNameNum},
+				C_REVIEW=#{review},
+				C_REVIEW_COMMENT=#{reviewComment},
+				C_REVIEW_PERSION=#{reviewPersion},
+				C_REVIEW_TIME=#{reviewTime},
+				C_RECEIVING_UNIT=#{receivingUnit},
+				C_RECEIVING_UNIT_PERSION=#{receivingUnitPersion},
+				C_RECEIVING_UNIT_PERSION_NAME=#{receivingUnitPersionName},
+				C_RECEIVING_UNIT_COMMENT=#{receivingUnitComment},
+				C_RECEIVING_UNIT_TIME=#{receivingUnitTime},
+				C_JOINTLY_SIGN=#{jointlySign},
+				C_JOINTLY_SIGN_COMMENT=#{jointlySignComment},
+				C_JOINTLY_SIGN_PERSION=#{jointlySignPersion},
+				C_JOINTLY_SIGN_TIME=#{jointlySignTime},
+				C_LEADER_APPROVAL=#{leaderApproval},
+				C_LEADER_COMMENT=#{leaderComment},
+				C_LEADER_PERSION=#{leaderPersion},
+				C_LEADER_TIME=#{leaderTime},
+				C_UPDATE_DATE=#{updateDate},
+				C_APPROVAL_STATUS=#{approvalStatus},
+				C_JOINTLY_SELECTED_PERSION=#{jointlySelectedPersion},
+				C_JOINTLY_SIGNED_PERSION=#{jointlySignedPersion},
+				C_LEADER_SELECTED_PERSION=#{leaderSelectedPersion}, 
+				C_OPERATE_TYPE=#{operateType},
+				C_REVIEW_PERSION_NAME=#{reviewPersionName},
+				C_JOINTLY_SIGN_PERSION_NAME=#{jointlySignPersionName},
+				C_LEADER_PERSION_NAME=#{leaderPersionName},
+				C_JOINTLY_SELECTED_PERSION_NAME=#{jointlySelectedPersionName},
+				C_LEADER_SELECTED_PERSION_NAME=#{leaderSelectedPersionName},
+				C_REVIEW_SELECTED_PERSION=#{reviewSelectedPersion},
+				C_REVIEW_SELECTED_PERSION_NAME=#{reviewSelectedPersionName},
+				C_RECEVING_SELECTED_PERSION=#{recevingSelectedPersion}, 
+				C_RECEVING_SELECTED_PERSION_NAME=#{recevingSelectedPersionName}, 
+				C_DISPLAY_APPROVER_NAME=#{currentStepUserList} 
+				,C_RECEIPT_NO=#{receiptNo} 
+				,C_OUT_JOINTLY_SIGN=#{outJointlySign} 
+				,C_OUT_JOINTLY_SIGN_COMMENT=#{outJointlySignComment} 
+				,C_OUT_JOINTLY_SIGN_PERSION=#{outJointlySignPersion} 
+				,C_OUT_JOINTLY_SIGN_PERSION_NAME=#{outJointlySignPersionName} 
+				,C_OUT_JOINTLY_SIGN_TIME=#{outJointlySignTime} 
+				,C_OUT_SELECTED_PERSION=#{outSelectedPersion} 
+				,C_OUT_SELECTED_PERSION_NAME=#{outSelectedPersionName} 
+				,C_OUT_SIGNED_PERSION=#{outSignedPersion} 
+				,C_PRODUCTION_UNIT_JOINTLY_SIGN=#{productionUntijointlySign} 
+				,C_PRODUCTION_UNIT_JOINTLY_SIGN_COMMENT=#{productionUntijointlySignComment}
+				,C_PRODUCTION_UNIT_JOINTLY_SIGN_PERSION=#{productionUntijointlySignPersion} 
+				,C_PRODUCTION_UNIT_JOINTLY_SIGN_PERSION_NAME=#{productionUntijointlySignPersionName} 
+				,C_PRODUCTION_UNIT_JOINTLY_SIGN_TIME=#{productionUntijointlySignTime} 
+				,C_PRODUCTION_UNIT_JOINTLY_SELECTED_PERSION=#{productionUntijointlySelectedPersion} 
+				,C_PRODUCTION_UNIT_JOINTLY_SELECTED_PERSION_NAME=#{productionUntijointlySelectedPersionName} 
+				,C_PRODUCTION_UNIT_JOINTLY_SIGNED_PERSION=#{productionUntijointlySignedPersion}
+				,C_DEPARTMENT_INSIDE_JOINTLY_SIGN=#{departMentInsidejointlySign} 
+				,C_DEPARTMENT_INSIDE_JOINTLY_SIGN_COMMENT=#{departMentInsidejointlySignComment}
+				,C_DEPARTMENT_INSIDE_JOINTLY_SIGN_PERSION=#{departMentInsidejointlySignPersion} 
+				,C_DEPARTMENT_INSIDE_JOINTLY_SIGN_PERSION_NAME=#{departMentInsidejointlySignPersionName} 
+				,C_DEPARTMENT_INSIDE_JOINTLY_SIGN_TIME=#{departMentInsidejointlySignTime} 
+				,C_DEPARTMENT_INSIDE_JOINTLY_SELECTED_PERSION=#{departMentInsidejointlySelectedPersion} 
+				,C_DEPARTMENT_INSIDE_JOINTLY_SELECTED_PERSION_NAME=#{departMentInsidejointlySelectedPersionName} 
+				,C_DEPARTMENT_INSIDE_JOINTLY_SIGNED_PERSION=#{departMentInsidejointlySignedPersion} 
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+
+		
+		<update id="delete" parameterType="ReceiptManagement">
+			<![CDATA[ 
+				DELETE FROM tb_receipt_management WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<select id="findByCondition" parameterType="map" resultMap="ReceiptManagement_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_receipt_management 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+		<select id="findReceptNumberInfo" parameterType="map" resultType="map">
+			<![CDATA[ 
+				SELECT * FROM tb_dispatch_number 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+	</mapper>

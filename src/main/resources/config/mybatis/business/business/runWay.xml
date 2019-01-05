@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.runWay">
+		<resultMap type="RunWayEntity" id="RunWay_temp">
+			<result property="id" column="C_ID" />
+			<result property="rlId" column="C_RL_ID" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="deviceId" column="C_DEVICE_ID" />
+			<result property="deviceType" column="C_DEVICE_TYPE" />
+			<result property="runWay" column="C_RUN_WAY" />
+			<result property="runWayName" column="C_RUN_WAY_NAME" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="deviceName" column="C_DEVICE_NAME" />
+			<result property="deviceTypeName" column="C_TYPE_NAME" />			
+			<result property="equipCode" column="C_EQUIP_CODE" />			
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="RunWay_temp">
+			<![CDATA[
+				SELECT * FROM TB_RUN_WAY 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_RUN_WAY 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="RunWay_temp">
+			<![CDATA[
+				SELECT * FROM TB_RUN_WAY  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="runWayEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_RUN_WAY 
+				(
+		         C_RL_ID
+		        , C_UNIT_ID
+		        , C_DEVICE_ID
+		        , C_DEVICE_TYPE
+		        , C_RUN_WAY
+				)
+				VALUES
+				(
+	            #{rlId}
+	           , #{unitId}
+	           , #{deviceId}
+	           , #{deviceType}
+	           , #{runWay}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="runWayEntity">
+			<![CDATA[
+				UPDATE TB_RUN_WAY SET
+	              C_RL_ID=#{rlId}
+	             , C_UNIT_ID=#{unitId}
+	             , C_DEVICE_ID=#{deviceId}
+	             , C_DEVICE_TYPE=#{deviceType}
+	             , C_RUN_WAY=#{runWay}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="runWayEntity">
+			<![CDATA[
+				DELETE FROM TB_RUN_WAY WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="RunWay_temp">
+			<![CDATA[ 
+				SELECT a.*, b.C_NAME as C_UNIT_NAME,d.C_NAME as C_RUN_WAY_NAME, c.C_NAME as C_DEVICE_NAME,e.C_NAME as C_TYPE_NAME FROM TB_RUN_WAY a 
+				LEFT JOIN TP_SYS_UNIT b ON a.C_UNIT_ID = b.C_ID 
+				LEFT JOIN tb_equip_ledger c ON c.C_ID=a.C_DEVICE_ID
+				LEFT JOIN TP_SYS_DICTIONARY d on  d.C_CATEGORY_CODE='RUN_WAY' AND d.C_CODE = a.C_RUN_WAY				
+				LEFT JOIN tp_sys_dictionary e  ON   e.C_CATEGORY_CODE='DEVICE_TYPE' AND   a.C_DEVICE_TYPE=e.C_CODE 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+			 order  by a.C_DEVICE_TYPE
+		</select>
+		<!-- 运行方式列表查询 -->
+		<select id="findRunWayByCondition" parameterType="map" resultMap="RunWay_temp">
+			<![CDATA[ 
+				 select t.* ,
+				 T2.C_NAME as C_DEVICE_NAME,t2.C_CODE as C_EQUIP_CODE from  tb_run_way t
+				 left join  tb_equip_ledger t2  on t.C_DEVICE_ID =t2.C_ID
+				 left join  tp_sys_unit t3  on t.C_UNIT_ID=t3.C_ID
+				 left join tb_equip_tree t4 on t2.c_id=t4.C_EQUIP_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

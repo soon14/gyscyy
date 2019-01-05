@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.stockStatistics">
+		<resultMap type="StockStatisticsEntity" id="StockStatistics_temp">
+			<result property="totalCount" column="C_TOTAL_COUNT" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="wareHouseName" column="C_WARE_HOUSE_NAME" />
+			<result property="wareHouseId" column="C_WARE_HOUSE_ID" />
+			<result property="materialName" column="C_MATERIAL_NAME" />
+			<result property="materialModel" column="C_MATERIAL_MODEL" />
+			<result property="materialId" column="C_MATERIAL_ID" />
+			<result property="materialUnit" column="C_MATERIAL_UNIT" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="StockStatistics_temp">
+			<![CDATA[
+				select * from  (SELECT
+					SUM(SID.C_COUNT),
+					SMC.C_NAME,
+					SI.C_INSTOCK_TIME,
+					SI.C_UNIT_ID,
+					SI.C_WARE_HOUSE_ID,
+					su.C_NAME unitName,
+					wh.C_WARE_HOUSE_NAME
+				FROM
+					tb_spare_instock_detail SID
+				LEFT JOIN tb_spare_instock SI ON sid.C_INSTOCK_ID = SI.C_ID
+				LEFT JOIN tb_spare_material_category SMC ON SID.C_MATERIAL_ID = smc.C_ID
+				LEFT JOIN tp_sys_unit su ON SI.C_UNIT_ID = su.C_ID
+				LEFT JOIN tb_ware_house wh ON wh.C_ID = SI.C_WARE_HOUSE_ID
+				GROUP BY
+					SID.C_MATERIAL_ID) s
+				WHERE
+				 s.C_INSTOCK_TIME > "2017-07-24"
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM (SELECT
+							*
+						FROM
+							tb_spare_inout_stock
+						GROUP BY
+							C_MATERIAL_ID,
+							C_WARE_HOUSE_ID,
+							C_UNIT_ID)  ss
+			]]>
+		</select>
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="StockStatistics_temp">
+			<![CDATA[ 
+					SELECT
+								*
+							FROM
+								(
+									SELECT sis.C_UNIT_ID C_ID,
+										sis.C_UNIT_ID,
+										sis.C_WARE_HOUSE_ID,
+										sis.C_MATERIAL_ID,
+										su.C_NAME AS C_UNIT_NAME,
+										wh.C_WARE_HOUSE_NAME,
+										SMC.C_NAME AS C_MATERIAL_NAME,
+										SMC.C_MODEL AS C_MATERIAL_MODEL,
+										SMC.C_UNIT AS C_MATERIAL_UNIT
+									FROM
+										tb_spare_inout_stock sis,
+										tb_spare_material_category SMC,
+										tp_sys_unit su,
+										tb_ware_house wh
+									WHERE
+										wh.C_ID = sis.C_WARE_HOUSE_ID
+									AND sis.C_UNIT_ID = su.C_ID
+									AND sis.C_MATERIAL_ID = smc.C_ID
+									GROUP BY
+										sis.C_MATERIAL_ID,
+										sis.C_WARE_HOUSE_ID,
+										sis.C_UNIT_ID
+								) a
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<!-- 根据时间条件查询查询时间前出库-->
+		<select id="findByConditionStatisticsPastOut" parameterType="map" resultMap="StockStatistics_temp">
+			<![CDATA[ 
+						select * from  (SELECT
+							sis.*, su.C_NAME AS C_UNIT_NAME,
+							wh.C_WARE_HOUSE_NAME,
+							SMC.C_NAME AS C_MATERIAL_NAME,
+							SUM(sis.C_COUNT) C_TOTAL_COUNT
+						FROM
+							tb_spare_inout_stock sis,
+							tb_spare_material_category SMC,
+							tp_sys_unit su,
+							tb_ware_house wh
+						WHERE
+							(sis.c_type = '2'
+						OR  sis.c_type = '4')
+						AND sis.C_TIME <= #{endMonth}
+						AND sis.C_TIME >= #{thisMonth}
+						AND wh.C_ID = sis.C_WARE_HOUSE_ID
+						AND sis.C_MATERIAL_ID = smc.C_ID
+						AND sis.C_UNIT_ID = su.C_ID
+						GROUP BY
+							sis.C_MATERIAL_ID,
+							sis.C_WARE_HOUSE_ID,
+							sis.C_UNIT_ID) a
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<!-- 根据时间条件查询查询时间前入库 -->
+		<select id="findByConditionStatisticsPastIn" parameterType="map" resultMap="StockStatistics_temp">
+			<![CDATA[ 
+					select * from  (SELECT  sis.*, su.C_NAME AS C_UNIT_NAME,
+							wh.C_WARE_HOUSE_NAME,
+							SMC.C_NAME AS C_MATERIAL_NAME,
+							SUM(sis.C_COUNT) C_TOTAL_COUNT
+						FROM
+							tb_spare_inout_stock sis,
+							tb_spare_material_category SMC,
+							tp_sys_unit su,
+							tb_ware_house wh
+						WHERE
+							(sis.c_type = '1'
+						OR	sis.c_type = '3'
+						OR	sis.c_type = '5')
+						AND sis.C_TIME <= #{endMonth}
+						AND sis.C_TIME >= #{thisMonth}
+						AND wh.C_ID = sis.C_WARE_HOUSE_ID
+						AND sis.C_MATERIAL_ID = smc.C_ID
+						AND sis.C_UNIT_ID = su.C_ID
+						GROUP BY
+							sis.C_MATERIAL_ID,
+							sis.C_WARE_HOUSE_ID,
+							sis.C_UNIT_ID) a
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<!-- 根据时间条件查询查询时间段出库库 -->
+		<select id="findByConditionStatisticsOut" parameterType="map" resultMap="StockStatistics_temp">
+			<![CDATA[ 
+						select * from  (SELECT
+							sis.*, su.C_NAME AS C_UNIT_NAME,
+							wh.C_WARE_HOUSE_NAME,
+							SMC.C_NAME AS C_MATERIAL_NAME,
+							SUM(sis.C_COUNT) C_TOTAL_COUNT
+						FROM
+							tb_spare_inout_stock sis,
+							tb_spare_material_category SMC,
+							tp_sys_unit su,
+							tb_ware_house wh
+						WHERE
+							(sis.c_type = '2'
+						OR	sis.c_type = '4')
+						AND sis.C_TIME >= #{lastDate}
+						AND sis.C_TIME < #{giveDate}
+						AND wh.C_ID = sis.C_WARE_HOUSE_ID
+						AND sis.C_MATERIAL_ID = smc.C_ID
+						AND sis.C_UNIT_ID = su.C_ID
+						GROUP BY
+							sis.C_MATERIAL_ID,
+							sis.C_WARE_HOUSE_ID,
+							sis.C_UNIT_ID) a
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<!-- 根据时间条件查询查询时间段入库 -->
+		<select id="findByConditionStatisticsIn" parameterType="map" resultMap="StockStatistics_temp">
+			<![CDATA[ 
+					select * from  (SELECT
+							sis.*, su.C_NAME AS C_UNIT_NAME,
+							wh.C_WARE_HOUSE_NAME,
+							SMC.C_NAME AS C_MATERIAL_NAME,
+							SUM(sis.C_COUNT) C_TOTAL_COUNT
+						FROM
+							tb_spare_inout_stock sis,
+							tb_spare_material_category SMC,
+							tp_sys_unit su,
+							tb_ware_house wh
+						WHERE
+							(sis.c_type = '1'
+						OR	sis.c_type = '3'
+						OR	sis.c_type = '5')
+						AND sis.C_TIME >= #{lastDate}
+						AND sis.C_TIME < #{giveDate}
+						AND wh.C_ID = sis.C_WARE_HOUSE_ID
+						AND sis.C_MATERIAL_ID = smc.C_ID
+						AND sis.C_UNIT_ID = su.C_ID
+						GROUP BY
+							sis.C_MATERIAL_ID,
+							sis.C_WARE_HOUSE_ID,
+							sis.C_UNIT_ID) a
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

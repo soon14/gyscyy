@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.runLogWind">
+		<resultMap type="runLogEntity" id="RunLogWindtemp">
+			<result property="personsIds" column="C_PERSONS_IDS" />
+			<result property="btmPersonsIds" column="C_BTM_PERSONS_IDS" />
+			<result property="chargeId" column="C_CHARGE_ID" />
+			<result property="givePersonsIds" column="C_GIVE_PERSONS_IDS" />
+			<result property="giveDutyId" column="C_GIVE_DUTY_ID" />
+			<result property="btmContent" column="C_BTM_CONTENT" />
+			<result property="jfState" column="C_JF_STATE" />
+			<result property="code" column="C_CODE" />
+			<result property="date" column="C_DATE" />
+			<result property="givePassword" column="C_GIVE_PASSWORD" />
+			<result property="teamId" column="C_TEAM_ID" />
+			<result property="giveDate" column="C_GIVE_DATE" />
+			<result property="giveChargeId" column="C_GIVE_CHARGE_ID" />
+			<result property="atmPersonsIds" column="C_ATM_PERSONS_IDS" />
+			<result property="id" column="C_ID" />
+			<result property="receivePassword" column="C_RECEIVE_PASSWORD" />
+			<result property="giveTeamId" column="C_GIVE_TEAM_ID" />
+			<result property="atmContent" column="C_ATM_CONTENT" />
+			<result property="dutyId" column="C_DUTY_ID" />
+			<result property="grState" column="C_GR_STATE" />
+ 			<result property="chargeName" column="C_CHARGE_NAME" />
+ 			<result property="giveChargeName" column="C_GIVE_CHARGE_NAME" />
+			<result property="grStateName" column="C_GR_STATE_NAME" /> 		
+			<result property="teamName" column="C_TEAM_NAME" /> 			
+			<result property="dutyName" column="C_DUTY_NAME" /> 
+			<result property="remark" column="C_REMARK" /> 			
+			<result property="fileId" column="C_FILE_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="check" column="C_CHECK" />
+			<result property="checkName" column="C_CHECK_NAME" />
+			<result property="unit" column="C_UNIT" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="RunLogWindtemp">
+			<![CDATA[
+				SELECT * FROM TB_RUN_LOG_WIND 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_RUN_LOG_WIND 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="RunLogWindtemp">
+			<![CDATA[
+				SELECT * FROM TB_RUN_LOG_WIND  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="runLogEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_RUN_LOG_WIND 
+				(
+		        
+	           C_PERSONS_IDS ,
+	           C_BTM_PERSONS_IDS 
+		        ,
+	           C_CHARGE_ID 
+		        ,
+	           C_GIVE_PERSONS_IDS 
+		        ,
+	           C_GIVE_DUTY_ID 
+		        ,
+	           C_BTM_CONTENT 
+		        ,
+	           C_JF_STATE 
+		        ,
+	           C_CODE 
+		        ,
+	           C_DATE 
+		        ,
+	           C_GIVE_PASSWORD 
+		        ,
+	           C_TEAM_ID 
+		        ,
+	           C_GIVE_DATE 
+		        ,
+	           C_GIVE_CHARGE_ID 
+		        ,
+	           C_ATM_PERSONS_IDS 
+		        ,
+	           C_RECEIVE_PASSWORD 
+		        ,
+	           C_GIVE_TEAM_ID 
+		        ,
+	           C_ATM_CONTENT 
+		        ,
+	           C_DUTY_ID 
+		        ,
+	           C_GR_STATE  ,
+	           C_REMARK ,
+	           C_FILE_ID ,
+	           C_CREATE_DATE,
+	           C_CHECK,
+	           C_UNIT
+				)
+				VALUES
+				(
+	           
+		       #{personsIds},
+		       #{btmPersonsIds}
+	           ,
+		       #{chargeId}
+	           ,
+		       #{givePersonsIds}
+	           ,
+		       #{giveDutyId}
+	           ,
+		       #{btmContent}
+	           ,
+		       #{jfState}
+	           ,
+		       #{code}
+	           ,
+		       #{date}
+	           ,
+		       #{givePassword}
+	           ,
+		       #{teamId}
+	           ,
+		       #{giveDate}
+	           ,
+		       #{giveChargeId}
+	           ,
+		       #{atmPersonsIds}
+	           ,
+		       #{receivePassword}
+	           ,
+		       #{giveTeamId}
+	           ,
+		       #{atmContent}
+	           ,
+		       #{dutyId}
+	           ,
+		       #{grState},
+		       #{remark},
+		       #{fileId},
+		       #{createDate},
+		       #{check},
+		       #{unit}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="runLogEntity">
+			<![CDATA[
+				UPDATE TB_RUN_LOG_WIND SET            
+                 C_PERSONS_IDS=#{personsIds},
+                 C_BTM_PERSONS_IDS=#{btmPersonsIds}
+	             ,
+                 C_CHARGE_ID=#{chargeId}
+	             ,
+                 C_GIVE_PERSONS_IDS=#{givePersonsIds}
+	             ,
+                 C_GIVE_DUTY_ID=#{giveDutyId}
+	             ,
+                 C_BTM_CONTENT=#{btmContent}
+	             ,
+                 C_JF_STATE=#{jfState}
+	             ,
+                 C_CODE=#{code}
+	             ,
+                 C_DATE=#{date}
+	             ,
+                 C_GIVE_PASSWORD=#{givePassword}
+	             ,
+                 C_TEAM_ID=#{teamId}
+	             ,
+                 C_GIVE_DATE=#{giveDate}
+	             ,
+                 C_GIVE_CHARGE_ID=#{giveChargeId}
+	             ,
+                 C_ATM_PERSONS_IDS=#{atmPersonsIds}
+	             ,
+                 C_RECEIVE_PASSWORD=#{receivePassword}
+	             ,
+                 C_GIVE_TEAM_ID=#{giveTeamId}
+	             ,
+                 C_ATM_CONTENT=#{atmContent}
+	             ,
+                 C_DUTY_ID=#{dutyId}
+	             ,
+                 C_GR_STATE=#{grState}
+                  ,
+                 C_REMARK=#{remark}
+	             ,
+                 C_FILE_ID=#{fileId},
+                 C_CREATE_DATE=#{createDate},
+                  C_CHECK=#{check},
+                  C_UNIT=#{unit}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="runLogEntity">
+			<![CDATA[
+				DELETE FROM TB_RUN_LOG_WIND WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="RunLogWindtemp">
+			<![CDATA[ 
+				SELECT a.*,c.C_NAME as C_CHARGE_NAME,d.C_NAME as C_GR_STATE_NAME,e.C_NAME as C_DUTY_NAME ,f.C_NAME as C_TEAM_NAME FROM TB_RUN_LOG_WIND a 
+				LEFT JOIN TP_SYS_USER c on a. C_CHARGE_ID=c.C_ID  
+				LEFT JOIN TP_SYS_DICTIONARY d on d.C_CODE = a.C_GR_STATE 
+				LEFT JOIN TB_TEAM_CLASSES e on a. C_TEAM_ID = e.C_ID
+				LEFT JOIN tb_duty_order  f on a.C_DUTY_ID = f.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<!-- 查询检查日志(检查统计专用)-->
+		<select id="findCountByCondition" parameterType="map" resultMap="RunLogWindtemp">
+			<![CDATA[ 
+				SELECT * FROM TB_RUN_LOG_WIND L 
+			
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

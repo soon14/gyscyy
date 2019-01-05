@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.overhaulWorkTask">
+		<resultMap type="OverhaulWorkTaskEntity" id="OverhaulWorkTask_temp">
+			<result property="id" column="C_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="updateDate" column="C_UPDATE_DATE" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="updateUserId" column="C_UPDATE_USER_ID" />
+			<result property="equipId" column="C_EQUIP_ID" />
+			<result property="equipName" column="C_EQUIP_NAME" />
+			<result property="workTask" column="C_WORK_TASK" />
+			<result property="finishStatus" column="C_FINISH_STATUS" />
+			<result property="overhaulRecordId" column="C_OVERHAUL_RECORD_ID" />
+			<result property="status" column="C_STATUS" />
+			<!-- 运行日志字段 -->
+			<result property="logid" column="LOG_ID" />
+			<result property="logoverhaulNumber" column="LOG_OVERHAUL_NUMBER" />
+			<result property="logcreateDate" column="LOG_CREATE_DATE" />
+			<result property="logupdateDate" column="LOG_UPDATE_DATE" />
+			<result property="logcreateUserId" column="LOG_CREATE_USER_ID" />
+			<result property="logupdateUserId" column="LOG_UPDATE_USER_ID" />
+			<result property="loglogDate" column="LOG_LOG_DATE" />
+			<result property="logunitId" column="LOG_UNIT_ID" />
+			<result property="logunitName" column="LOG_UNIT_NAME" />
+			<result property="logdutyUserId" column="LOG_DUTY_USER_ID" />
+			<result property="logdutyUserName" column="LOG_DUTY_USER_NAME" />
+			<result property="logsubmitUserId" column="LOG_SUBMIT_USER_ID" />
+			<result property="logsubmitUserName" column="LOG_SUBMIT_USER_NAME" />
+			<result property="logstatus" column="LOG_STATUS" />
+			<result property="logfileId" column="LOG_FILE_ID" />
+			<result property="logprocessStatus" column="LOG_PROCESS_STATUS" />
+			<result property="logfinishStatus" column="LOG_FINISH_STATUS" />
+			<result property="logaskPersonName" column="LOG_ASK_PERSON_NAME" />
+			<result property="logoutUnitName" column="LOG_OUT_UNIT_NAME" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="OverhaulWorkTask_temp">
+			<![CDATA[
+				SELECT * FROM TB_OVERHAUL_WORK_TASK 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_OVERHAUL_WORK_TASK 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="OverhaulWorkTask_temp">
+			<![CDATA[
+				SELECT * FROM TB_OVERHAUL_WORK_TASK  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="OverhaulWorkTaskEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_OVERHAUL_WORK_TASK 
+				(
+		          C_CREATE_DATE
+		        , C_CREATE_USER_ID
+		        , C_UPDATE_DATE
+		        , C_UPDATE_USER_ID
+		        , C_EQUIP_ID
+		        , C_EQUIP_NAME
+		        , C_WORK_TASK
+		        , C_FINISH_STATUS
+		        , C_OVERHAUL_RECORD_ID
+		        , C_STATUS
+				)
+				VALUES
+				(
+		         #{createDate}
+	           , #{createUserId}
+	           , #{updateDate}
+	           , #{updateUserId}
+	           , #{equipId}
+	           , #{equipName}
+	           , #{workTask}
+	           , #{finishStatus}
+	           , #{overhaulRecordId}
+	           , #{status}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="OverhaulWorkTaskEntity">
+			<![CDATA[
+				UPDATE TB_OVERHAUL_WORK_TASK SET
+                   C_CREATE_DATE=#{createDate}
+	             , C_CREATE_USER_ID=#{createUserId}
+	             , C_UPDATE_DATE=#{updateDate}
+	             , C_UPDATE_USER_ID=#{updateUserId}
+	             , C_EQUIP_ID=#{equipId}
+	             , C_EQUIP_NAME=#{equipName}
+	             , C_WORK_TASK=#{workTask}
+	             , C_FINISH_STATUS=#{finishStatus}
+	             , C_OVERHAUL_RECORD_ID=#{overhaulRecordId}
+	             , C_STATUS=#{status}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="OverhaulWorkTaskEntity">
+			<![CDATA[
+				DELETE FROM TB_OVERHAUL_WORK_TASK WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="OverhaulWorkTask_temp">
+			<![CDATA[ 
+				SELECT O.*  FROM TB_OVERHAUL_WORK_TASK O 
+				LEFT JOIN TB_EQUIP_LEDGER E ON O.C_EQUIP_ID = E.C_ID
+	            RIGHT JOIN tb_overhaul_record F ON O.C_OVERHAUL_RECORD_ID = F.C_ID	
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByEquip" parameterType="map" resultMap="OverhaulWorkTask_temp">
+			<![CDATA[ 
+				SELECT O.* FROM TB_OVERHAUL_WORK_TASK O
+	            LEFT JOIN tb_overhaul_record F ON O.C_OVERHAUL_RECORD_ID = F.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+		
+		<select id="findEquitOverhaulData" parameterType="map" resultMap="OverhaulWorkTask_temp">
+			<![CDATA[ 
+					SELECT
+						O.C_ID AS C_ID,
+						O.C_EQUIP_ID AS C_EQUIP_ID,
+						E.C_NAME AS C_EQUIP_NAME,
+						O.C_WORK_TASK AS C_WORK_TASK,
+						O.C_FINISH_STATUS AS LOG_FINISH_STATUS,
+						O.C_STATUS AS C_STATUS,
+						r.C_START_DATE AS LOG_LOG_DATE,
+						D.C_UNIT_NAME AS LOG_OUT_UNIT_NAME,
+						A.C_NAME AS LOG_SUBMIT_USER_NAME,
+						D.C_DUTY_PERSON AS LOG_DUTY_USER_ID,
+						B.C_NAME AS LOG_DUTY_USER_NAME,
+						D.C_CREATE_USER_ID AS LOG_SUBMIT_USER_ID,
+						C.C_NAME AS LOG_UNIT_NAME 
+					FROM
+						TB_OVERHAUL_WORK_TASK O
+					LEFT JOIN tb_overhaul_log_detail D ON O.C_OVERHAUL_RECORD_ID = D.C_OVERHAUL_RECORD_ID 
+					LEFT JOIN tb_overhaul_record r ON O.C_OVERHAUL_RECORD_ID = r.C_ID
+					LEFT JOIN TB_EQUIP_LEDGER E ON O.C_EQUIP_ID = E.C_ID 
+					LEFT JOIN tp_sys_user  A ON A.C_ID = D.C_CREATE_USER_ID 
+					LEFT JOIN tp_sys_user  B ON B.C_ID = D.C_DUTY_PERSON
+					LEFT JOIN tp_sys_unit C ON  C.C_ID = r.C_UNIT_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		
+    </mapper>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd
+     	http://www.springframework.org/schema/beans 
+     	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+     	http://www.springframework.org/schema/jdbc 
+     	http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+     	http://www.springframework.org/schema/tx 
+     	http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+     	http://www.springframework.org/schema/aop 
+     	http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+     	
+	<bean id="springContextHolder" class="com.aptech.framework.spring.SpringContextHolder"></bean>
+
+	<!-- datasource config --> 
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:/config/datasource.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+ 	<!-- Oracle数据连接 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass" value="${center.jdbc.driverClass}" />
+		<property name="jdbcUrl" value="${center.jdbc.url}" />
+		<property name="user" value="${center.jdbc.username}" />
+		<property name="password" value="${center.jdbc.password}" />
+		<!-- 连接关闭时默认将所有未提交的操作回滚  确认为false-->
+		<property name="autoCommitOnClose" value="${center.jdbc.autoCommitOnClose}" />
+		<!-- 当连接池用完时客户端调用getConnection()后等待获取连接的时间,超时后抛出SQLException,如设为0无限期等待，单位毫秒,缺省为0 -->
+		<property name="checkoutTimeout" value="${center.cpool.checkoutTimeout}" />
+		<property name="initialPoolSize" value="${center.cpool.minPoolSize}" />
+		<property name="minPoolSize" value="${center.cpool.minPoolSize}" />
+		<!-- 连接池中保留的最大连接数,缺省值为15 -->
+		<property name="maxPoolSize" value="${center.cpool.maxPoolSize}" />
+		<!-- 最大空闲时间,60秒内未使用则连接被丢弃,若为0则永不丢弃.缺省值为0 -->
+		<property name="maxIdleTime" value="${center.cpool.maxIdleTime}" />
+		<!-- 当连接池中的连接耗尽的时候一次同时获取的连接数,缺省值为3 -->
+		<property name="acquireIncrement" value="${center.cpool.acquireIncrement}" />
+		<!-- 超过最小的连接数以后，当连接空闲的时候该连接在连接池中保持多长时间，单位为秒 -->
+		<property name="maxIdleTimeExcessConnections" value="${center.cpool.maxIdleTimeExcessConnections}" />
+	</bean>
+	
+	<!-- myBatis文件 -->
+	<bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:config/mybatis/base/mybatis-config.xml" />
+		<property name="mapperLocations" 
+			value="classpath*:config/mybatis/business/**/*.xml"></property>
+	</bean>
+	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sessionFactory" />
+	</bean>
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">        
+        <property name="defaultEncoding" value="utf-8"></property>        
+    </bean>
+    
+    <!-- Filters 过滤链 配置-->
+	<bean id="aptechFilter" class="com.aptech.framework.filterChain.AptechFilterFactory">
+		<property name="filters">
+			<map>
+				<entry key="projectFilter" value-ref="projectFilter"></entry>
+			</map>
+		</property>
+		<property name="filterDefinitionMap" ref="menuFilterChainDefinition" />
+	</bean>
+
+	<bean id="projectFilter" class="com.aptech.business.filter.ProjectFilter">
+		<property name="closed" value="false"></property>
+	</bean>
+	<bean id="illegalCharacterFilter" class="com.aptech.common.filter.IllegalCharacterFilter" />
+	<!-- 过滤配置 -->
+	<bean id="menuFilterChainDefinition" class="com.aptech.framework.filterChain.FilterChainDefinition">
+		<property name="firstChainDefinition">
+			<value>
+				/index.jsp=none
+				/static/**=none
+				/upload/**=none
+				/login/*=none
+				/act/diagram-viewer/**=none	
+				/act/process-editor/**=none	
+				/mobile/token/**=none
+			</value>
+		</property>
+		<property name="endChainDefinition">
+			<value>/**=all</value>
+		</property>
+	</bean>
+    
+    <!-- ##################    缓存配置~~~~~~Start    #################### -->
+	<bean name="cache" class="com.aptech.framework.cache.LocalCacheImpl" />
+	<!-- 
+	<bean id="cache" class="com.aptech.framework.cache.EhCacheImpl">
+		<property name="configLocation">
+			<value>classpath:/config/ehcache/ehcache.xml</value>
+		</property>
+		<property name="cacheManagerName" value="platformCache" />
+	</bean> -->
+    
+    <tx:annotation-driven />
+    
+    <context:component-scan base-package="com.aptech">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.RestController"/> 		 
+	</context:component-scan>
+	  
+	<aop:config />
+ 
+</beans>

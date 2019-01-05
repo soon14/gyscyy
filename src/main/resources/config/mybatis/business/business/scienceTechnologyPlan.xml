@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.scienceTechnologyPlan">
+		<resultMap type="ScienceTechnologyPlanEntity" id="ScienceTechnologyPlan_temp">
+			<result property="id" column="C_ID" />
+			<result property="userId" column="C_USER_ID" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="planName" column="C_PLAN_NAME" />
+			<result property="description" column="C_DESCRIPTION" />
+			<result property="planType" column="C_PLAN_TYPE" />
+			<result property="uploadTime" column="C_UPLOAD_TIME" />
+			<result property="planCompleteTime" column="C_PLAN_COMPLETE_TIME" />
+			<result property="remark" column="C_REMARK" />
+			<result property="fileId" column="C_FILE_ID" />
+			<result property="status" column="C_STATUS" />
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="userName" column="C_USER_NAME" />
+			
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="ScienceTechnologyPlan_temp">
+			<![CDATA[
+				SELECT * FROM TB_SCIENCE_TECHNOLOGY_PLAN 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_SCIENCE_TECHNOLOGY_PLAN 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="ScienceTechnologyPlan_temp">
+			<![CDATA[
+				SELECT * FROM TB_SCIENCE_TECHNOLOGY_PLAN  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="ScienceTechnologyPlanEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_SCIENCE_TECHNOLOGY_PLAN 
+				(
+		          C_USER_ID
+		        , C_UNIT_ID
+		        , C_PLAN_NAME
+		        , C_DESCRIPTION
+		        , C_PLAN_TYPE
+		        , C_UPLOAD_TIME
+		        , C_PLAN_COMPLETE_TIME
+		        , C_REMARK
+		        , C_FILE_ID
+		        , C_STATUS
+				)
+				VALUES
+				(
+		         #{userId}
+	           , #{unitId}
+	           , #{planName}
+	           , #{description}
+	           , #{planType}
+	           , #{uploadTime}
+	           , #{planCompleteTime}
+	           , #{remark}
+	           , #{fileId}
+	           , #{status}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="ScienceTechnologyPlanEntity">
+			<![CDATA[
+				UPDATE TB_SCIENCE_TECHNOLOGY_PLAN SET
+                   C_USER_ID=#{userId}
+	             , C_UNIT_ID=#{unitId}
+	             , C_PLAN_NAME=#{planName}
+	             , C_DESCRIPTION=#{description}
+	             , C_PLAN_TYPE=#{planType}
+	             , C_UPLOAD_TIME=#{uploadTime}
+	             , C_PLAN_COMPLETE_TIME=#{planCompleteTime}
+	             , C_REMARK=#{remark}
+	             , C_FILE_ID=#{fileId}
+	             , C_STATUS=#{status}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="ScienceTechnologyPlanEntity">
+			<![CDATA[
+				DELETE FROM TB_SCIENCE_TECHNOLOGY_PLAN WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="ScienceTechnologyPlan_temp">
+			<![CDATA[ 
+				SELECT t.*,a.C_NAME AS C_USER_NAME,b.C_NAME AS C_UNIT_NAME FROM TB_SCIENCE_TECHNOLOGY_PLAN t LEFT JOIN TP_SYS_USER a ON t.C_USER_ID = a.C_ID LEFT JOIN TP_SYS_UNIT b ON t.C_UNIT_ID = b.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

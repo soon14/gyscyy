@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.overhaulPlanMember">
+		<resultMap type="OverhaulPlanMemberEntity" id="OverhaulPlanMember_temp">
+			<result property="id" column="C_ID" />
+			<result property="name" column="C_NAME" />
+			<result property="code" column="C_CODE" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="updateDate" column="C_UPDATE_DATE" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="updateUserId" column="C_UPDATE_USER_ID" />
+			<result property="overhaulPlanId" column="C_OVERHAUL_PLAN_ID" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="OverhaulPlanMember_temp">
+			<![CDATA[
+				SELECT * FROM TB_OVERHAUL_PLAN_MEMBER 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_OVERHAUL_PLAN_MEMBER 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="OverhaulPlanMember_temp">
+			<![CDATA[
+				SELECT * FROM TB_OVERHAUL_PLAN_MEMBER  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="OverhaulPlanMemberEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_OVERHAUL_PLAN_MEMBER 
+				(
+		          C_NAME
+		        , C_CODE
+		        , C_CREATE_DATE
+		        , C_UPDATE_DATE
+		        , C_CREATE_USER_ID
+		        , C_UPDATE_USER_ID
+		        , C_OVERHAUL_PLAN_ID
+				)
+				VALUES
+				(
+		         #{name}
+	           , #{code}
+	           , #{createDate}
+	           , #{updateDate}
+	           , #{createUserId}
+	           , #{updateUserId}
+	           , #{overhaulPlanId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="OverhaulPlanMemberEntity">
+			<![CDATA[
+				UPDATE TB_OVERHAUL_PLAN_MEMBER SET
+                   C_NAME=#{name}
+	             , C_CODE=#{code}
+	             , C_CREATE_DATE=#{createDate}
+	             , C_UPDATE_DATE=#{updateDate}
+	             , C_CREATE_USER_ID=#{createUserId}
+	             , C_UPDATE_USER_ID=#{updateUserId}
+	             , C_OVERHAUL_PLAN_ID=#{overhaulPlanId}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="OverhaulPlanMemberEntity">
+			<![CDATA[
+				DELETE FROM TB_OVERHAUL_PLAN_MEMBER WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="OverhaulPlanMember_temp">
+			<![CDATA[ 
+				SELECT p.* FROM TB_OVERHAUL_PLAN_MEMBER p
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

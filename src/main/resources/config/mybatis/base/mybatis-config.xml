@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC 
+	"-//mybatis.org//DTD Config 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+        <setting name="jdbcTypeForNull" value="VARCHAR"/>
+		<setting name="callSettersOnNulls" value="true"/>          
+    </settings>
+	<typeAliases>	
+		<package name="com.aptech.common"/>
+		<package name="com.aptech.platform"/>
+		<package name="com.aptech.business"/>		
+		<package name="com.aptech.framework.log"/>
+	</typeAliases>
+	<plugins>
+        <plugin interceptor="com.aptech.framework.orm.paginator.OffsetLimitInterceptor">
+            <!--<property name="dialectClass" value="com.aptech.framework.orm.dialect.SQLServerDialect"/>-->
+            <property name="dialectClass" value="com.aptech.framework.orm.dialect.MySQLDialect"/>
+            <!--<property name="dialectClass" value="com.aptech.framework.orm.dialect.OracleDialect"/>-->            
+        </plugin>
+        <plugin interceptor="com.aptech.framework.orm.interceptor.UpdateInterceptor">
+            <!--<property name="dialectClass" value="com.aptech.framework.orm.dialect.SQLServerDialect"/>-->
+            <property name="dialectClass" value="com.aptech.framework.orm.dialect.MySQLDialect"/>
+            <!--<property name="dialectClass" value="com.aptech.framework.orm.dialect.OracleDialect"/>-->            
+        </plugin>
+    </plugins>  
+	<mappers>
+		<mapper resource="config/mybatis/base/base.xml" />
+		<mapper resource="config/mybatis/base/operationLog.xml" />		
+	</mappers>
+</configuration>

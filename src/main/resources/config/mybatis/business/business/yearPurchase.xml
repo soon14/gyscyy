@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.yearPurchase">
+		<resultMap type="YearPurchaseEntity" id="YearPurchase_temp">
+			<result property="id" column="C_ID" />
+			<result property="code" column="C_CODE" />
+			<result property="name" column="C_NAME" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="type" column="C_TYPE" />
+			<result property="specification" column="C_SPECIFICATION" />
+			<result property="amount" column="C_AMOUNT" />
+			<result property="budgetPrice" column="C_BUDGET_PRICE" />
+			<result property="totalPrice" column="C_TOTAL_PRICE" />
+			<result property="buyTime" column="C_BUY_TIME" />
+			<result property="projectName" column="C_PROJECT_NAME" />
+			<result property="remark" column="C_REMARK" />
+			<result property="fileId" column="C_FILE_ID" />
+		    <result property="status" column="C_STATUS" />
+				<result property="unit" column="C_UNIT" />
+				<result property="dutyUnit" column="C_DUTY_UNIT" />
+				<result property="companyUnit" column="C_COMPANY_UNIT" />
+				<result property="userName" column="userName" />
+				<result property="dutyName" column="dutyName" />
+				<result property="companyName" column="companyName" />
+				<result property="ifEndStatus" column="C_IF_END_STATUS" />
+				<result property="unitId" column="C_UNIT_ID" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="YearPurchase_temp">
+			<![CDATA[
+				SELECT * FROM TB_YEAR_PURCHASE 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_YEAR_PURCHASE 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="YearPurchase_temp">
+			<![CDATA[
+				SELECT * FROM TB_YEAR_PURCHASE  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="YearPurchaseEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_YEAR_PURCHASE 
+				(
+		          C_CODE
+		        , C_NAME
+		        , C_CREATE_USER_ID
+		        , C_CREATE_DATE
+		        , C_TYPE
+		        , C_SPECIFICATION
+		        , C_AMOUNT
+		        , C_BUDGET_PRICE
+		        , C_TOTAL_PRICE
+		        , C_BUY_TIME
+		        , C_PROJECT_NAME
+		        , C_REMARK
+		        , C_FILE_ID
+		        , C_STATUS
+		        , C_UNIT
+		        , C_DUTY_UNIT
+		        , C_COMPANY_UNIT
+		        , C_IF_END_STATUS
+		        , C_UNIT_ID
+				)
+				VALUES
+				(
+		         #{code}
+	           , #{name}
+	           , #{createUserId}
+	           , #{createDate}
+	           , #{type}
+	           , #{specification}
+	           , #{amount}
+	           , #{budgetPrice}
+	           , #{totalPrice}
+	           , #{buyTime}
+	           , #{projectName}
+	           , #{remark}
+	           , #{fileId}
+	           , #{status}
+	           , #{unit}
+	           , #{dutyUnit}
+	           , #{companyUnit}
+	           , #{ifEndStatus}
+	           , #{unitId}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="YearPurchaseEntity">
+			<![CDATA[
+				UPDATE TB_YEAR_PURCHASE SET
+                   C_CODE=#{code}
+                 , C_NAME=#{name}
+	             , C_CREATE_USER_ID=#{createUserId}
+	             , C_CREATE_DATE=#{createDate}
+	             , C_TYPE=#{type}
+	             , C_SPECIFICATION=#{specification}
+	             , C_AMOUNT=#{amount}
+	             , C_BUDGET_PRICE=#{budgetPrice}
+	             , C_TOTAL_PRICE=#{totalPrice}
+	             , C_BUY_TIME=#{buyTime}
+	             , C_PROJECT_NAME=#{projectName}
+	             , C_REMARK=#{remark}
+	             , C_FILE_ID=#{fileId}
+	             , C_STATUS=#{status}
+	             , C_UNIT=#{unit}
+	             , C_DUTY_UNIT=#{dutyUnit}
+	             , C_COMPANY_UNIT=#{companyUnit}
+	             , C_IF_END_STATUS=#{ifEndStatus}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="YearPurchaseEntity">
+			<![CDATA[
+				DELETE FROM TB_YEAR_PURCHASE WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="YearPurchase_temp">
+			<![CDATA[ 
+					SELECT a.*,b.C_NAME AS userName,c.C_NAME as dutyName, d.C_NAME as companyName  FROM TB_YEAR_PURCHASE a LEFT JOIN TP_SYS_USER b ON a.C_CREATE_USER_ID = b.C_ID
+					left join tp_sys_unit c on a.C_DUTY_UNIT=c.C_ID
+					left join tb_purchase_organization d on a.C_COMPANY_UNIT = d.C_ID 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

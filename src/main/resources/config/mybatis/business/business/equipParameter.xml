@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.equipParameter">
+		<resultMap type="EquipParameterEntity" id="EquipParameter_temp">
+			<result property="id" column="C_ID" />
+			<result property="parameter" column="C_PARAMETER" />
+			<result property="parameterType" column="C_PARAMETER_TYPE" />
+			<result property="defaultValue" column="C_DEFAULT_VALUE" />
+			<result property="equipLedgerId" column="C_EQUIP_LEDGER_ID" />
+			<result property="status" column="C_STATUS" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="EquipParameter_temp">
+			<![CDATA[
+				SELECT * FROM TB_EQUIP_PARAMETER 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_EQUIP_PARAMETER 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="EquipParameter_temp">
+			<![CDATA[
+				SELECT * FROM TB_EQUIP_PARAMETER  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="EquipParameterEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_EQUIP_PARAMETER 
+				(
+	            	 C_EQUIP_LEDGER_ID,C_PARAMETER,C_PARAMETER_TYPE,C_DEFAULT_VALUE,C_STATUS
+				)
+				VALUES
+				(
+		       		#{equipLedgerId},#{parameter},#{parameterType},#{defaultValue},#{status}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="EquipParameterEntity">
+			<![CDATA[
+				UPDATE TB_EQUIP_PARAMETER SET
+                 C_EQUIP_LEDGER_ID=#{equipLedgerId},C_PARAMETER=#{parameter},C_PARAMETER_TYPE=#{parameterType},C_DEFAULT_VALUE=#{defaultValue},C_STATUS=#{status}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="EquipParameterEntity">
+			<![CDATA[
+				DELETE FROM TB_EQUIP_PARAMETER WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="EquipParameter_temp">
+			<![CDATA[ 
+				SELECT * FROM TB_EQUIP_PARAMETER 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+		<!-- 根据条件查询 -->
+		<select id="delByEquipId" parameterType="EquipParameterEntity" >
+			<![CDATA[ 
+				DELETE FROM TB_EQUIP_PARAMETER WHERE C_EQUIP_LEDGER_ID=#{equipLedgerId}
+			]]>
+		</select>
+    </mapper>

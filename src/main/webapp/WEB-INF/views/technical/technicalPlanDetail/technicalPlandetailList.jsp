@@ -1,0 +1,211 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"  
+    pageEncoding="utf-8"%>  
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+		<meta charset="UTF-8">
+		<%@ include file="/WEB-INF/views/common/meta.jsp" %>
+	</head>
+	<body>
+	<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+				<ul class="breadcrumb">
+					<li>
+						<i class="ace-icon fa fa-home home-icon"></i>
+						<a href="javascript:void(0);" onclick="firstPage()">首页</a>
+					</li>
+					<li class="active">业务管理</li>
+					<li class="active">待办任务</li>
+					<li class="active">待办详细</li>
+					<li class="active">详细计划</li>
+				</ul>
+		</div>
+		<div class="col-md-12" >
+		<div class="page-content">
+		<div class="tabbable" style="margin-top: 20px;">
+		 		<ul class="nav nav-tabs" id="myTab">
+		 			<li class="active">
+			 			<a   data-toggle="tab" href="#workitem" aria-expanded="true">
+							<i class="green ace-icon fa fa-home bigger-120"></i>
+							详细计划
+						</a>
+		 			</li>
+		 		</ul>
+		 		<div style="float:right; margin-top:-35px;margin-right:55px;">
+					<button id="btnBackTicket" class="btn btn-xs btn-primary">
+						<i class="fa fa-reply"></i>
+						返回
+					</button>
+				</div>	
+				<div class="tab-content">
+				<div id="workitem" class="tab-pane fade active in">
+				
+    			<div class="widget-main no-padding">
+				<h5 class="table-title header smaller lighter blue">详细计划</h5>
+	 			<table id="technicalPlandetail_table" class="table table-striped table-bordered table-hover" style="width:100%;">
+	 			<input type="hidden" id="technicalWorkId" value="${technicalWorkId}"/>
+	 			<input type="hidden" id="technicalId" value="${technicalId}"/>
+	 			<input type="hidden" id="uuid" value="${uuid}"/>
+							<thead>
+								<tr>
+									<th style="display:none;">主键</th>
+	                                <th>序号</th>
+	                                <th>项目名称</th>
+	                                <th>定检周期</th>
+	                                <th>本年计划时间</th>
+	                                <th>实际完成时间</th>
+	                                <th>完成状态</th>
+	                                <th>完成情况</th>
+	                                <th>风险和问题</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                </table>
+		    	</div>
+    		</div>
+    	</div>
+    </div>
+</div>
+<script type="text/javascript">
+var listFormDialog;
+var technicalPlandetailDatatables ="";
+jQuery(function($) {
+	seajs.use(['datatables', 'confirm', 'dialog'], function(A){
+		var conditions=[];
+	    	var uuid=$("#uuid").val();
+			var technicalId=$("#technicalId").val();
+	    	var technicalWorkId=$("#technicalWorkId").val();
+    	    var orderSqe='${orderSqe}';
+		    technicalPlandetailDatatables = new A.datatables({
+			render: '#technicalPlandetail_table',
+			options: {
+		        "ajax": {
+		            "url": format_url("/technicalPlandetail/search"),
+		            "contentType": "application/json",
+		            "type": "POST",
+		            "dataType": "JSON",
+		            "data": function (d) {
+		            	    conditions.push({
+        					field: 'C_TECHNICAL_WORKID',
+        					fieldType:'STRING',
+        					matchType:'EQ',
+        					value:'${technicalWorkId}'
+	        				});
+			            	d.orderSeq='${orderSqe}';
+			            	d.conditions = conditions;
+			                return JSON.stringify(d);
+		              }
+		        },
+		        multiple : true,
+				ordering: true,
+				checked: false,
+				paging:false,
+				bInfo:false,
+				columns: [{data:"id", visible:false,orderable:false},
+				          {data: "orderSeq",width: "5%",orderable: true},
+				          {data: "planName",width: "10%",orderable: true}, 
+				          {data: "djzqStr",name:"djzq",width: "8%",orderable: true}, 
+				          {data: "nowTime",width: "10%",orderable: true}, 
+				          {data: "wcTime",width: "10%",orderable: true},
+				          {data: "wcStatusStr",name:"wcStatus",width: "8%",orderable: true}, 
+				          {data: "wcqk",width: "20%",orderable: true}, 
+				          {data: "danger",width: "20%",orderable: true}],
+				toolbars: [{
+					label:"新增",
+					icon:"glyphicon glyphicon-plus",
+					className:"btn-success",
+					events:{
+						click:function(event){
+							var info =technicalPlandetailDatatables._datatables.page.info();
+							var  detailoneTotal=info.recordsTotal+1;
+    						listFormDialog = new A.dialog({
+        						width:1000 ,
+        						height:600 ,
+        						title: "详细计划增加",
+        						url:format_url("/technicalPlandetail/getAdd?uuid="+uuid+"&technicalId="+technicalId+"&technicalWorkId="+technicalWorkId+"&orderSqe="+orderSqe+"&detailoneTotal="+detailoneTotal),
+        						closed: function(){
+        							technicalPlandetailDatatables.draw(false);
+        						}	
+        					}).render()
+						}
+					}
+				}],
+				btns: [{
+					id: "edit",
+					label:"修改",
+					icon: "fa fa-pencil bigger-130",
+					className: "green edit",
+					events:{
+						click: function(event, nRow, nData){
+							var id = nData.id;
+							listFormDialog = new A.dialog({
+								width: 1000,
+								height: 600,
+								title: "详细计划编辑",
+								url:format_url('/technicalPlandetail/getEdit/' + id),
+								closed: function(){
+									technicalPlandetailDatatables.draw(false);
+								}
+							}).render();
+						}
+					}
+				}, {
+					id:"delete",
+					label:"删除",
+					icon: "fa fa-trash-o bigger-130",
+					className: "red del",
+					events:{
+						click: function(event, nRow, nData){
+							var id = nData.id;
+							var url =format_url('/technicalPlandetail/'+ id);
+							A.confirm('您确认删除么？',function(){
+								$.ajax({
+									url : url,
+									contentType : 'application/json',
+									dataType : 'JSON',
+									type : 'DELETE',
+									success: function(result){
+										alert('删除成功');
+										technicalPlandetailDatatables.draw(false);
+									},
+									error:function(v,n){
+										alert('操作失败');
+									}
+								});
+							});
+						}
+					}
+			}]
+			}
+		}).render();
+		    
+		    $('#btnBackTicket').on('click',function(){
+		    	
+		    	var technicalId='${technicalId}';
+				var id = '${taskId}';//任务流程实例ID
+				var procInstId = '${procInstId}';//流程实例ID
+				var procDefId = '${procDefId}';////流程定义ID
+				var formURL="/technical/approve/"+ technicalId;
+				A.loadPage({
+					render : '#page-container',
+					url : format_url("/todoTask/detail?id=" + id + "&currentPage="+ 1 
+							+ "&pageSize=" + 10+"&procInstId="+procInstId+
+							"&procDefId="+procDefId+"&formURL="+formURL)
+				});
+				
+		    	/* if(uuid!=null&&uuid!=""){
+		    		A.loadPage({
+						render : '#page-container',
+						url:format_url("/technical/getAdd?recovUuid="+ uuid),
+					});
+		    	}else{
+		    		A.loadPage({
+						render : '#page-container',
+						url:format_url("/technical/getEdit/"+ technicalId),
+					});
+		    	} */
+		    });
+	});
+});
+        </script>
+    </body>
+</html>

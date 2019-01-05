@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.safeManage.accident">
+		<resultMap type="AccidentEntity" id="Accident_temp">
+			<result property="id" column="C_ID" />
+			<result property="name" column="C_NAME" />
+			<result property="createUserId" column="C_CREATE_USER_ID" />
+			<result property="createDate" column="C_CREATE_DATE" />
+			<result property="sglb" column="C_SGLB" />
+			<result property="unitId" column="C_UNIT_ID" />
+			<result property="time" column="C_TIME" />
+			<result property="dcbg" column="C_DCBG" />
+			<result property="fileid" column="C_FILEID" />
+			<result property="byong" column="C_BYONG" />
+			<result property="bytwo" column="C_BYTWO" />
+			<result property="bythree" column="C_BYTHREE" />
+			<result property="status" column="C_STATUS" />
+			<result property="userName" column="userName" />
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="Accident_temp"> 
+			<![CDATA[
+				SELECT * FROM TB_ACCIDENT 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_ACCIDENT 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="Accident_temp">
+			<![CDATA[
+				SELECT * FROM TB_ACCIDENT  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="AccidentEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_ACCIDENT 
+				(
+		          C_NAME
+		        , C_CREATE_USER_ID
+		        , C_CREATE_DATE
+		        , C_SGLB
+		        , C_UNIT_ID
+		        , C_TIME
+		        , C_DCBG
+		        , C_FILEID
+		        , C_BYONG
+		        , C_BYTWO
+		        , C_BYTHREE
+		        , C_STATUS
+				)
+				VALUES
+				(
+		         #{name}
+	           , #{createUserId}
+	           , #{createDate}
+	           , #{sglb}
+	           , #{unitId}
+	           , #{time}
+	           , #{dcbg}
+	           , #{fileid}
+	           , #{byong}
+	           , #{bytwo}
+	           , #{bythree}
+	           , #{status}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="AccidentEntity">
+			<![CDATA[
+				UPDATE TB_ACCIDENT SET
+                   C_NAME=#{name}
+	             , C_CREATE_USER_ID=#{createUserId}
+	             , C_CREATE_DATE=#{createDate}
+	             , C_SGLB=#{sglb}
+	             , C_UNIT_ID=#{unitId}
+	             , C_TIME=#{time}
+	             , C_DCBG=#{dcbg}
+	             , C_FILEID=#{fileid}
+	             , C_BYONG=#{byong}
+	             , C_BYTWO=#{bytwo}
+	             , C_BYTHREE=#{bythree}
+	             , C_STATUS=#{status} 
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="AccidentEntity">
+			<![CDATA[
+				DELETE FROM TB_ACCIDENT WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="Accident_temp">
+			<![CDATA[ 
+				SELECT a.*, b.C_NAME as userName  FROM TB_ACCIDENT  a  left join tp_sys_user b on a.C_CREATE_USER_ID=b.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

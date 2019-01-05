@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.messageCenter">
+		<resultMap type="MessageCenterEntity" id="MessageCenter_temp">
+			<result property="id" column="C_ID" />
+			<result property="title" column="C_MESSAGE_TITLE" />
+			<result property="context" column="C_CONTEXT" />
+			<result property="sendTime" column="C_SEND_TIME" />
+			<result property="sendPerson" column="C_SEND_PERSON" />
+			<result property="type" column="C_TYPE" />
+			<result property="category" column="C_CATEGORY" />
+			<result property="group" column="C_GROUP" />
+			<result property="receivePerson" column="C_RECEIVE_PERSON" />
+			<result property="contextId" column="C_CONTEXT_ID" />
+			<result property="status" column="C_STATUS" />
+			<result property="isnotImportant" column="C_ISNOT_IMPORTANT" />
+			
+        </resultMap>
+		
+		<!-- 获取所有数据 -->
+		<select id="findAll" resultMap="MessageCenter_temp">
+			<![CDATA[
+				SELECT * FROM TB_MESSAGE_CONTEXT 
+			]]>
+		</select>
+		
+		<!-- 获取所有数据条数 -->
+		<select id="total" resultType="int">
+			<![CDATA[
+				SELECT count(1) FROM TB_MESSAGE_CONTEXT 
+			]]>
+		</select>
+		
+		<!-- 根据id查询 -->
+		<select id="findById" parameterType="long" resultMap="MessageCenter_temp">
+			<![CDATA[
+				SELECT * FROM TB_MESSAGE_CONTEXT  WHERE C_ID=#{id}
+			]]>
+		</select>
+		
+		<!-- 添加数据 -->
+		<insert id="insert" parameterType="MessageCenterEntity">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<!-- ORACLE 数据库需要增加SEQUENCE配置
+			<selectKey keyProperty="id" resultType="Long" order="BEFORE">
+		      select SEQ_TP_APP.nextval from dual  
+		    </selectKey>-->
+			<![CDATA[
+				INSERT INTO TB_MESSAGE_CONTEXT 
+				(
+		          C_MESSAGE_TITLE
+		        , C_CONTEXT
+		        , C_SEND_TIME
+		        , C_SEND_PERSON
+		        , C_TYPE
+		        , C_CATEGORY
+		        , C_GROUP
+		        , C_ISNOT_IMPORTANT
+				)
+				VALUES
+				(
+		         #{title}
+	           , #{context}
+	           , #{sendTime}
+	           , #{sendPerson}
+	           , #{type}
+	           , #{category}
+	           , #{group}
+	           , #{isnotImportant}
+				)
+			]]>
+		</insert>
+		
+		<!-- 修改数据 -->
+		<update id="update" parameterType="MessageCenterEntity">
+			<![CDATA[
+				UPDATE TB_MESSAGE_CONTEXT SET
+                   C_MESSAGE_TITLE=#{title}
+	             , C_CONTEXT=#{context}
+	             , C_SEND_TIME=#{sendTime}
+	             , C_SEND_PERSON=#{sendPerson}
+	             , C_TYPE=#{type}
+	             , C_CATEGORY=#{category}
+	             , C_GROUP=#{group}
+	             , C_ISNOT_IMPORTANT=#{isnotImportant}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 删除数据 -->
+		<update id="delete" parameterType="MessageCenterEntity">
+			<![CDATA[
+				DELETE FROM TB_MESSAGE_CONTEXT WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<!-- 根据条件查询 -->
+		<select id="findByCondition" parameterType="map" resultMap="MessageCenter_temp">
+			<![CDATA[ 
+			select mc.C_MESSAGE_TITLE,mc.C_CONTEXT,mc.C_SEND_TIME,mc.C_SEND_PERSON,mc.C_TYPE,mc.C_CATEGORY,mc.C_GROUP,ms.C_ID,ms.C_RECEIVE_PERSON,ms.C_CONTEXT_ID,ms.C_STATUS,mc.C_ISNOT_IMPORTANT
+ 			from tb_message_context mc LEFT JOIN tb_message_status ms 
+			on ms.C_CONTEXT_ID = mc.C_ID
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+    </mapper>

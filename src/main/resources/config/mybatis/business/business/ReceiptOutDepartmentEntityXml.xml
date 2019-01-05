@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.aptech.business.OAManagement.outDepartment.ReceiptOutDepartment">
+		<resultMap type="ReceiptOutDepartment" id="ReceiptOutDepartment_temp">
+			<result property="id" column="C_ID" /> 
+			<result property="receiptId" column="C_RECEIPT_ID" /> 
+			<result property="result" column="C_RESULT" /> 
+			<result property="comment" column="C_COMMENT" /> 
+			<result property="persionId" column="C_PERSION_ID" /> 
+			<result property="persionName" column="C_PERSION_NAME" /> 
+			<result property="time" column="C_TIME" /> 
+			<result property="unitId" column="C_UNIT_ID" /> 
+			<result property="unitName" column="C_UNIT_NAME" />
+			<result property="type" column="C_TYPE" /> 
+		</resultMap>
+		<select id="findAll" resultMap="ReceiptOutDepartment_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_receipt_outside_department 
+			]]>
+		</select>
+		
+		<select id="total" resultType="int">
+			<![CDATA[ 
+				SELECT count(1) FROM tb_receipt_outside_department 
+			]]>
+		</select>
+		
+		<select id="findById" parameterType="long" resultMap="ReceiptOutDepartment_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_receipt_outside_department WHERE C_ID=#{id}
+			]]>
+		</select> 
+		 
+		
+		<!-- ORACLE 数据库需要增加SEQUENCE配置 -->
+		<insert id="insert" parameterType="ReceiptOutDepartment">
+			<selectKey resultType="Long" order="AFTER" keyProperty="id">
+				SELECT LAST_INSERT_ID() AS id
+			</selectKey>
+			<![CDATA[ 
+				insert into tb_receipt_outside_department 
+				(C_ID, C_RECEIPT_ID, C_RESULT, C_COMMENT, C_PERSION_ID, C_PERSION_NAME,C_TIME, C_UNIT_ID, C_UNIT_NAME,C_TYPE)
+				values
+				(#{id}, #{receiptId}, #{result}, #{comment}, #{persionId}, #{persionName}, #{time}, #{unitId}, #{unitName},#{type})
+			]]>
+		</insert>
+
+		<update id="update" parameterType="ReceiptOutDepartment">
+			<![CDATA[ 
+				update tb_receipt_outside_department set
+				C_RECEIPT_ID=#{receiptId},
+				C_RESULT=#{result},
+				C_COMMENT=#{comment},
+				C_PERSION_ID=#{persionId},
+				C_PERSION_NAME=#{persionName},
+				C_TIME=#{time}
+				,C_UNIT_ID=#{unitId}
+				,C_UNIT_NAME=#{unitName}
+				,C_TYPE=#{type}
+				WHERE C_ID=#{id}
+			]]>
+		</update>
+		<update id="delete" parameterType="ReceiptOutDepartment">
+			<![CDATA[ 
+				DELETE FROM tb_receipt_outside_department WHERE C_ID=#{id}
+			]]>
+		</update>
+		
+		<select id="findByCondition" parameterType="map" resultMap="ReceiptOutDepartment_temp">
+			<![CDATA[ 
+				SELECT * FROM tb_receipt_outside_department 
+			]]>
+			<include refid="com.aptech.dao.base.conditionSql"/>
+		</select>
+
+	</mapper>
